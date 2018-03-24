@@ -1,0 +1,34 @@
+{
+    "name": "amber/container",
+    "description": "Simple PHP DI Container.",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Deivi Peña",
+            "email": "systemson@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Amber\\Container\\": "src/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/systemson/Cache"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "amber/cache": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}
