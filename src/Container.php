@@ -43,7 +43,7 @@ class Container
     {
         /* Check the instance of the class is in the cache */
         if (Cache::has($className)) {
-            //return Cache::get($className);
+            return Cache::get($className);
         }
 
         /* Check if the class exists */
