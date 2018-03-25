@@ -34,7 +34,11 @@ trait ReflectionTrait
     {
         foreach ($injectables as $injectable) {
             if ($object instanceof $injectable->class) {
-                $object->{$injectable->name} = self::getInstanceOf($injectable->inject);
+                if (self::get($injectable->name)) {
+                    $object->{$injectable->name} = self::get($injectable->name);
+                } elseif (class_exists($injectable->inject)) {
+                    $object->{$injectable->name} = self::getInstanceOf($injectable->inject);
+                }
             }
         }
 

@@ -9,7 +9,8 @@
             "email": "systemson@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Amber\\Container\\": "src/"
@@ -18,17 +19,22 @@
     "repositories": [
         {
             "type": "vcs",
+            "url": "https://github.com/systemson/Filesystem"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/systemson/Cache"
         }
     ],
     "require": {
         "php": ">=7.0.0",
+        "amber/filesystem": "dev-master",
         "amber/cache": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.5"
     },
     "scripts": {
-        "test": "phpunit"
+        "test": "phpunit --coverage-html ./tmp/coverage/"
     }
 }

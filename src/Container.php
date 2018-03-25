@@ -25,20 +25,15 @@ class Container
     }
 
     /**
-     * Singleton implementation.
+     * Get an instance of the class.
+     *
+     * @param string  $className  The class to be instantiated.
+     * @param array   $arguments  Optional. The arguments for the constructor.
+     *
+     * @throws Amber\Container\ContainerException
+     *
+     * @return object  The instance of the class
      */
-    public static function getInstance()
-    {
-        /* Checks if the Container is already instantiated. */
-        if (!self::$instance instanceof self) {
-            /* Instantiate the Container class */
-            self::$instance = new self();
-        }
-
-        /* Return the instance of Container */
-        return self::$instance;
-    }
-
     public static function getInstanceOf(string $className, array $arguments = [])
     {
         /* Check the instance of the class is in the cache */
@@ -48,7 +43,7 @@ class Container
 
         /* Check if the class exists */
         if (!class_exists($className)) {
-            throw new ContainerException("DI Container: class {$className} do not exists.");
+            throw new ContainerException("DI Container: class {$className} does not exists.");
         }
 
         /* Instantiate the ReflectionClass */
@@ -75,7 +70,5 @@ class Container
 
             return $instance;
         }
-
-        throw new ContainerException("DI Container: class {$className} could not be instantiated.");
     }
 }

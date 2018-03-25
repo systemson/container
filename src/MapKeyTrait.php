@@ -9,7 +9,26 @@ trait MapKeyTrait
         if (empty(self::$map)) {
             self::$map = (object) [];
         }
+
         self::$map->{$key} = $value;
+
+        return true;
+    }
+
+    public static function get(string $key)
+    {
+        return self::$map->{$key} ?? null;
+    }
+
+    public static function unbind($key)
+    {
+        if (isset(self::$map->{$key})) {
+            unset(self::$map->{$key});
+
+            return true;
+        }
+
+        return false;
     }
 
     public static function bindMultiple(array $array)
@@ -17,11 +36,17 @@ trait MapKeyTrait
         foreach ($array as $key => $value) {
             self::bind($key, $value);
         }
+
+        return true;
     }
 
-    public static function get(string $key)
+    public static function unbindMultiple(array $array)
     {
-        return self::$map->{$key} ?? null;
+        foreach ($array as $key) {
+            self::unbind($key);
+        }
+
+        return true;
     }
 
     public static function getParametersFromMap(array $keys = [])
