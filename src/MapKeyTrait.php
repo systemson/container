@@ -6,8 +6,8 @@ trait MapKeyTrait
 {
     public static function set(string $key, string $obj)
     {
-        if(empty(self::$map)) {
-            self::$map = (object) array();
+        if (empty(self::$map)) {
+            self::$map = (object) [];
         }
         self::$map->{$key} = $obj;
     }
