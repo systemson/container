@@ -9,6 +9,7 @@ class Container
     use MapKeyTrait, ReflectionTrait;
 
     protected static $instance;
+
     public static $map = [];
 
     final private function __construct()
@@ -40,13 +41,14 @@ class Container
 
     public static function getInstanceOf(string $className, array $arguments = [])
     {
+        /* Check the instance of the class is in the cache */
         if (Cache::has($className)) {
             //return Cache::get($className);
         }
 
         /* Check if the class exists */
         if (!class_exists($className)) {
-            throw new ContainerException("DI Container: missing class {$className}.");
+            throw new ContainerException("DI Container: class {$className} do not exists.");
         }
 
         /* Instantiate the ReflectionClass */
@@ -59,19 +61,19 @@ class Container
             $params = !empty($params) ? $params : self::getParametersFromMap($classParams);
 
             /* Create an instance of the class */
-            $obj = $reflection->newInstanceArgs($params);
+            $instance = $reflection->newInstanceArgs($params);
         } else {
-            $obj = $reflection->newInstance();
+            $instance = $reflection->newInstance();
         }
 
         $injectables = self::getInjectableProperties($reflection);
 
-        $obj = self::inject($obj, $injectables);
+        $instance = self::inject($instance, $injectables);
 
-        if ($obj instanceof $className) {
-            Cache::set($className, $obj, 15);
+        if ($instance instanceof $className) {
+            Cache::set($className, $instance, 15);
 
-            return $obj;
+            return $instance;
         }
 
         throw new ContainerException("DI Container: class {$className} could not be instantiated.");
