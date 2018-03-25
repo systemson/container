@@ -10,7 +10,7 @@ class DIExampleClass
     public $key;
 
     /**
-     * @var object  Amber\Container\Tests\InjectableExampleClass::class
+     * @var object Amber\Container\Tests\InjectableExampleClass::class
      */
     public $object;
 
@@ -25,7 +25,6 @@ class DIExampleClass
     {
         return $this->key;
     }
-
 
     public function getObject()
     {

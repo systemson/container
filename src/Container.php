@@ -27,12 +27,12 @@ class Container
     /**
      * Get an instance of the class.
      *
-     * @param string  $className  The class to be instantiated.
-     * @param array   $arguments  Optional. The arguments for the constructor.
+     * @param string $className The class to be instantiated.
+     * @param array  $arguments Optional. The arguments for the constructor.
      *
      * @throws Amber\Container\ContainerException
      *
-     * @return object  The instance of the class
+     * @return object The instance of the class
      */
     public static function getInstanceOf(string $className, array $arguments = [])
     {

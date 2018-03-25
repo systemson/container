@@ -16,8 +16,8 @@ class ContainerTest extends TestCase
 
         /* Multiple binding */
         $this->assertTrue(Container::bindMultiple([
-            'key' => $key,
-            'class' => $class,
+            'key'    => $key,
+            'class'  => $class,
             'object' => $object,
         ]));
 
@@ -37,7 +37,6 @@ class ContainerTest extends TestCase
         /* Checks if the map key attribute returns value value */
         $this->assertSame('value', Container::get('key'));
 
-
         /* Bind string [object => Amber\Container\Tests\DIExampleClass::class] */
         $this->assertTrue(Container::bind('object', InjectableExampleClass::class));
 
@@ -53,7 +52,7 @@ class ContainerTest extends TestCase
             $example = Container::getInstanceOf(DIExampleClass::class)
         );
 
-        $params =  [
+        $params = [
             (object) ['name' => 'key'],
             (object) ['name' => 'class'],
         ];
