@@ -12,9 +12,8 @@ trait ReflectionTrait
 
     public static function getMethodParams($method)
     {
-        if($method instanceof \ReflectionMethod) {
+        if ($method instanceof \ReflectionMethod) {
             return $method->getParameters();
         }
-        return null;
     }
 }
