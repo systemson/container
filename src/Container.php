@@ -57,6 +57,10 @@ class Container
             $obj = $reflection->newInstance();
         }
 
+        $injectables = self::getInjectableProperties($reflection);
+
+        $obj = self::inject($obj, $injectables);
+
         if ($obj instanceof $className) {
 
             Cache::set($className, $obj, 15);

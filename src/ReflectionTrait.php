@@ -17,4 +17,28 @@ trait ReflectionTrait
         }
         return null;
     }
+
+    public static function getInjectableProperties(\ReflectionClass $reflection)
+    {
+        foreach ($reflection->getProperties() as $property) {
+            if (preg_match("'@inject\s(.*?)[\r\n|\r|\n]'", $property->getDocComment(), $match)) {
+                $property->inject = $match[1];
+
+                $injectables[] = $property;
+            }
+        }
+
+        return $injectables ?? [];
+    }
+
+    public static function inject($object, array $injectables)
+    {
+        foreach ($injectables as $injectable) {
+            if ($object instanceof $injectable->class) {
+                $object->{$injectable->name} = self::getInstanceOf($injectable->inject);
+            }
+        }
+
+        return $object;
+    }
 }
