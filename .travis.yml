@@ -6,4 +6,4 @@ php:
 before_install:
 
 script:
-  - phpunit --bootstrap src/autoload.php --debug --coverage-text test
+  - phpunit --bootstrap vendor/autoload.php --debug --coverage-text test
