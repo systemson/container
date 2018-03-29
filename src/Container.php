@@ -6,67 +6,48 @@ use Amber\Cache\Cache;
 
 class Container
 {
-    use MapKeyTrait, ReflectionTrait;
+    use Binder;
 
-    protected static $instance;
+    protected $instance;
 
-    public static $map = [];
-
-    final private function __construct()
-    {
-    }
-
-    final private function __clone()
-    {
-    }
-
-    final private function __wakeup()
-    {
-    }
+    public $map = [];
 
     /**
      * Get an instance of the class.
      *
-     * @param string $className The class to be instantiated.
+     * @param string $class               The class to be instantiated.
      * @param array  $arguments Optional. The arguments for the constructor.
      *
      * @throws Amber\Container\ContainerException
      *
      * @return object The instance of the class
      */
-    public static function getInstanceOf(string $className, array $arguments = [])
+    public function getInstanceOf(string $name, array $arguments = [])
     {
-        /* Check the instance of the class is in the cache */
-        if (Cache::has($className)) {
-            return Cache::get($className);
-        }
-
         /* Check if the class exists */
-        if (!class_exists($className)) {
-            throw new ContainerException("DI Container: class {$className} does not exists.");
+        if (!class_exists($name)) {
+            throw new ContainerException("DI Container: class {$class} does not exists.");
         }
 
-        /* Instantiate the ReflectionClass */
-        $reflection = self::reflectionOf($className);
-
-        /* Get the constructor parameters */
-        $classParams = self::getMethodParams($reflection->getConstructor());
-
-        if (!empty($classParams)) {
-            $params = !empty($params) ? $params : self::getParametersFromMap($classParams);
-
-            /* Create an instance of the class */
-            $instance = $reflection->newInstanceArgs($params);
-        } else {
-            $instance = $reflection->newInstance();
+        /* Check the instance of the class is in the cache */
+        if (Cache::has($name)) {
+            //return Cache::get($class);
         }
 
-        $injectables = self::getInjectableProperties($reflection);
+        /* Get the class reflection */
+        $class = new Reflector($name);
 
-        $instance = self::inject($instance, $injectables);
+        /* Get class constructor arguments */
+        $arguments = $this->getArguments($class->parameters, $arguments);
 
-        if ($instance instanceof $className) {
-            Cache::set($className, $instance, 15);
+        /* Instantiate the class */
+        $instance = $class->newInstance($arguments);
+
+        /* Inject dependencies */
+        $instance = $this->inject($instance, $class->injectables);
+
+        if ($instance instanceof $name) {
+            //Cache::set($class, $instance, 15);
 
             return $instance;
         }
