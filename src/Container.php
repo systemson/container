@@ -31,7 +31,7 @@ class Container
 
         /* Check the instance of the class is in the cache */
         if (Cache::has($name)) {
-            //return Cache::get($class);
+            return Cache::get($name);
         }
 
         /* Get the class reflection */
@@ -47,7 +47,7 @@ class Container
         $instance = $this->inject($instance, $class->injectables);
 
         if ($instance instanceof $name) {
-            //Cache::set($class, $instance, 15);
+            Cache::set($name, $instance, 15);
 
             return $instance;
         }
