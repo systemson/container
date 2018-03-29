@@ -6,7 +6,7 @@ class Reflector
 {
     public function __construct($class)
     {
-        $reflection =  new \ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
 
         $method = $reflection->getConstructor();
 
@@ -39,7 +39,6 @@ class Reflector
     {
         foreach ($this->properties as $property) {
             if (preg_match("'@inject\s(.*?)[\r\n|\r|\n]'", $property->getDocComment(), $match)) {
-
                 $property->inject = $match[1];
 
                 $injectables[] = $property;
