@@ -2,9 +2,8 @@
 
 namespace Amber\Container;
 
-
 /**
- * Trait to handle the Container's binder
+ * Trait to handle the Container's binder.
  */
 trait Binder
 {
@@ -95,14 +94,13 @@ trait Binder
      */
     public function getArguments($params = [], $arguments = [])
     {
-        if(empty($params)) {
-           return null;
-        } elseif(!empty($arguments)) {
+        if (empty($params)) {
+            return;
+        } elseif (!empty($arguments)) {
             return $arguments;
         }
 
         foreach ($params as $param) {
-
             $key = $param->getClass() ? $param->getClass()->name : $param->name;
 
             /* Gets the value from the map */
@@ -110,17 +108,14 @@ trait Binder
 
             /* Checks if the value is a class to instantiate it */
             if (class_exists($value)) {
-
                 $arguments[] = $this->getInstanceOf($value);
 
             /* Checks if the value is not null to return it */
             } elseif ($value !== null) {
-
                 $arguments[] = $value;
 
             /* Checks if the param is a class to instantiate it */
             } elseif ($param->getClass() && class_exists($param->getClass()->name)) {
-
                 $arguments[] = $this->getInstanceOf($param->getClass()->name);
             }
         }

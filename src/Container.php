@@ -15,7 +15,7 @@ class Container
     /**
      * Get an instance of the class.
      *
-     * @param string $class               The class to be instantiated.
+     * @param string $class     The class to be instantiated.
      * @param array  $arguments Optional. The arguments for the constructor.
      *
      * @throws Amber\Container\ContainerException
