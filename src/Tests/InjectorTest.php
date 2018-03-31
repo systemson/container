@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class InjectorTest extends TestCase
 {
-
     /**
      * @expectedException Amber\Container\InvalidArgumentException
      */
@@ -61,7 +60,7 @@ class InjectorTest extends TestCase
 
         /* Test if returns the arguments */
         $args = [
-            'key' => $key,
+            'key'   => $key,
             'class' => $class,
         ];
 

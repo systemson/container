@@ -57,7 +57,7 @@ class Binder implements ContainerInterface
      *
      * @throws Amber\Container\InvalidArgumentException
      *
-     * @return boolean
+     * @return bool
      */
     public function has($key)
     {
@@ -135,7 +135,7 @@ class Binder implements ContainerInterface
     public function getArguments($params = [], $arguments = [])
     {
         if (empty($params)) {
-            return null;
+            return;
         } elseif (!empty($arguments)) {
             return $arguments;
         }
@@ -185,7 +185,6 @@ class Binder implements ContainerInterface
             } else {
                 throw new ContainerException("Property {$property->inject} does not belongs to {$property->class}.");
             }
-
         }
 
         return $object;

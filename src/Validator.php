@@ -1,4 +1,5 @@
 <?php
+
 namespace Amber\Container;
 
 trait Validator
