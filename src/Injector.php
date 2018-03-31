@@ -20,7 +20,7 @@ class Injector extends Binder
     {
         /* Check if the class exists */
         if (!class_exists($name)) {
-            throw new ContainerException("DI Container: class {$class} does not exists.");
+            throw new ContainerException("Class {$name} does not exists.");
         }
 
         /* Check the instance of the class is in the cache */

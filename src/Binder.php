@@ -179,8 +179,13 @@ class Binder implements ContainerInterface
                     $object->{$property->name} = $this->get($property->name);
                 } elseif (class_exists($property->inject)) {
                     $object->{$property->name} = $this->getInstanceOf($property->inject);
+                } else {
+                    throw new ContainerException("Class {$property->inject} does not exists.");
                 }
+            } else {
+                throw new ContainerException("Property {$property->inject} does not belongs to {$property->class}.");
             }
+
         }
 
         return $object;

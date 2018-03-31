@@ -2,6 +2,6 @@
 
 namespace Amber\Container\Tests;
 
-class InjectableExampleClass
+class InjectableClass
 {
 }

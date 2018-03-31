@@ -2,14 +2,14 @@
 
 namespace Amber\Container\Tests;
 
-class DIExampleClass
+class ReceiverClass
 {
     /**
-     * @inject Amber\Container\Tests\InjectableExampleClass::class
+     * @inject Amber\Container\Tests\InjectableClass
      *
      * @var string
      */
-    public $inject;
+    public $injected;
 
     /**
      * @var string
@@ -17,11 +17,11 @@ class DIExampleClass
     public $key;
 
     /**
-     * @var object Amber\Container\Tests\InjectableExampleClass::class
+     * @var object Amber\Container\Tests\InjectableClass::class
      */
     public $object;
 
-    public function __construct(string $key, InjectableExampleClass $object)
+    public function __construct(string $key, InjectableClass $object)
     {
         $this->key = $key;
 

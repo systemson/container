@@ -9,22 +9,37 @@ class ReflectorTest extends TestCase
 {
     public function testReflector()
     {
-        $class = ReflectorExampleClass::class;
+        $class = ReflectorClass::class;
         $reflection = new Reflector($class);
 
+        /* Test reflection instance. */
         $this->assertInstanceOf(
             \ReflectionClass::class,
             $reflection->reflection
         );
 
+        /* Test if the instance returned by inflector is an instance of ReflectorClass. */
         $this->assertInstanceOf(
             $class,
             $reflection->newInstance()
         );
 
+        /* Test if the ReflectorClass reads the injectable properties */
         $this->assertSame(
             'inject',
             $reflection->getInjectableProperties()[0]->name
+        );
+    }
+
+    public function testReflectorWithParams()
+    {
+        $class = ReflectorWithParamsClass::class;
+        $reflection = new Reflector($class);
+
+        /* Test new instance with arguments for the constructor */
+        $this->assertInstanceOf(
+            $class,
+            $reflection->newInstance([new InjectableClass()])
         );
     }
 }

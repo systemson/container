@@ -2,10 +2,10 @@
 
 namespace Amber\Container\Tests;
 
-class ReflectorExampleClass
+class ReflectorClass
 {
     /**
-     * @inject InjectableExampleClass
+     * @inject InjectableClass
      */
     public $inject;
 }
