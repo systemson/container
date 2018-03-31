@@ -2,21 +2,32 @@
 
 namespace Amber\Container;
 
+use Psr\Container\ContainerInterface;
+
 /**
- * Trait to handle the Container's binder.
+ * Class to handle the Container's binder.
  */
-trait Binder
+class Binder implements ContainerInterface
 {
+    use Validator;
+
+    public $map = [];
+
     /**
      * Bind an item to the Container's map by a unique key.
      *
      * @param string $key The unique item's key.
      * @param mixed  $key The value of the item.
      *
+     * @throws Amber\Container\InvalidArgumentException
+     *
      * @return bolean true
      */
-    public function bind(string $key, $value = null)
+    public function bind($key, $value = null)
     {
+        /* Throws an InvalidArgumentException on invalid type. */
+        $this->validate($key);
+
         $this->map[$key] = $value ?? $key;
 
         return true;
@@ -27,11 +38,33 @@ trait Binder
      *
      * @param string $key The unique item's key.
      *
+     * @throws Amber\Container\InvalidArgumentException
+     *
      * @return mixed The value of the item.
      */
     public function get($key)
     {
+        /* Throws an InvalidArgumentException on invalid type. */
+        $this->validate($key);
+
         return $this->map[$key] ?? null;
+    }
+
+    /**
+     * Checks for an item on the Container's map by its unique key.
+     *
+     * @param string $key The unique item's key.
+     *
+     * @throws Amber\Container\InvalidArgumentException
+     *
+     * @return boolean
+     */
+    public function has($key)
+    {
+        /* Throws an InvalidArgumentException on invalid type. */
+        $this->validate($key);
+
+        return isset($this->map[$key]) ?? false;
     }
 
     /**
@@ -43,6 +76,9 @@ trait Binder
      */
     public function unbind($key)
     {
+        /* Throws an InvalidArgumentException on invalid type. */
+        $this->validate($key);
+
         if (isset($this->map[$key])) {
             unset($this->map[$key]);
 
@@ -62,6 +98,8 @@ trait Binder
     public function bindMultiple(array $items)
     {
         foreach ($items as $key => $value) {
+
+            /* Throws an InvalidArgumentException on invalid type. */
             $this->bind($key, $value);
         }
 
@@ -78,6 +116,8 @@ trait Binder
     public function unbindMultiple(array $array)
     {
         foreach ($array as $key) {
+
+            /* Throws an InvalidArgumentException on invalid type. */
             $this->unbind($key);
         }
 
@@ -95,7 +135,7 @@ trait Binder
     public function getArguments($params = [], $arguments = [])
     {
         if (empty($params)) {
-            return;
+            return null;
         } elseif (!empty($arguments)) {
             return $arguments;
         }
@@ -124,7 +164,7 @@ trait Binder
     }
 
     /**
-     * Injects depedencies to an object.
+     * Injects dependencies to an object.
      *
      * @params object $object     The object to be injected.
      * @params array  $properties The injectable properties.

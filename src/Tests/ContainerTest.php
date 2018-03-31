@@ -2,14 +2,17 @@
 
 namespace Amber\Container\Tests;
 
-use Amber\Container\Container;
+use Amber\Container\Injector;
 use PHPUnit\Framework\TestCase;
 
 class ContainerTest extends TestCase
 {
-    public function testBinder()
+    /**
+     * @expectedException Amber\Container\InvalidArgumentException
+     */
+    public function testContainer()
     {
-        $container = new Container();
+        $container = new Injector();
 
         /* var for multiple binding */
         $key = 'value';
@@ -28,20 +31,27 @@ class ContainerTest extends TestCase
 
         /* Check if unbinds worked */
         $this->assertFalse($container->unbind('object'));
+        $this->assertFalse($container->has('object'));
 
-        /* Checks if the map key attribute returns value value */
+        /* Checks if the map has a key item */
+        $this->assertTrue($container->has('key'));
+
+        /* Checks if the map key key returns value value */
         $this->assertSame('value', $container->get('key'));
 
         /* Bind string [object => Amber\Container\Tests\DIExampleClass::class] */
-        $this->assertTrue($container->bind('object', InjectableExampleClass::class));
+        $this->assertTrue($container->bind('object', $class));
 
-        /* Checks if the map key attribute returns value value */
+        /* Checks if the map key object returns an instance of InjectableExampleClass */
         $this->assertSame(InjectableExampleClass::class, $container->get('object'));
 
-        /* */
+        /* Checks if the Container returns an instance of DIExampleClass */
         $this->assertInstanceOf(
             DIExampleClass::class,
             $example = $container->getInstanceOf(DIExampleClass::class)
         );
+
+        /* Checks for an invalid key type */
+        $container->get(1);
     }
 }

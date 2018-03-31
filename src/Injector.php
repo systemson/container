@@ -4,16 +4,10 @@ namespace Amber\Container;
 
 use Amber\Cache\Cache;
 
-class Container
+class Injector extends Binder
 {
-    use Binder;
-
-    protected $instance;
-
-    public $map = [];
-
     /**
-     * Get an instance of the class.
+     * Get an instance of the specified class.
      *
      * @param string $class     The class to be instantiated.
      * @param array  $arguments Optional. The arguments for the constructor.

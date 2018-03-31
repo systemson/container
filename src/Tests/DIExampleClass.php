@@ -5,6 +5,13 @@ namespace Amber\Container\Tests;
 class DIExampleClass
 {
     /**
+     * @inject Amber\Container\Tests\InjectableExampleClass::class
+     *
+     * @var string
+     */
+    public $inject;
+
+    /**
      * @var string
      */
     public $key;
