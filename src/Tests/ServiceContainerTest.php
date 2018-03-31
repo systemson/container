@@ -2,8 +2,8 @@
 
 namespace Amber\Container\Tests;
 
-use Amber\Container\ServiceContainer;
 use Amber\Container\Binder;
+use Amber\Container\ServiceContainer;
 use PHPUnit\Framework\TestCase;
 
 class ServiceContainerTest extends TestCase

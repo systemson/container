@@ -5,7 +5,7 @@ namespace Amber\Container;
 class ServiceContainer extends Binder
 {
     /**
-     * @var object $instance ServiceContainer Instance.
+     * @var object ServiceContainer Instance.
      */
     private static $instance;
 
@@ -24,7 +24,7 @@ class ServiceContainer extends Binder
     public static function getInstance()
     {
         if (!self::$instance instanceof self) {
-            self::$instance = new self;
+            self::$instance = new self();
         }
 
         return self::$instance;

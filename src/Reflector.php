@@ -10,28 +10,28 @@ class Reflector
     public $name;
 
     /**
-     * @var object $reflection The ReflectionClass instance of the provided class.
+     * @var object The ReflectionClass instance of the provided class.
      */
     public $reflection;
 
     /**
-     * @var array $properties An array of ReflectionProperty instances from the constructor properties.
+     * @var array An array of ReflectionProperty instances from the constructor properties.
      */
     public $properties;
 
     /**
-     * @var array $injectables An array of ReflectionProperty instances for the injectable properties.
+     * @var array An array of ReflectionProperty instances for the injectable properties.
      */
     public $injectables;
 
     /**
-     * @var array $parameters An array of the parameters for the constructor.
+     * @var array An array of the parameters for the constructor.
      */
     public $parameters;
 
     /**
-     * @var object $constructor An object containing the ReflectionMethod instance and the parameters
-     *                          for the constructor.
+     * @var object An object containing the ReflectionMethod instance and the parameters
+     *             for the constructor.
      */
     public $constructor;
 
