@@ -80,6 +80,10 @@ class Reflector
      */
     public function getInjectableProperties()
     {
+        if ($this->injectables !== null) {
+            return $this->injectables;
+        }
+
         foreach ($this->properties as $property) {
             if (preg_match(
                 "'@inject\s(.*?)[\s\r\n|\r|\n]'",
@@ -88,10 +92,10 @@ class Reflector
             )) {
                 $property->inject = $match[1];
 
-                $injectables[] = $property;
+                $this->injectables[] = $property;
             }
         }
 
-        return $injectables ?? [];
+        return $this->injectables ?? [];
     }
 }

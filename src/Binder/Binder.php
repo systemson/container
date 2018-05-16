@@ -1,7 +1,9 @@
 <?php
 
-namespace Amber\Container;
+namespace Amber\Container\Binder;
 
+use Amber\Cache\Exception\InvalidArgumentException;
+use Amber\Common\Validator;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -19,14 +21,16 @@ class Binder implements ContainerInterface
      * @param string $key The unique item's key.
      * @param mixed  $key The value of the item.
      *
-     * @throws Amber\Container\InvalidArgumentException
+     * @throws Amber\Container\Exception\InvalidArgumentException
      *
      * @return bolean true
      */
     public function bind($key, $value = null)
     {
         /* Throws an InvalidArgumentException on invalid type. */
-        $this->validate($key);
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Key argument must be a non empty string');
+        }
 
         $this->map[$key] = $value ?? $key;
 
@@ -45,7 +49,9 @@ class Binder implements ContainerInterface
     public function get($key)
     {
         /* Throws an InvalidArgumentException on invalid type. */
-        $this->validate($key);
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Key argument must be a non empty string');
+        }
 
         return $this->map[$key] ?? null;
     }
@@ -62,7 +68,9 @@ class Binder implements ContainerInterface
     public function has($key)
     {
         /* Throws an InvalidArgumentException on invalid type. */
-        $this->validate($key);
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Key argument must be a non empty string');
+        }
 
         return isset($this->map[$key]) ?? false;
     }
@@ -77,7 +85,9 @@ class Binder implements ContainerInterface
     public function unbind($key)
     {
         /* Throws an InvalidArgumentException on invalid type. */
-        $this->validate($key);
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Key argument must be a non empty string');
+        }
 
         if (isset($this->map[$key])) {
             unset($this->map[$key]);

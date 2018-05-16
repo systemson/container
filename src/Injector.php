@@ -3,9 +3,19 @@
 namespace Amber\Container;
 
 use Amber\Cache\Cache;
+use Amber\Container\Binder\Binder;
 
 class Injector extends Binder
 {
+    /**
+     * @var Cache driver.
+     */
+    public $cacher;
+
+    public function __construct()
+    {
+    }
+
     /**
      * Get an instance of the specified class.
      *
@@ -16,32 +26,32 @@ class Injector extends Binder
      *
      * @return object The instance of the class
      */
-    public function getInstanceOf(string $name, array $arguments = [])
+    public function getInstanceOf(string $class, array $arguments = [])
     {
         /* Check if the class exists */
-        if (!class_exists($name)) {
-            throw new ContainerException("Class {$name} does not exists.");
+        if (!class_exists($class)) {
+            throw new ContainerException("Class {$class} does not exists.");
         }
 
         /* Check the instance of the class is in the cache */
-        if (Cache::has($name)) {
-            return Cache::get($name);
+        if (Cache::has($class)) {
+            return Cache::get($class);
         }
 
         /* Get the class reflection */
-        $class = new Reflector($name);
+        $reflector = new Reflector($class);
 
         /* Get class constructor arguments */
-        $arguments = $this->getArguments($class->parameters, $arguments);
+        $arguments = $this->getArguments($reflector->parameters, $arguments);
 
         /* Instantiate the class */
-        $instance = $class->newInstance($arguments);
+        $instance = $reflector->newInstance($arguments);
 
         /* Inject dependencies */
-        $instance = $this->inject($instance, $class->injectables);
+        $instance = $this->inject($instance, $reflector->injectables);
 
-        if ($instance instanceof $name) {
-            Cache::set($name, $instance, 15);
+        if ($instance instanceof $class) {
+            Cache::set($class, $instance, 15);
 
             return $instance;
         }

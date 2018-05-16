@@ -2,7 +2,7 @@
 
 namespace Amber\Container\Tests;
 
-use Amber\Container\Binder;
+use Amber\Container\Binder\Binder;
 use Amber\Container\ServiceContainer;
 use PHPUnit\Framework\TestCase;
 

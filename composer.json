@@ -24,13 +24,18 @@
         {
             "type": "vcs",
             "url": "https://github.com/systemson/Cache"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/systemson/Common"
         }
     ],
     "require": {
         "php": ">=7.0.0",
+        "psr/container": "^1.0",
         "amber/filesystem": "dev-master",
         "amber/cache": "dev-master",
-        "psr/container": "^1.0"
+        "amber/common": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.5"

@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 class InjectorTest extends TestCase
 {
     /**
-     * @expectedException Amber\Container\InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testBinder()
     {
@@ -35,10 +35,10 @@ class InjectorTest extends TestCase
         $this->assertFalse($container->unbind('object'));
         $this->assertFalse($container->has('object'));
 
-        /* Test if the map has a key item */
+        /* Test if the map has a "key" item */
         $this->assertTrue($container->has('key'));
 
-        /* Test if the map key key returns value value */
+        /* Test if the map key "key" returns value "value" */
         $this->assertSame('value', $container->get('key'));
 
         /* Bind string [object => Amber\Container\Tests\InjectableClass::class] */
