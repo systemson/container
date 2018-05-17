@@ -13,7 +13,8 @@ trait Cacher
         $this->cache = $this->getInstanceOf(Cache::class, [$driver]);
     }
 
-    protected function cache() {
+    protected function cache()
+    {
         return $this->cache;
     }
 }

@@ -3,7 +3,6 @@
 namespace Amber\Container;
 
 use Amber\Common\Validator;
-use Amber\Container\Reflector;
 
 class Service
 {
@@ -39,7 +38,6 @@ class Service
     public function instance($arguments = [])
     {
         if ($this->isCallable($this->value)) {
-
             return $this->reflection()->newInstance($arguments);
         }
     }
