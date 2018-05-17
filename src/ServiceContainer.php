@@ -2,7 +2,7 @@
 
 namespace Amber\Container;
 
-use Amber\Container\Binder\Binder;
+use Amber\Container\Container\Binder;
 
 class ServiceContainer extends Binder
 {

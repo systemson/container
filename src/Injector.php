@@ -3,7 +3,8 @@
 namespace Amber\Container;
 
 use Amber\Cache\Cache;
-use Amber\Container\Binder\Binder;
+use Amber\Container\Container\Binder;
+use Amber\Container\Exception\ContainerException;
 
 class Injector extends Binder
 {
@@ -38,17 +39,8 @@ class Injector extends Binder
             return Cache::get($class);
         }
 
-        /* Get the class reflection */
-        $reflector = new Reflector($class);
-
-        /* Get class constructor arguments */
-        $arguments = $this->getArguments($reflector->parameters, $arguments);
-
         /* Instantiate the class */
-        $instance = $reflector->newInstance($arguments);
-
-        /* Inject dependencies */
-        $instance = $this->inject($instance, $reflector->injectables);
+        $instance = $this->get($class);
 
         if ($instance instanceof $class) {
             Cache::set($class, $instance, 15);
