@@ -19,10 +19,6 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/systemson/Filesystem"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/systemson/Common"
         },
         {
