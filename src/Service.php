@@ -16,9 +16,9 @@ class Service
     protected $instance;
     protected $reflection;
 
-    public function __construct($value = null)
+    public function __construct($value)
     {
-        $this->value = $value ?? $key;
+        $this->value = $value;
         $this->type = $this->getType($value);
     }
 
@@ -28,7 +28,7 @@ class Service
             return $this->reflection;
         }
 
-        return $this->reflection = new Reflector($value);
+        return $this->reflection = new Reflector($this->value);
     }
 
     /**

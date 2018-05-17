@@ -27,7 +27,7 @@ class Injector extends Binder
      *
      * @return object The instance of the class
      */
-    public function getInstanceOf(string $class, array $arguments = [])
+    public function mount(string $class, array $arguments = [])
     {
         /* Check if the class exists */
         if (!class_exists($class)) {

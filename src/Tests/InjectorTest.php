@@ -42,41 +42,14 @@ class InjectorTest extends TestCase
         $this->assertTrue($container->bind('object', $class));
 
         /* Test if the map key object returns an instance of InjectableClass */
-        $this->assertSame(InjectableClass::class, $container->get('object'));
+        $this->assertInstanceOf(InjectableClass::class, $container->get('object'));
+    }
 
-        /* Test if the Container returns an instance of ReceiverClass */
-        /*$this->assertInstanceOf(
-            ReceiverClass::class,
-            $receiver = $container->getInstanceOf(ReceiverClass::class)
-        );*/
+    public function testInjector()
+    {
+        $container = new Injector();
+        $container->bind(InjectableClass::class);
 
-        /* Test if returns null */
-        $this->assertNull($container->getArguments());
-        $this->assertNull($container->getArguments([]));
-        $this->assertNull($container->getArguments([], []));
-
-        /* Test if returns the arguments */
-        $args = [
-            'key'   => $key,
-            'class' => $class,
-        ];
-
-        $this->assertEquals($args, $container->getArguments(
-            $reflector->parameters,
-            $args
-        ));
-
-        /* Test if returned arguments match the arguments needed for the instantiation */
-        //$this->assertEquals([$key, $object], $container->getArguments($reflector->parameters));
-
-        /* Test if the inject property was nulled */
-        //$receiver->injected = null;
-        //$this->assertNull($receiver->injected);
-
-        /* Test if injection returns the same object */
-        //$this->assertSame($receiver, $container->inject($receiver, $reflector->injectables));
-
-        /* Test if injection works */
-        //$this->assertInstanceOf($class, $receiver->injected);
+        $this->assertInstanceOf(InjectableClass::class, $container->mount(InjectableClass::class));
     }
 }
