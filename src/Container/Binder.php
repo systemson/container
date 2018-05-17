@@ -2,9 +2,9 @@
 
 namespace Amber\Container\Container;
 
+use Amber\Common\Validator;
 use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Exception\NotFoundException;
-use Amber\Common\Validator;
 use Amber\Container\Service;
 use Psr\Container\ContainerInterface;
 
@@ -57,15 +57,11 @@ abstract class Binder implements ContainerInterface
         }
 
         if ($this->has($key)) {
-
             $service = $this->locate($key);
 
             if (!$this->isClass($service->value)) {
-
                 return $service->value;
-
             } else {
-
                 $arguments = $this->getArguments($service->parameters());
 
                 return $service->instance($arguments);

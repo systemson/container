@@ -2,9 +2,6 @@
 
 namespace Amber\Container\Container;
 
-use Amber\Container\Exception\InvalidArgumentException;
-use Amber\Common\Validator;
-
 trait Injector
 {
     /**
