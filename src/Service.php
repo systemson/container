@@ -10,9 +10,9 @@ class Service
 
     public $value;
     public $type;
+    public $arguments;
+    public $is_singleton = false;
     protected $parameters;
-    protected $arguments;
-    protected $singleton = false;
     protected $instance;
     protected $reflection;
 
@@ -40,19 +40,20 @@ class Service
      */
     public function instance($arguments = [])
     {
-        if ($this->singleton && $this->instance instanceof $this->value) {
+        if ($this->instance instanceof $this->value) {
             return $this->instance;
         }
 
-        if ($this->isCallable($this->value)) {
+        if ($this->isClass($this->value)) {
+            if ($this->is_singleton) {
+                return $this->instance = $this->reflection()->newInstance($arguments);
+            }
             return $this->reflection()->newInstance($arguments);
         }
     }
 
     /**
-     * Instantiate the reflected class.
-     *
-     * @param array $arguments The arguments for the class constructor.
+     * Gets the constructor paramaters for the current class.
      *
      * @return object The instance of the reflected class
      */
@@ -62,6 +63,6 @@ class Service
             return $this->parameters;
         }
 
-        return $this->reflection()->parameters;
+        return $this->parameters = $this->reflection()->parameters;
     }
 }

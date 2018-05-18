@@ -13,7 +13,7 @@ use Psr\Container\ContainerInterface;
  */
 abstract class Binder implements ContainerInterface
 {
-    use Finder, Injector, Validator;
+    use Finder, Validator;
 
     protected $services = [];
 
@@ -27,7 +27,7 @@ abstract class Binder implements ContainerInterface
      *
      * @return bolean true
      */
-    public function bind($key, $value = null)
+    final public function bind($key, $value = null)
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (!$this->isString($key)) {
@@ -49,7 +49,7 @@ abstract class Binder implements ContainerInterface
      *
      * @return mixed The value of the item.
      */
-    public function get($key)
+    final public function get($key)
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (!$this->isString($key)) {
@@ -57,14 +57,21 @@ abstract class Binder implements ContainerInterface
         }
 
         if ($this->has($key)) {
+
+            /* Retrieves the service from the map. */
             $service = $this->locate($key);
 
             if (!$this->isClass($service->value)) {
-                return $service->value;
-            } else {
-                $arguments = $this->getArguments($service->parameters());
 
-                return $service->instance($arguments);
+                return $service->value;
+
+            } else {
+
+                if ($service->arguments != null) {
+                    $service->arguments = $this->getArguments($service->parameters());
+                }
+
+                return $service->instance($service->arguments);
             }
         }
 
@@ -72,7 +79,7 @@ abstract class Binder implements ContainerInterface
     }
 
     /**
-     * Checks for an item on the Container's map by its unique key.
+     * Checks for the existance of an item on the Container's map by its unique key.
      *
      * @param string $key The unique item's key.
      *
@@ -80,7 +87,7 @@ abstract class Binder implements ContainerInterface
      *
      * @return bool
      */
-    public function has($key)
+    final public function has($key)
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (!$this->isString($key)) {
@@ -91,15 +98,15 @@ abstract class Binder implements ContainerInterface
     }
 
     /**
-     * Removes an item from the Container's map by its unique key.
+     * Unbind an item from the Container's map by its unique key.
      *
      * @param string $key The unique item's key.
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
      *
-     * @return bolean true on succes, false on failure.
+     * @return bool true on succes, false on failure.
      */
-    public function unbind($key)
+    final public function unbind($key)
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (!$this->isString($key)) {
@@ -118,11 +125,11 @@ abstract class Binder implements ContainerInterface
     /**
      * Binds multiple items to the Container's map by their unique keys.
      *
-     * @param array $items The array of items to add.
+     * @param array $items An array of key => value items to bind.
      *
-     * @return bolean true
+     * @return bool true
      */
-    public function bindMultiple(array $items)
+    final public function bindMultiple(array $items)
     {
         foreach ($items as $key => $value) {
             $this->bind($key, $value);
@@ -132,13 +139,29 @@ abstract class Binder implements ContainerInterface
     }
 
     /**
+     * Gets multiple items from the Container's map by their unique keys.
+     *
+     * @param array $items An array of items to get.
+     *
+     * @return bool true
+     */
+    final public function getMultiple(array $items)
+    {
+        foreach ($items as $key) {
+            $services[] = $this->get($key);
+        }
+
+        return $services;
+    }
+
+    /**
      * Removes multiple items from the Container's map by their unique keys.
      *
-     * @param array $items The array of items to remove.
+     * @param array $items An array of items to remove.
      *
-     * @return bolean true
+     * @return bool true
      */
-    public function unbindMultiple(array $array)
+    final public function unbindMultiple(array $array)
     {
         foreach ($array as $key) {
             $this->unbind($key);

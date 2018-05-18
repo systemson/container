@@ -2,6 +2,8 @@
 
 namespace Amber\Container\Tests;
 
+use Amber\Cache\Cache;
+use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Injector;
 use Amber\Container\Reflector;
 use PHPUnit\Framework\TestCase;
@@ -12,44 +14,75 @@ class InjectorTest extends TestCase
     {
         $container = new Injector();
 
-        /* vars for binding */
-        $key = 'value';
+        /* Variables */
+        $key = 'key';
+        $string = 'string';
+        $number = 1;
+        $array = [1,2,3,4,5];
         $class = InjectableClass::class;
         $object = new $class();
         $reflector = new Reflector(ReceiverClass::class);
 
-        /* Multiple binding */
-        $this->assertTrue($container->bindMultiple([
-            'key'    => $key,
-            'class'  => $class,
-            'object' => $object,
-        ]));
+        /* Test strings */
+        $this->assertTrue($container->bind($key, $string));
+        $this->assertTrue($container->has($key));
+        $this->assertSame($string, $container->get($key));
+        $this->assertTrue($container->unbind($key));
+        $this->assertFalse($container->has($key));
 
-        /* Unbind */
-        $this->assertTrue($container->unbindMultiple(['object']));
+        /* Test numbers */
+        $this->assertTrue($container->bind($key, $number));
+        $this->assertTrue($container->has($key));
+        $this->assertSame($number, $container->get($key));
+        $this->assertTrue($container->unbind($key));
+        $this->assertFalse($container->has($key));
 
-        /* Test if unbinds worked */
-        $this->assertFalse($container->unbind('object'));
-        $this->assertFalse($container->has('object'));
+        /* Test arrays */
+        $this->assertTrue($container->bind($key, $array));
+        $this->assertTrue($container->has($key));
+        $this->assertSame($array, $container->get($key));
+        $this->assertTrue($container->unbind($key));
+        $this->assertFalse($container->has($key));
 
-        /* Test if the map has a "key" item */
-        $this->assertTrue($container->has('key'));
+        /* Test objects */
+        $this->assertTrue($container->bind($key, $object));
+        $this->assertTrue($container->has($key));
+        $this->assertSame($object, $container->get($key));
+        $this->assertTrue($container->unbind($key));
+        $this->assertFalse($container->has($key));
 
-        /* Test if the map key "key" returns value "value" */
-        $this->assertSame('value', $container->get('key'));
+        /* Test classes */
+        $this->assertTrue($container->bind($class));
+        $this->assertTrue($container->has($class));
+        $this->assertInstanceOf($class, $container->get($class));
+        $this->assertTrue($container->unbind($class));
+        $this->assertFalse($container->has($class));
 
-        /* Bind string [object => Amber\Container\Tests\InjectableClass::class] */
-        $this->assertTrue($container->bind('object', $class));
+        Cache::clear();
 
-        /* Test if the map key object returns an instance of InjectableClass */
-        $this->assertInstanceOf(InjectableClass::class, $container->get('object'));
+        return $container;
     }
 
-    public function testInjector()
+    /**
+     * @depends testBinder
+     */
+    public function testInjector($container)
     {
-        $container = new Injector();
-        $container->bind(InjectableClass::class);
+        $class = InjectableClass::class;
 
-        $this->assertInstanceOf(InjectableClass::class, $container->mount(InjectableClass::class));
+        /* Test classes */
+        $this->assertTrue($container->bind($class));
+        $this->assertTrue($container->has($class));
+        $this->assertInstanceOf($class, $container->mount($class));
+        $this->assertInstanceOf($class, $container->mount($class));
+        $this->assertTrue($container->unbind($class));
+        $this->assertFalse($container->has($class));
+
+        Cache::clear();
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $container->mount(UnknownClass::class);
+
     }
 }

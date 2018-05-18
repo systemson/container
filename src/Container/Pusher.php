@@ -2,7 +2,7 @@
 
 namespace Amber\Container\Container;
 
-trait Injector
+trait Pusher
 {
     /**
      * Injects dependencies to an object.

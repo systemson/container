@@ -23,10 +23,10 @@ trait Finder
     }
 
     /**
-     * Get the arguments for the instantiation of the class.
+     * Gets an item from the Container's map by its unique key.
      *
-     * @param array $params    The params needed by the constructor.
-     * @param array $arguments The arguments previously passed to the container.
+     * @param array $params    Optional. The params needed by the constructor.
+     * @param array $arguments Optional. The arguments previously passed to the container.
      *
      * @return array The arguments for the class constructor.
      */
@@ -46,7 +46,7 @@ trait Finder
 
             /* Checks if the value is a class to instantiate it */
             if (class_exists($value)) {
-                $arguments[] = $this->getInstanceOf($value);
+                $arguments[] = $this->get($value);
 
             /* Checks if the value is not null to return it */
             } elseif ($value !== null) {
@@ -54,7 +54,7 @@ trait Finder
 
             /* Checks if the param is a class to instantiate it */
             } elseif ($param->getClass() && class_exists($param->getClass()->name)) {
-                $arguments[] = $this->getInstanceOf($param->getClass()->name);
+                $arguments[] = $this->get($param->getClass()->name);
             }
         }
 

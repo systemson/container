@@ -3,18 +3,29 @@
 namespace Amber\Container;
 
 use Amber\Cache\Cache;
+use Amber\Container\Container\Pusher;
 use Amber\Container\Container\Binder;
-use Amber\Container\Exception\ContainerException;
+use Amber\Container\Exception\InvalidArgumentException;
 
 class Injector extends Binder
 {
+    use Pusher;
+
+    /**
+     * @var Container's configuration.
+     */
+    public $config;
+
     /**
      * @var Cache driver.
      */
     public $cacher;
 
-    public function __construct()
+    const CACHE_DRIVER = 'file';
+
+    public function __construct($config = [])
     {
+        $this->config = $config;
     }
 
     /**
@@ -30,8 +41,8 @@ class Injector extends Binder
     public function mount(string $class, array $arguments = [])
     {
         /* Check if the class exists */
-        if (!class_exists($class)) {
-            throw new ContainerException("Class {$class} does not exists.");
+        if (!$this->isClass($class)) {
+            throw new InvalidArgumentException("Class {$class} does not exists.");
         }
 
         /* Check the instance of the class is in the cache */
@@ -42,10 +53,8 @@ class Injector extends Binder
         /* Instantiate the class */
         $instance = $this->get($class);
 
-        if ($instance instanceof $class) {
-            Cache::set($class, $instance, 15);
+        Cache::set($class, $instance, 15);
 
-            return $instance;
-        }
+        return $instance;
     }
 }
