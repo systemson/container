@@ -4,10 +4,9 @@ namespace Amber\Container\Tests;
 
 use Amber\Cache\Cache;
 use Amber\Container\Exception\InvalidArgumentException;
-use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Injector;
-use Amber\Container\Tests\Example\Model;
 use Amber\Container\Tests\Example\Controller;
+use Amber\Container\Tests\Example\Model;
 use PHPUnit\Framework\TestCase;
 
 class InjectorTest extends TestCase
@@ -38,13 +37,12 @@ class InjectorTest extends TestCase
         $this->assertTrue($container->unbind($model));
         $this->assertTrue($container->unbind($controller));
 
-
         $this->assertFalse($container->has($model));
         $this->assertFalse($container->has($controller));
 
         Cache::clear();
 
-        return $container; 
+        return $container;
     }
 
     /**

@@ -2,14 +2,13 @@
 
 namespace Amber\Container\Tests;
 
-use Amber\Container\Exception\ContainerException;
 use Amber\Container\Injector;
-use Amber\Container\Tests\Example\View;
-use Amber\Container\Tests\Example\Model;
 use Amber\Container\Tests\Example\Controller;
+use Amber\Container\Tests\Example\Model;
+use Amber\Container\Tests\Example\View;
 use PHPUnit\Framework\TestCase;
 
-class PuserTest extends TestCase
+class PusherTest extends TestCase
 {
     public function testPush()
     {
@@ -36,7 +35,7 @@ class PuserTest extends TestCase
     }
 
     /**
-     * @depends testPush 
+     * @depends testPush
      */
     public function testInject($container)
     {

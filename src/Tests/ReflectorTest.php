@@ -4,7 +4,6 @@ namespace Amber\Container\Tests;
 
 use Amber\Container\Reflector;
 use Amber\Container\Tests\Example\InjectableClass;
-use Amber\Container\Tests\Example\ReceiverClass;
 use Amber\Container\Tests\Example\ReflectorClass;
 use Amber\Container\Tests\Example\ReflectorWithParamsClass;
 use PHPUnit\Framework\TestCase;
