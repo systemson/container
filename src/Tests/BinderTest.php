@@ -19,7 +19,7 @@ class BinderTest extends TestCase
         $key = 'key';
         $string = 'string';
         $number = 1;
-        $array = [1,2,3,4,5];
+        $array = [1, 2, 3, 4, 5];
         $class = Model::class;
         $object = new $class();
 
@@ -73,15 +73,15 @@ class BinderTest extends TestCase
         $key = 'key';
         $string = 'string';
 
-        for($x=0; $x<5; $x++) {
-            $multiple[$key.$x] = $string.$x; 
+        for ($x = 0; $x < 5; $x++) {
+            $multiple[$key.$x] = $string.$x;
         }
 
         /* Test strings */
         $this->assertTrue($container->bindMultiple($multiple));
         $this->assertSame(array_values($multiple), $container->getMultiple(array_keys($multiple)));
         $this->assertTrue($container->unbindMultiple(array_keys($multiple)));
-        $this->assertFalse($container->has($multiple[$key."0"]));
+        $this->assertFalse($container->has($multiple[$key.'0']));
 
         Cache::clear();
     }
@@ -141,4 +141,3 @@ class BinderTest extends TestCase
         $container->unbind(1);
     }
 }
-

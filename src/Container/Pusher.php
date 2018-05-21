@@ -35,7 +35,6 @@ trait Pusher
     public function push($instance, array $properties = [])
     {
         foreach ($properties as $key => $value) {
-
             if (property_exists($instance, $key)) {
                 $instance->{$key} = $this->get($value);
             }

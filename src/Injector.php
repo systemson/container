@@ -3,8 +3,8 @@
 namespace Amber\Container;
 
 use Amber\Cache\Cache;
-use Amber\Container\Container\Pusher;
 use Amber\Container\Container\Binder;
+use Amber\Container\Container\Pusher;
 use Amber\Container\Exception\InvalidArgumentException;
 
 class Injector extends Binder

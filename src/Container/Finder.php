@@ -2,8 +2,6 @@
 
 namespace Amber\Container\Container;
 
-use Amber\Container\Exception\NotFoundException;
-
 trait Finder
 {
     /**
