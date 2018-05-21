@@ -10,7 +10,7 @@ class Service
 
     public $value;
     public $type;
-    public $arguments;
+    public $arguments = [];
     public $is_singleton = false;
     protected $parameters;
     protected $instance;
@@ -44,12 +44,17 @@ class Service
             return $this->instance;
         }
 
-        if ($this->isClass($this->value)) {
-            if ($this->is_singleton) {
-                return $this->instance = $this->reflection()->newInstance($arguments);
-            }
-            return $this->reflection()->newInstance($arguments);
+        if (!$this->isClass($this->value)) {
+            return;
         }
+
+        $instance = $this->reflection()->newInstance($arguments);
+
+        if ($this->is_singleton) {
+            return $this->instance = $instance;
+        }
+
+        return  $instance;
     }
 
     /**

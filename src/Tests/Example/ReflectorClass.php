@@ -1,6 +1,6 @@
 <?php
 
-namespace Amber\Container\Tests;
+namespace Amber\Container\Tests\Example;
 
 class ReflectorClass
 {

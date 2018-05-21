@@ -56,26 +56,22 @@ abstract class Binder implements ContainerInterface
             throw new InvalidArgumentException('Key argument must be a non empty string');
         }
 
-        if ($this->has($key)) {
-
-            /* Retrieves the service from the map. */
-            $service = $this->locate($key);
-
-            if (!$this->isClass($service->value)) {
-
-                return $service->value;
-
-            } else {
-
-                if ($service->arguments != null) {
-                    $service->arguments = $this->getArguments($service->parameters());
-                }
-
-                return $service->instance($service->arguments);
-            }
+        if (!$this->has($key)) {
+            throw new NotFoundException("No entry was found in for key {$key}");
         }
 
-        throw new NotFoundException("No entry was found in for key {$key}");
+        /* Retrieves the service from the map. */
+        $service = $this->locate($key);
+
+        if (!$this->isClass($service->value)) {
+            return $service->value;
+        }
+
+        if (empty($service->arguments)) {
+            $service->arguments = $this->getArguments($service->parameters());
+        }
+
+        return $service->instance($service->arguments);
     }
 
     /**
@@ -94,7 +90,7 @@ abstract class Binder implements ContainerInterface
             throw new InvalidArgumentException('Key argument must be a non empty string');
         }
 
-        return isset($this->services[$key]) ?? false;
+        return isset($this->services[$key]);
     }
 
     /**

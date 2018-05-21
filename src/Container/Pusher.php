@@ -8,26 +8,39 @@ trait Pusher
      * Injects dependencies to an object.
      *
      * @params object $object     The object to be injected.
-     * @params array  $properties The injectable properties.
      *
      * @return object The object already injected.
      */
-    public function inject($object, array $properties = [])
+    public function inject($instance)
     {
+        $service = $this->locate(get_class($instance));
+
+        $properties = $service->reflection()->injectables;
+
         foreach ($properties as $property) {
-            if ($object instanceof $property->class) {
-                if ($this->get($property->name)) {
-                    $object->{$property->name} = $this->get($property->name);
-                } elseif (class_exists($property->inject)) {
-                    $object->{$property->name} = $this->getInstanceOf($property->inject);
-                } else {
-                    throw new ContainerException("Class {$property->inject} does not exists.");
-                }
-            } else {
-                throw new ContainerException("Property {$property->inject} does not belongs to {$property->class}.");
+            $instance->{$property->name} = $this->get($property->inject);
+        }
+
+        return $instance;
+    }
+
+    /**
+     * Injects dependencies to an object.
+     *
+     * @params object $instance     The object to be injected.
+     * @params array  $properties   An key-value array of properties to inject into the object.
+     *
+     * @return object The object already injected.
+     */
+    public function push($instance, array $properties = [])
+    {
+        foreach ($properties as $key => $value) {
+
+            if (property_exists($instance, $key)) {
+                $instance->{$key} = $this->get($value);
             }
         }
 
-        return $object;
+        return $instance;
     }
 }
