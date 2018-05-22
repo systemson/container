@@ -4,7 +4,6 @@ namespace Amber\Container\Container;
 
 use Amber\Common\Validator;
 use Amber\Container\Exception\InvalidArgumentException;
-use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Service\Service;
 use Psr\Container\ContainerInterface;
 
@@ -167,12 +166,12 @@ abstract class Binder implements ContainerInterface
      *
      * @return object The instance of the class
      */
-     protected function instanciate(Service $service, $arguments = [])
-     {
+    protected function instanciate(Service $service, $arguments = [])
+    {
         if (empty($service->arguments)) {
             $service->setArguments($this->getArguments($service, $arguments));
         }
 
         return $service->getInstance($service->arguments);
-     }
+    }
 }
