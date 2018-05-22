@@ -27,7 +27,7 @@ class InjectorTest extends TestCase
             $controller,
             $container->mount($controller, [
                 1,
-                $container->get($model)
+                $container->get($model),
             ])
         );
         $this->assertInstanceOf($controller, $container->mount($controller));

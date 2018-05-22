@@ -56,7 +56,7 @@ class Service
     protected $reflection;
 
     /**
-     * @param string $key The name of the service.
+     * @param string $key   The name of the service.
      * @param string $Value The value of the service.
      */
     public function __construct($key, $value)
@@ -136,6 +136,7 @@ class Service
         if ($this->singleton == true) {
             return $this->instance = $instance;
         }
+
         return  $instance;
     }
 

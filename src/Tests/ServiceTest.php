@@ -2,7 +2,6 @@
 
 namespace Amber\Container\Tests;
 
-use Amber\Cache\Cache;
 use Amber\Container\Exception\ContainerException;
 use Amber\Container\Injector;
 use Amber\Container\Tests\Example\Controller;
@@ -21,7 +20,7 @@ class ServiceTest extends TestCase
         $controller = Controller::class;
         $arguments = [
             1,
-            new Model()
+            new Model(),
         ];
 
         /* Test classes */
@@ -62,7 +61,6 @@ class ServiceTest extends TestCase
      */
     public function testGetParametersException($service)
     {
-
         $this->expectException(ContainerException::class);
 
         $service->getParameters();
@@ -73,7 +71,6 @@ class ServiceTest extends TestCase
      */
     public function testGetInjectablesException($service)
     {
-
         $this->expectException(ContainerException::class);
 
         $service->getInjectables();
@@ -84,7 +81,6 @@ class ServiceTest extends TestCase
      */
     public function testGetInstanceException($service)
     {
-
         $this->expectException(ContainerException::class);
 
         $service->getInstance();
@@ -95,7 +91,6 @@ class ServiceTest extends TestCase
      */
     public function testSingletonException($service)
     {
-
         $this->expectException(ContainerException::class);
 
         $service->singleton(true);
@@ -106,7 +101,6 @@ class ServiceTest extends TestCase
      */
     public function testSetArgumentsException($service)
     {
-
         $this->expectException(ContainerException::class);
 
         $service->setArguments([]);

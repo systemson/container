@@ -34,7 +34,7 @@ trait Finder
      * @return array The arguments for the class constructor.
      */
     protected function getArguments(Service $service, array $arguments = [])
-    { 
+    {
         if (!empty($arguments)) {
             return $arguments;
         }
