@@ -29,7 +29,7 @@ class Injector extends Binder
     }
 
     /**
-     * Get an instance of the specified class.
+     * Gets an instance of the specified class, and stores it.
      *
      * @param string $class     The class to be instantiated.
      * @param array  $arguments Optional. The arguments for the constructor.
@@ -50,8 +50,10 @@ class Injector extends Binder
             return Cache::get($class);
         }
 
-        /* Instantiate the class */
-        $instance = $this->get($class);
+        $service = $this->locate($class)->singleton(true);
+
+        /* Get and instance of the class */
+        $instance = $this->instanciate($service, $arguments);
 
         Cache::set($class, $instance, 15);
 

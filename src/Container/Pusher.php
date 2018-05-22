@@ -5,7 +5,7 @@ namespace Amber\Container\Container;
 trait Pusher
 {
     /**
-     * Injects dependencies to an object.
+     * Injects dependencies to a service.
      *
      * @params object $object     The object to be injected.
      *
@@ -15,9 +15,7 @@ trait Pusher
     {
         $service = $this->locate(get_class($instance));
 
-        $properties = $service->reflection()->injectables;
-
-        foreach ($properties as $property) {
+        foreach ($service->getInjectables() as $property) {
             $instance->{$property->name} = $this->get($property->inject);
         }
 

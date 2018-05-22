@@ -30,7 +30,13 @@ class ReflectorTest extends TestCase
         /* Test if the ReflectorClass reads the injectable properties */
         $this->assertSame(
             'inject',
-            $reflection->getInjectableProperties()[0]->name
+            $reflection->getInjectables()[0]->name
+        );
+
+        /* Test that the injectable property prevents from being readed twice. */
+        $this->assertSame(
+            $reflection->getInjectables(),
+            $reflection->getInjectables()
         );
     }
 

@@ -20,14 +20,14 @@ class Reflector
     public $properties;
 
     /**
-     * @var array An array of ReflectionProperty instances for the injectable properties.
-     */
-    public $injectables;
-
-    /**
      * @var array An array of the parameters for the constructor.
      */
     public $parameters;
+
+    /**
+     * @var array An array of ReflectionProperty instances for the injectable properties.
+     */
+    protected $injectables;
 
     /**
      * @var object An object containing the ReflectionMethod instance and the parameters
@@ -47,7 +47,6 @@ class Reflector
         $this->name = $class;
         $this->reflection = $reflection;
         $this->properties = $reflection->getProperties();
-        $this->injectables = $this->getInjectableProperties();
         $this->parameters = $params;
         $this->constructor = (object) [
             'reflection' => $constructor,
@@ -78,7 +77,7 @@ class Reflector
      *
      * @return array An array of the injectable properties.
      */
-    public function getInjectableProperties()
+    public function getInjectables()
     {
         if ($this->injectables !== null) {
             return $this->injectables;

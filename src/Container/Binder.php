@@ -5,7 +5,7 @@ namespace Amber\Container\Container;
 use Amber\Common\Validator;
 use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Exception\NotFoundException;
-use Amber\Container\Service;
+use Amber\Container\Service\Service;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -34,7 +34,7 @@ abstract class Binder implements ContainerInterface
             throw new InvalidArgumentException('Key argument must be a non empty string');
         }
 
-        $this->services[$key] = new Service($value ?? $key);
+        $this->services[$key] = new Service($key, $value ?? $key);
 
         return true;
     }
@@ -45,7 +45,6 @@ abstract class Binder implements ContainerInterface
      * @param string $key The unique item's key.
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
-     * @throws Amber\Container\Exception\NotFoundException
      *
      * @return mixed The value of the item.
      */
@@ -56,10 +55,6 @@ abstract class Binder implements ContainerInterface
             throw new InvalidArgumentException('Key argument must be a non empty string');
         }
 
-        if (!$this->has($key)) {
-            throw new NotFoundException("No entry was found in for key {$key}");
-        }
-
         /* Retrieves the service from the map. */
         $service = $this->locate($key);
 
@@ -67,11 +62,7 @@ abstract class Binder implements ContainerInterface
             return $service->value;
         }
 
-        if (empty($service->arguments)) {
-            $service->arguments = $this->getArguments($service->parameters());
-        }
-
-        return $service->instance($service->arguments);
+        return $this->instanciate($service);
     }
 
     /**
@@ -165,4 +156,23 @@ abstract class Binder implements ContainerInterface
 
         return true;
     }
+
+    /**
+     * Get an instance of the specified Service.
+     *
+     * @todo Should be moved to a independent trait.
+     *
+     * @param string $class     The service to be instantiated.
+     * @param array  $arguments Optional. The arguments for the constructor.
+     *
+     * @return object The instance of the class
+     */
+     protected function instanciate(Service $service, $arguments = [])
+     {
+        if (empty($service->arguments)) {
+            $service->setArguments($this->getArguments($service, $arguments));
+        }
+
+        return $service->getInstance($service->arguments);
+     }
 }

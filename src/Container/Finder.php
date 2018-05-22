@@ -2,6 +2,9 @@
 
 namespace Amber\Container\Container;
 
+use Amber\Container\Exception\NotFoundException;
+use Amber\Container\Service\Service;
+
 trait Finder
 {
     /**
@@ -9,11 +12,17 @@ trait Finder
      *
      * @param string $key The unique item's key.
      *
+     * @throws Amber\Container\Exception\NotFoundException
+     *
      * @return mixed The value of the item.
      */
-    protected function locate($key)
+    public function locate($key)
     {
-        return $this->services[$key] ?? null;
+        if (!$this->has($key)) {
+            throw new NotFoundException("No entry was found in for key {$key}");
+        }
+
+        return $this->services[$key];
     }
 
     /**
@@ -24,12 +33,16 @@ trait Finder
      *
      * @return array The arguments for the class constructor.
      */
-    protected function getArguments(array $params = [], array $arguments = [])
-    {
+    protected function getArguments(Service $service, array $arguments = [])
+    { 
+        if (!empty($arguments)) {
+            return $arguments;
+        }
+
+        $params = $service->getParameters();
+
         if (empty($params)) {
             return;
-        } elseif (!empty($arguments)) {
-            return $arguments;
         }
 
         foreach ($params as $param) {

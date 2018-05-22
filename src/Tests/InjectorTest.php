@@ -16,13 +16,21 @@ class InjectorTest extends TestCase
         $container = new Injector();
 
         $model = Model::class;
+        $controller = Controller::class;
 
         /* Test classes */
+        $this->assertTrue($container->bind('id', 1));
         $this->assertTrue($container->bind($model));
+        $this->assertTrue($container->bind($controller));
         $this->assertTrue($container->has($model));
-        $this->assertInstanceOf($model, $container->get($model));
-        $this->assertInstanceOf($model, $container->mount($model));
-        $this->assertInstanceOf($model, $container->mount($model));
+        $this->assertInstanceOf(
+            $controller,
+            $container->mount($controller, [
+                1,
+                $container->get($model)
+            ])
+        );
+        $this->assertInstanceOf($controller, $container->mount($controller));
 
         $controller = Controller::class;
 
