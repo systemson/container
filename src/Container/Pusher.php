@@ -35,10 +35,8 @@ trait Pusher
     public function push($instance, array $properties)
     {
         foreach ($properties as $key => $value) {
-
             if (!property_exists($instance, $key)) {
                 throw new ContainerException("Property {$key} does not exists in the current instance");
-
             } else {
                 $instance->{$key} = $this->get($value);
             }
