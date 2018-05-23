@@ -4,6 +4,7 @@ namespace Amber\Container\Tests;
 
 use Amber\Cache\Cache;
 use Amber\Container\Exception\InvalidArgumentException;
+use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Injector;
 use Amber\Container\Tests\Example\Controller;
 use Amber\Container\Tests\Example\Model;
@@ -18,11 +19,12 @@ class InjectorTest extends TestCase
         $model = Model::class;
         $controller = Controller::class;
 
-        /* Test classes */
+        /* Bind dependencies */
         $this->assertTrue($container->bind('id', 1));
         $this->assertTrue($container->bind($model));
         $this->assertTrue($container->bind($controller));
-        $this->assertTrue($container->has($model));
+
+        //$this->assertTrue($container->has($model));
         $this->assertInstanceOf(
             $controller,
             $container->mount($controller, [
@@ -35,8 +37,9 @@ class InjectorTest extends TestCase
         $controller = Controller::class;
 
         /* Test classes */
-        $this->assertTrue($container->bind('id', 5));
-        $this->assertTrue($container->bind($controller));
+        $this->assertFalse($container->bind('id', 5));
+        $this->assertFalse($container->bind($controller));
+
         $this->assertTrue($container->has($controller));
 
         $instance = $container->get($controller);
@@ -56,10 +59,20 @@ class InjectorTest extends TestCase
     /**
      * @depends testInjector
      */
-    public function testException($container)
+    public function testInvalidArgumentException($container)
     {
         $this->expectException(InvalidArgumentException::class);
 
         $container->mount(UnknownClass::class);
+    }
+
+    /**
+     * @depends testInjector
+     */
+    public function testNotFoundException($container)
+    {
+        $this->expectException(NotFoundException::class);
+
+        $container->mount(Controller::class);
     }
 }

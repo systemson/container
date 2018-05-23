@@ -2,7 +2,6 @@
 
 namespace Amber\Container\Tests;
 
-use Amber\Cache\Cache;
 use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Injector;
@@ -59,8 +58,6 @@ class BinderTest extends TestCase
         $this->assertTrue($container->unbind($class));
         $this->assertFalse($container->has($class));
 
-        Cache::clear();
-
         return $container;
     }
 
@@ -82,8 +79,6 @@ class BinderTest extends TestCase
         $this->assertSame(array_values($multiple), $container->getMultiple(array_keys($multiple)));
         $this->assertTrue($container->unbindMultiple(array_keys($multiple)));
         $this->assertFalse($container->has($multiple[$key.'0']));
-
-        Cache::clear();
     }
 
     /**

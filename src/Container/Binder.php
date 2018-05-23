@@ -12,19 +12,19 @@ use Psr\Container\ContainerInterface;
  */
 abstract class Binder implements ContainerInterface
 {
-    use Finder, Validator;
+    use Finder, ServicesTrait, MultipleBinder, Validator;
 
     protected $services = [];
 
     /**
-     * Bind an item to the Container's map by a unique key.
+     * Binds an item to the Container's map by a unique key.
      *
      * @param string $key The unique item's key.
      * @param mixed  $key The value of the item.
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
      *
-     * @return bolean true
+     * @return bool True on success. False if key already exists.
      */
     final public function bind($key, $value = null)
     {
@@ -33,9 +33,11 @@ abstract class Binder implements ContainerInterface
             throw new InvalidArgumentException('Key argument must be a non empty string');
         }
 
-        $this->services[$key] = new Service($key, $value ?? $key);
+        if (!$this->has($key)) {
+            return $this->put($key, $value);
+        }
 
-        return true;
+        return false;
     }
 
     /**
@@ -84,13 +86,13 @@ abstract class Binder implements ContainerInterface
     }
 
     /**
-     * Unbind an item from the Container's map by its unique key.
+     * Unbinds an item from the Container's map by its unique key.
      *
      * @param string $key The unique item's key.
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
      *
-     * @return bool true on succes, false on failure.
+     * @return bool true on success, false on failure.
      */
     final public function unbind($key)
     {
@@ -109,55 +111,7 @@ abstract class Binder implements ContainerInterface
     }
 
     /**
-     * Binds multiple items to the Container's map by their unique keys.
-     *
-     * @param array $items An array of key => value items to bind.
-     *
-     * @return bool true
-     */
-    final public function bindMultiple(array $items)
-    {
-        foreach ($items as $key => $value) {
-            $this->bind($key, $value);
-        }
-
-        return true;
-    }
-
-    /**
-     * Gets multiple items from the Container's map by their unique keys.
-     *
-     * @param array $items An array of items to get.
-     *
-     * @return bool true
-     */
-    final public function getMultiple(array $items)
-    {
-        foreach ($items as $key) {
-            $services[] = $this->get($key);
-        }
-
-        return $services;
-    }
-
-    /**
-     * Removes multiple items from the Container's map by their unique keys.
-     *
-     * @param array $items An array of items to remove.
-     *
-     * @return bool true
-     */
-    final public function unbindMultiple(array $array)
-    {
-        foreach ($array as $key) {
-            $this->unbind($key);
-        }
-
-        return true;
-    }
-
-    /**
-     * Get an instance of the specified Service.
+     * Gets an instance of the specified Service.
      *
      * @todo Should be moved to a independent trait.
      *

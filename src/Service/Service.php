@@ -66,6 +66,12 @@ class Service
         $this->type = $this->getType($value);
     }
 
+
+    /**
+     * Gets an instance of the Amber\Container\Reflector for the current class.
+     *
+     * @return object Amber\Container\Reflector instance.
+     */
     protected function getReflection()
     {
         if ($this->reflection instanceof Reflector) {

@@ -3,16 +3,15 @@
 namespace Amber\Container\Tests;
 
 use Amber\Container\Reflector;
-use Amber\Container\Tests\Example\InjectableClass;
-use Amber\Container\Tests\Example\ReflectorClass;
-use Amber\Container\Tests\Example\ReflectorWithParamsClass;
+use Amber\Container\Tests\Example\Controller;
+use Amber\Container\Tests\Example\Model;
 use PHPUnit\Framework\TestCase;
 
 class ReflectorTest extends TestCase
 {
     public function testReflector()
     {
-        $class = ReflectorClass::class;
+        $class = Controller::class;
         $reflection = new Reflector($class);
 
         /* Test reflection instance. */
@@ -24,12 +23,12 @@ class ReflectorTest extends TestCase
         /* Test if the instance returned by inflector is an instance of ReflectorClass. */
         $this->assertInstanceOf(
             $class,
-            $reflection->newInstance()
+            $reflection->newInstance([1, new Model()])
         );
 
-        /* Test if the ReflectorClass reads the injectable properties */
+        /* Test if the Reflector class reads the injectable properties */
         $this->assertSame(
-            'inject',
+            'view',
             $reflection->getInjectables()[0]->name
         );
 
@@ -37,18 +36,6 @@ class ReflectorTest extends TestCase
         $this->assertSame(
             $reflection->getInjectables(),
             $reflection->getInjectables()
-        );
-    }
-
-    public function testReflectorWithParams()
-    {
-        $class = ReflectorWithParamsClass::class;
-        $reflection = new Reflector($class);
-
-        /* Test new instance with arguments for the constructor */
-        $this->assertInstanceOf(
-            $class,
-            $reflection->newInstance([new InjectableClass()])
         );
     }
 }

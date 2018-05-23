@@ -8,7 +8,7 @@ use Amber\Container\Service\Service;
 trait Finder
 {
     /**
-     * Finds an item from the Container's map by its unique key.
+     * Returns a Service from the Container's map by its unique key.
      *
      * @param string $key The unique item's key.
      *
@@ -19,10 +19,26 @@ trait Finder
     public function locate($key)
     {
         if (!$this->has($key)) {
-            throw new NotFoundException("No entry was found in for key {$key}");
+            throw new NotFoundException("No entry was found for {$key}");
         }
 
         return $this->services[$key];
+    }
+
+    /**
+     * Returns and remove a Services from the Container's map by its unique key.
+     *
+     * @param string $key The unique item's key.
+     *
+     * @return mixed The value of the item.
+     */
+    public function pull($key)
+    {
+        $service = $this->locate($key);
+
+        $this->unbind($key);
+
+        return $service;
     }
 
     /**

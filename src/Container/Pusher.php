@@ -35,6 +35,8 @@ trait Pusher
         foreach ($properties as $key => $value) {
             if (property_exists($instance, $key)) {
                 $instance->{$key} = $this->get($value);
+            } else {
+                ContainerException
             }
         }
 

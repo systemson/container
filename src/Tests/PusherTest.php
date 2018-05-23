@@ -60,4 +60,18 @@ class PusherTest extends TestCase
 
         return $container;
     }
+
+    /**
+     * @depends testPusher
+     */
+    public function testPushContainerException($container)
+    {
+        $this->expectException(ContainerException::class);
+
+        /* Instantiate the controller */
+        $instance = $container->get(Controller::class);
+
+        $instance = $container->push(['instance' => $instance]);
+
+    }
 }

@@ -42,7 +42,7 @@ class Injector extends Binder
     {
         /* Check if the class exists */
         if (!$this->isClass($class)) {
-            throw new InvalidArgumentException("Class argument {$class} is not a valid class or do not exists.");
+            throw new InvalidArgumentException("Class {$class} is not a valid class or do not exists.");
         }
 
         /* Check the instance of the class is in the cache */
