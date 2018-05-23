@@ -2,6 +2,7 @@
 
 namespace Amber\Container\Tests;
 
+use Amber\Container\Exception\ContainerException;
 use Amber\Container\Injector;
 use Amber\Container\Tests\Example\Controller;
 use Amber\Container\Tests\Example\Model;
@@ -64,14 +65,13 @@ class PusherTest extends TestCase
     /**
      * @depends testPusher
      */
-    public function testPushContainerException($container)
+    public function testPusherContainerException($container)
     {
         $this->expectException(ContainerException::class);
 
         /* Instantiate the controller */
-        $instance = $container->get(Controller::class);
+        $instance = $container->get(Model::class);
 
-        $instance = $container->push(['instance' => $instance]);
-
+        $instance = $container->push($instance, ['unknown' => 'value']);
     }
 }

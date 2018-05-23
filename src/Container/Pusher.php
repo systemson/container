@@ -2,6 +2,8 @@
 
 namespace Amber\Container\Container;
 
+use Amber\Container\Exception\ContainerException;
+
 trait Pusher
 {
     /**
@@ -30,13 +32,15 @@ trait Pusher
      *
      * @return object The object already injected.
      */
-    public function push($instance, array $properties = [])
+    public function push($instance, array $properties)
     {
         foreach ($properties as $key => $value) {
-            if (property_exists($instance, $key)) {
-                $instance->{$key} = $this->get($value);
+
+            if (!property_exists($instance, $key)) {
+                throw new ContainerException("Property {$key} does not exists in the current instance");
+
             } else {
-                ContainerException
+                $instance->{$key} = $this->get($value);
             }
         }
 
