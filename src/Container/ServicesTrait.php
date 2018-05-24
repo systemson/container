@@ -34,8 +34,8 @@ trait ServicesTrait
     /**
      * Sets an instance into a Service in the Container's map by it's unique key.
      *
-     * @param string $key       The unique item's key.
-     * @param mixed  $instance  The value of the item.
+     * @param string $key      The unique item's key.
+     * @param mixed  $instance The value of the item.
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
      *
@@ -50,7 +50,6 @@ trait ServicesTrait
         }
 
         if (is_object($instance) && $instance instanceof $service->value) {
-
             $service->instance = $instance;
             $service->singleton = true;
 
