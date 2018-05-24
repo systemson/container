@@ -125,7 +125,7 @@ trait ServicesTrait
      *
      * @return void
      */
-    public function init()
+    public function pick()
     {
         $this->services = Cache::get('services', []);
     }
@@ -135,7 +135,7 @@ trait ServicesTrait
      *
      * @return void
      */
-    public function build()
+    public function drop()
     {
         Cache::set('services', $this->services);
     }

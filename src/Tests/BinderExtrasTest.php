@@ -52,13 +52,13 @@ class BinderExtrasTest extends TestCase
         $this->assertTrue($container->clear());
         $this->assertTrue($container->isEmpty());
 
-        /* Test init() and build() */
+        /* Test pick() and drop() */
         $this->assertTrue($container->bind($key.'1', $string));
         $this->assertTrue($container->bind($key.'2', $string));
         $this->assertTrue($container->bind($key.'3', $string));
 
         /* Stores the services in the cache */
-        $container->build();
+        $container->drop();
 
         /* Cleares the services and checks that no keys exists */
         $this->assertTrue($container->clear());
@@ -68,7 +68,7 @@ class BinderExtrasTest extends TestCase
         $this->assertFalse($container->has($key.'3'));
 
         /* Load the services from the cache */
-        $container->init();
+        $container->pick();
 
         /* Tests that the services are being restored from the cache */
         $this->assertFalse($container->isEmpty());
