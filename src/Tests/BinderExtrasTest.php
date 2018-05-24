@@ -2,11 +2,9 @@
 
 namespace Amber\Container\Tests;
 
-use Amber\Container\Exception\InvalidArgumentException;
-use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Injector;
-use Amber\Container\Tests\Example\Model;
 use Amber\Container\Tests\Example\ChildModel;
+use Amber\Container\Tests\Example\Model;
 use PHPUnit\Framework\TestCase;
 
 class BinderExtrasTest extends TestCase
@@ -46,18 +44,18 @@ class BinderExtrasTest extends TestCase
         $this->assertTrue($container->unbind($key));
 
         /* Test clear() */
-        $this->assertTrue($container->bind($key."1", $string));
-        $this->assertTrue($container->bind($key."2", $number));
-        $this->assertTrue($container->bind($key."3", $array));
+        $this->assertTrue($container->bind($key.'1', $string));
+        $this->assertTrue($container->bind($key.'2', $number));
+        $this->assertTrue($container->bind($key.'3', $array));
         $this->assertFalse($container->isEmpty());
         $this->assertSame(3, $container->count());
         $this->assertTrue($container->clear());
         $this->assertTrue($container->isEmpty());
 
         /* Test init() and build() */
-        $this->assertTrue($container->bind($key."1", $string));
-        $this->assertTrue($container->bind($key."2", $string));
-        $this->assertTrue($container->bind($key."3", $string));
+        $this->assertTrue($container->bind($key.'1', $string));
+        $this->assertTrue($container->bind($key.'2', $string));
+        $this->assertTrue($container->bind($key.'3', $string));
 
         /* Stores the services in the cache */
         $container->build();
@@ -65,18 +63,17 @@ class BinderExtrasTest extends TestCase
         /* Cleares the services and checks that no keys exists */
         $this->assertTrue($container->clear());
         $this->assertTrue($container->isEmpty());
-        $this->assertFalse($container->has($key."1"));
-        $this->assertFalse($container->has($key."2"));
-        $this->assertFalse($container->has($key."3"));
+        $this->assertFalse($container->has($key.'1'));
+        $this->assertFalse($container->has($key.'2'));
+        $this->assertFalse($container->has($key.'3'));
 
         /* Load the services from the cache */
         $container->init();
 
         /* Tests that the services are being restored from the cache */
         $this->assertFalse($container->isEmpty());
-        $this->assertTrue($container->has($key."1"));
-        $this->assertTrue($container->has($key."2"));
-        $this->assertTrue($container->has($key."3"));
-
+        $this->assertTrue($container->has($key.'1'));
+        $this->assertTrue($container->has($key.'2'));
+        $this->assertTrue($container->has($key.'3'));
     }
 }
