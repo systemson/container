@@ -43,9 +43,9 @@ trait MultipleBinder
      *
      * @return bool true
      */
-    final public function unbindMultiple(array $array)
+    final public function unbindMultiple(array $items)
     {
-        foreach ($array as $key) {
+        foreach ($items as $key) {
             $this->unbind($key);
         }
 

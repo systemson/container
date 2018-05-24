@@ -44,7 +44,7 @@ trait Finder
     /**
      * Gets the arguments for a Service's constructor.
      *
-     * @param array $params    The params needed by the constructor.
+     * @param array $service   The params needed by the constructor.
      * @param array $arguments Optional. The arguments previously passed to the container.
      *
      * @return array The arguments for the class constructor.

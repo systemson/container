@@ -115,7 +115,7 @@ abstract class Binder implements ContainerInterface
      *
      * @todo Should be moved to a independent trait.
      *
-     * @param string $class     The service to be instantiated.
+     * @param string $service   The service to be instantiated.
      * @param array  $arguments Optional. The arguments for the constructor.
      *
      * @return object The instance of the class

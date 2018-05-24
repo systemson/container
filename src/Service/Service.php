@@ -56,8 +56,10 @@ class Service
     protected $reflection;
 
     /**
+     * The Service constructor.
+     *
      * @param string $key   The name of the service.
-     * @param string $Value The value of the service.
+     * @param string $value The value of the service.
      */
     public function __construct($key, $value)
     {

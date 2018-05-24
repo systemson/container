@@ -23,6 +23,11 @@ class Injector extends Binder
 
     const CACHE_DRIVER = 'file';
 
+    /**
+     * The Injector constructor.
+     *
+     * @param array $config The configurations for the Injector.
+     */
     public function __construct($config = [])
     {
         $this->config = $config;

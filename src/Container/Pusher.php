@@ -9,7 +9,7 @@ trait Pusher
     /**
      * Injects dependencies to a service.
      *
-     * @params object $object     The object to be injected.
+     * @param object $instance The object to be injected.
      *
      * @return object The object already injected.
      */
@@ -27,8 +27,8 @@ trait Pusher
     /**
      * Injects dependencies to an object.
      *
-     * @params object $instance     The object to be injected.
-     * @params array  $properties   An key-value array of properties to inject into the object.
+     * @param object $instance   The object to be injected.
+     * @param array  $properties An key-value array of properties to inject into the object.
      *
      * @return object The object already injected.
      */
