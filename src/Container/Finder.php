@@ -26,7 +26,7 @@ trait Finder
     }
 
     /**
-     * Returns and remove a Services from the Container's map by its unique key.
+     * Returns and remove a value from the Container's map by its unique key.
      *
      * @param string $key The unique item's key.
      *
@@ -34,15 +34,15 @@ trait Finder
      */
     public function pull($key)
     {
-        $service = $this->locate($key);
+        $value = $this->get($key);
 
         $this->unbind($key);
 
-        return $service;
+        return $value;
     }
 
     /**
-     * Gets an item from the Container's map by its unique key.
+     * Gets the arguments for a Service's constructor.
      *
      * @param array $params    The params needed by the constructor.
      * @param array $arguments Optional. The arguments previously passed to the container.

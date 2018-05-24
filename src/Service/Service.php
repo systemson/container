@@ -36,6 +36,11 @@ class Service
     public $singleton = false;
 
     /**
+     * @var object The class instance.
+     */
+    public $instance;
+
+    /**
      * @var array The parameters required for the class constructor.
      */
     protected $parameters = [];
@@ -44,11 +49,6 @@ class Service
      * @var array The injectable properties of the class.
      */
     protected $injectables = [];
-
-    /**
-     * @var object The class instance.
-     */
-    protected $instance;
 
     /**
      * @var object The class reflection.

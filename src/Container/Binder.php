@@ -19,8 +19,8 @@ abstract class Binder implements ContainerInterface
     /**
      * Binds an item to the Container's map by a unique key.
      *
-     * @param string $key The unique item's key.
-     * @param mixed  $key The value of the item.
+     * @param string $key   The unique item's key.
+     * @param mixed  $value The value of the item.
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
      *

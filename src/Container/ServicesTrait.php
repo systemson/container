@@ -12,12 +12,12 @@ trait ServicesTrait
     /**
      * Binds or Updates an item to the Container's map by a unique key.
      *
-     * @param string $key The unique item's key.
-     * @param mixed  $key The value of the item.
+     * @param string $key   The unique item's key.
+     * @param mixed  $value The value of the item.
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
      *
-     * @return bool True on success. False if key already exists.
+     * @return bool True on success.
      */
     public function put($key, $value = null)
     {
@@ -32,17 +32,45 @@ trait ServicesTrait
     }
 
     /**
-     * Updates an item on the Container's map by a unique key.
+     * Sets an instance into a Service in the Container's map by it's unique key.
      *
-     * @param string $key The unique item's key.
-     * @param mixed  $key The value of the item.
+     * @param string $key       The unique item's key.
+     * @param mixed  $instance  The value of the item.
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
+     *
+     * @return bool True on success.
+     */
+    public function set($key, $instance)
+    {
+        $service = $this->locate($key);
+
+        if (!$service->type == 'class') {
+            throw new ContainerException("Service {$key} is not a class");
+        }
+
+        if (is_object($instance) && $instance instanceof $service->value) {
+
+            $service->instance = $instance;
+            $service->singleton = true;
+
+            return true;
+        }
+
+        throw new ContainerException("Instance argument provided for {$key} is not an instance of {$service->value}");
+    }
+
+    /**
+     * Updates an item in the Container's map by it's unique key.
+     *
+     * @param string $key   The unique item's key.
+     * @param mixed  $value The value of the item.
+     *
      * @throws Amber\Container\Exception\NotFoundException
      *
      * @return bool true
      */
-    public function update($key, $value = null)
+    public function update($key, $value)
     {
         if (!$this->has($key)) {
             throw new NotFoundException("No entry was found for {$key}");
@@ -59,6 +87,8 @@ trait ServicesTrait
     public function clear()
     {
         $this->services = [];
+
+        return true;
     }
 
     /**
