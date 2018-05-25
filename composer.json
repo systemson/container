@@ -29,6 +29,6 @@
     },
     "scripts": {
         "test": "phpunit --verbose --coverage-html ./tmp/coverage/",
-        "docs": "phpdoc -d ./src -i Tests/ -t ./tmp/docs/api "
+        "docs": "phpdoc -d ./src -i Tests/ -t ./tmp/docs/api"
     }
 }
