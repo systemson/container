@@ -19,9 +19,8 @@
     "require": {
         "php": ">=7.0.0",
         "psr/container": "^1.0",
-        "amber/filesystem": "dev-master",
-        "amber/cache": "dev-master",
-        "amber/common": "dev-master"
+        "amber/common": "dev-master",
+        "amber/cache": "dev-master"
     },
     "require-dev": {
         "phpdocumentor/phpdocumentor": "^2.0",

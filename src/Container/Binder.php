@@ -2,9 +2,9 @@
 
 namespace Amber\Container\Container;
 
-use Amber\Common\Validator;
 use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Service\Service;
+use Amber\Validator\Validator;
 use Psr\Container\ContainerInterface;
 
 /**

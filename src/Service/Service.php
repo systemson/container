@@ -2,9 +2,9 @@
 
 namespace Amber\Container\Service;
 
-use Amber\Common\Validator;
 use Amber\Container\Exception\ContainerException;
 use Amber\Container\Reflector;
+use Amber\Validator\Validator;
 
 class Service
 {
@@ -102,6 +102,25 @@ class Service
     }
 
     /**
+     * Sets or gets the arguments for the Service.
+     *
+     * @param array $arguments The arguments for the class constructor.
+     *
+     * @retun object Self instance.
+     */
+    public function setArguments($arguments = [])
+    {
+        /* Checks if the service is a valid class. */
+        if ($this->type != 'class') {
+            throw new ContainerException("Service {$this->key} is not a class.");
+        }
+
+        $this->arguments = $arguments;
+
+        return $this;
+    }
+
+    /**
      * Gets the constructor paramaters for the current class.
      *
      * @return array The parameters for the class constructor.
@@ -162,25 +181,6 @@ class Service
         }
 
         $this->singleton = $singleton;
-
-        return $this;
-    }
-
-    /**
-     * Sets or gets the arguments for the Service.
-     *
-     * @param array $arguments The arguments for the class constructor.
-     *
-     * @retun object Self instance.
-     */
-    public function setArguments($arguments = [])
-    {
-        /* Checks if the service is a valid class. */
-        if ($this->type != 'class') {
-            throw new ContainerException("Service {$this->key} is not a class.");
-        }
-
-        $this->arguments = $arguments;
 
         return $this;
     }
