@@ -27,6 +27,7 @@ class Service
 
     /**
      * @var array The arguments for the service constructor. If the service is a class.
+     * @todo Should be protected.
      */
     public $arguments = [];
 
@@ -102,20 +103,36 @@ class Service
     }
 
     /**
-     * Sets or gets the arguments for the Service.
+     * Gets the arguments for the Service.
      *
      * @param array $arguments The arguments for the class constructor.
      *
      * @retun object Self instance.
      */
-    public function setArguments($arguments = [])
+    public function getArguments()
+    {
+        return $this->arguments;
+    }
+
+    /**
+     * Stores the arguments for the Service.
+     *
+     * @param array $arguments The arguments for the class constructor.
+     *
+     * @retun object Self instance.
+     */
+    public function setArguments(array $arguments = [])
     {
         /* Checks if the service is a valid class. */
         if ($this->type != 'class') {
             throw new ContainerException("Service {$this->key} is not a class.");
         }
 
-        $this->arguments = $arguments;
+        $this->arguments = [];
+
+        foreach ($arguments as $argument) {
+            $this->arguments[] = $argument;
+        }
 
         return $this;
     }

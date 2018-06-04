@@ -58,7 +58,7 @@ trait Finder
         $params = $service->getParameters();
 
         if (empty($params)) {
-            return;
+            return [];
         }
 
         foreach ($params as $param) {
