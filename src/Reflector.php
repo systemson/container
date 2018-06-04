@@ -30,11 +30,21 @@ class Reflector
     protected $injectables;
 
     /**
+     * @var array An array of ReflectionMethod instances for the class public methods.
+     */
+    protected $methods;
+
+    /**
      * @var object An object containing the ReflectionMethod instance and the parameters
      *             for the constructor.
      */
     public $constructor;
 
+    /**
+     * The class constructor.
+     *
+     * @param $class The class to reflect.
+     */
     public function __construct($class)
     {
         $reflection = new \ReflectionClass($class);
@@ -55,7 +65,21 @@ class Reflector
     }
 
     /**
-     * Instantiate the reflected class.
+     * Gets the public methods of the reflected class.
+     *
+     * @return array An array of the class public methods.
+     */
+    public function getMethods()
+    {
+        if (empty($this->methods)) {
+            $this->methods = $this->reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
+        }
+
+        return $this->methods;
+    }
+
+    /**
+     * Instantiates the reflected class.
      *
      * @param array $arguments The arguments for the class constructor.
      *
@@ -73,7 +97,7 @@ class Reflector
     }
 
     /**
-     * Find the injectable properties from the class.
+     * Finds the injectable properties from the class.
      *
      * @return array An array of the injectable properties.
      */

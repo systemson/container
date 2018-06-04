@@ -3,6 +3,7 @@
 namespace Amber\Container\Container;
 
 use Amber\Cache\Cache;
+use Amber\Container\Exception\ContainerException;
 use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Service\Service;
@@ -37,6 +38,7 @@ trait ServicesTrait
      * @param string $key      The unique item's key.
      * @param mixed  $instance The value of the item.
      *
+     * @throws Amber\Container\Exception\ContainerException
      * @throws Amber\Container\Exception\InvalidArgumentException
      *
      * @return bool True on success.
@@ -50,13 +52,13 @@ trait ServicesTrait
         }
 
         if (is_object($instance) && $instance instanceof $service->value) {
-            $service->instance = $instance;
-            $service->singleton = true;
+            $service->setInstance($instance);
+            $service->singleton();
 
             return true;
         }
 
-        throw new ContainerException("Instance argument provided for {$key} is not an instance of {$service->value}");
+        throw new InvalidArgumentException("Argument provided for {$key} is not an instance of {$service->value}");
     }
 
     /**
