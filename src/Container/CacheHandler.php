@@ -3,8 +3,8 @@
 namespace Amber\Container\Container;
 
 use Amber\Cache\Cache;
-use Psr\SimpleCache\CacheInterface;
 use Amber\Container\Config\ConfigAwareInterface;
+use Psr\SimpleCache\CacheInterface;
 
 trait CacheHandler
 {
@@ -19,7 +19,7 @@ trait CacheHandler
     protected $servicesName = 'injector_services';
 
     /**
-     * Returns the cache driver
+     * Returns the cache driver.
      *
      * @return object Psr\SimpleCache\CacheInterface instance.
      */
@@ -55,6 +55,7 @@ trait CacheHandler
         if (!$this->cache()->has($this->servicesName)) {
             $this->cache()->set($this->servicesName, $this->services);
         }
+
         return true;
     }
 }

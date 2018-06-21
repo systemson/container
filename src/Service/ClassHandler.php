@@ -16,12 +16,12 @@ trait ClassHandler
     /**
      * @var array The class public properties.
      */
-     protected $properties = [];
+    protected $properties = [];
 
     /**
      * @var array The class public methods.
      */
-     protected $methods = [];
+    protected $methods = [];
 
     /**
      * @var object The class instance.
@@ -103,9 +103,10 @@ trait ClassHandler
     /**
      * Sets an instance for the Service.
      *
-     * @throws Amber\Container\Exception\InvalidArgumentException
      *
      * @param array $instance The instance of the service.
+     *
+     * @throws Amber\Container\Exception\InvalidArgumentException
      *
      * @return self The current service.
      */
