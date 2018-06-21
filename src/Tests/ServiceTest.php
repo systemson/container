@@ -44,14 +44,22 @@ class ServiceTest extends TestCase
         $this->assertSame($view, $service->getInjectables()[0]->inject);
 
         /* Test getInstance() */
-        $this->assertEquals($container->get($controller), $service->getInstance($arguments));
+        $instance = $container->get($controller);
         $service->singleton(true);
+        $this->assertEquals($instance, $service->getInstance($arguments));
+        $this->assertTrue($service->isSingleton());
         $this->assertInstanceOf($controller, $service->getInstance($arguments));
+
+        /* Test setInstance */
+        $service->clear();
+        $this->assertFalse($service->isSingleton());
+        $this->assertEquals($instance, $service->getInstance($arguments));
         $this->assertInstanceOf($controller, $service->getInstance($arguments));
 
         /* Test setArguments() */
         $service->setArguments($arguments);
         $this->assertSame($arguments, $service->arguments);
+
 
         return $container->locate('id');
     }

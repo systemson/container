@@ -22,7 +22,6 @@ class InjectorTest extends TestCase
         /* Bind dependencies */
         $this->assertTrue($container->bind('id', 1));
         $this->assertTrue($container->bind($model));
-        $this->assertTrue($container->bind($controller));
 
         //$this->assertTrue($container->has($model));
         $this->assertInstanceOf(

@@ -101,13 +101,13 @@ trait ClassHandler
     }
 
     /**
-     * Instantiate the reflected class.
+     * Sets an instance for the Service.
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
      *
-     * @param array $arguments Optional. The arguments for the class constructor.
+     * @param array $instance The instance of the service.
      *
-     * @return bool True on success.
+     * @return self The current service.
      */
     public function setInstance($instance)
     {
@@ -116,6 +116,7 @@ trait ClassHandler
 
         if ($instance instanceof $this->value) {
             $this->instance = $instance;
+            $this->singleton();
 
             return $this;
         }
@@ -124,7 +125,7 @@ trait ClassHandler
     }
 
     /**
-     * Instantiate the reflected class.
+     * Instantiates the reflected class.
      *
      * @param array $arguments Optional. The arguments for the class constructor.
      *
@@ -146,6 +147,19 @@ trait ClassHandler
         }
 
         return $instance;
+    }
+
+    /**
+     * Removes the Service's instance.
+     *
+     * @return self The current service.
+     */
+    public function clear()
+    {
+        $this->instance = null;
+        $this->singleton(false);
+
+        return $this;
     }
 
     /**

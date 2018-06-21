@@ -24,6 +24,21 @@ trait Finder
 
         return $this->services[$key];
     }
+    /**
+     * Binds and returns a Service from the Container's map by its unique key.
+     *
+     * @param string $key The unique item's key.
+     *
+     * @return mixed The value of the item.
+     */
+    public function findAndBind($key)
+    {
+        if (!$this->has($key)) {
+            $this->bind($key);
+        }
+
+        return $this->services[$key];
+    }
 
     /**
      * Returns and remove a value from the Container's map by its unique key.

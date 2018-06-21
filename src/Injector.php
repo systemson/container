@@ -2,26 +2,16 @@
 
 namespace Amber\Container;
 
-use Amber\Cache\Cache;
+use Amber\Container\Config\ConfigAware;
+use Amber\Container\Config\ConfigAwareInterface;
 use Amber\Container\Container\Binder;
+use Amber\Container\Container\CacheHandler;
 use Amber\Container\Container\Pusher;
 use Amber\Container\Exception\InvalidArgumentException;
 
-class Injector extends Binder
+class Injector extends Binder implements ConfigAwareInterface
 {
-    use Pusher;
-
-    /**
-     * @var Container's configuration.
-     */
-    public $config;
-
-    /**
-     * @var Cache driver.
-     */
-    public $cacher;
-
-    const CACHE_DRIVER = 'file';
+    use Pusher, ConfigAware, CacheHandler;
 
     /**
      * The Injector constructor.
@@ -30,7 +20,7 @@ class Injector extends Binder
      */
     public function __construct($config = [])
     {
-        $this->config = $config;
+        $this->setConfig($config);
     }
 
     /**
@@ -45,22 +35,22 @@ class Injector extends Binder
      */
     public function mount(string $class, array $arguments = [])
     {
-        /* Check if the class exists */
+        /* Checks if the class exists */
         if (!$this->isClass($class)) {
             throw new InvalidArgumentException("Class {$class} is not a valid class or do not exists.");
         }
 
-        /* Check the instance of the class is in the cache */
-        if (Cache::has($class)) {
-            return Cache::get($class);
+        /* Checks if the instance of the class is in the cache */
+        if ($this->cache()->has($class)) {
+            return $this->cache()->get($class);
         }
 
-        $service = $this->locate($class)->singleton(true);
+        $service = $this->findAndBind($class)->singleton(true);
 
-        /* Get and instance of the class */
+        /* Gets an instance of the class */
         $instance = $this->instanciate($service, $arguments);
 
-        Cache::set($class, $instance, 15);
+        $this->cache()->set($class, $instance, 15);
 
         return $instance;
     }

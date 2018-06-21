@@ -2,7 +2,6 @@
 
 namespace Amber\Container\Container;
 
-use Amber\Cache\Cache;
 use Amber\Container\Exception\ContainerException;
 use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Exception\NotFoundException;
@@ -120,25 +119,5 @@ trait ServicesTrait
     public function services()
     {
         return $this->services;
-    }
-
-    /**
-     * Retrieves the Container's map from the cache.
-     *
-     * @return void
-     */
-    public function pick()
-    {
-        $this->services = Cache::get('services', []);
-    }
-
-    /**
-     * Stores the Container's map into the cache.
-     *
-     * @return void
-     */
-    public function drop()
-    {
-        Cache::set('services', $this->services);
     }
 }
