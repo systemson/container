@@ -24,6 +24,7 @@ trait Finder
 
         return $this->services[$key];
     }
+
     /**
      * Binds and returns a Service from the Container's map by its unique key.
      *

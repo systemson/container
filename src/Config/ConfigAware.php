@@ -11,8 +11,7 @@ trait ConfigAware
 
     public function setConfig(array $config)
     {
-        foreach($config as $key => $value)
-        {
+        foreach ($config as $key => $value) {
             $this->config[$key] = $value;
         }
     }
@@ -22,7 +21,6 @@ trait ConfigAware
         $config = $this->config;
 
         foreach (explode('.', $key) as $search) {
-
             if (isset($config[$search])) {
                 $config = $config[$search];
             } else {
