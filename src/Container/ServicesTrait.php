@@ -44,10 +44,14 @@ trait ServicesTrait
      */
     public function set($key, $instance)
     {
+        if (!$this->has($key)) {
+            throw new NotFoundException("No entry was found for {$key}.");
+        }
+
         $service = $this->locate($key);
 
-        if (!$service->type == 'class') {
-            throw new ContainerException("Service {$key} is not a class");
+        if ($service->type != 'class') {
+            throw new ContainerException("Service {$key} is not a class.");
         }
 
         if (is_object($instance) && $instance instanceof $service->value) {
@@ -57,7 +61,7 @@ trait ServicesTrait
             return true;
         }
 
-        throw new InvalidArgumentException("Argument provided for {$key} is not an instance of {$service->value}");
+        throw new InvalidArgumentException("Argument provided for {$key} is not an instance of {$service->value} class.");
     }
 
     /**
@@ -72,8 +76,13 @@ trait ServicesTrait
      */
     public function update($key, $value)
     {
+        /* Throws an InvalidArgumentException on invalid type. */
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Key argument must be a non empty string');
+        }
+
         if (!$this->has($key)) {
-            throw new NotFoundException("No entry was found for {$key}");
+            throw new NotFoundException("No entry was found for {$key}.");
         }
 
         return $this->put($key, $value);

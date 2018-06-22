@@ -2,6 +2,9 @@
 
 namespace Amber\Container\Tests;
 
+use Amber\Container\Exception\ContainerException;
+use Amber\Container\Exception\InvalidArgumentException;
+use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Injector;
 use Amber\Container\Tests\Example\ChildModel;
 use Amber\Container\Tests\Example\Model;
@@ -52,28 +55,68 @@ class BinderExtrasTest extends TestCase
         $this->assertTrue($container->clear());
         $this->assertTrue($container->isEmpty());
 
-        /* Test pick() and drop() */
-        $this->assertTrue($container->bind($key.'1', $string));
-        $this->assertTrue($container->bind($key.'2', $string));
-        $this->assertTrue($container->bind($key.'3', $string));
+        return $container;
+    }
 
-        /* Stores the services in the cache */
-        $this->assertTrue($container->drop());
+    /**
+     * @depends testExtras
+     */
+    public function testPutException($container)
+    {
+        $this->expectException(InvalidArgumentException::class);
 
-        /* Cleares the services and checks that no keys exists */
-        $this->assertTrue($container->clear());
-        $this->assertTrue($container->isEmpty());
-        $this->assertFalse($container->has($key.'1'));
-        $this->assertFalse($container->has($key.'2'));
-        $this->assertFalse($container->has($key.'3'));
+        $container->put(1, 'string');
+    }
 
-        /* Load the services from the cache */
-        $this->assertTrue($container->pick());
+    /**
+     * @depends testExtras
+     */
+    public function testSetNotFoundException($container)
+    {
+        $this->expectException(NotFoundException::class);
 
-        /* Tests that the services are being restored from the cache */
-        $this->assertFalse($container->isEmpty());
-        $this->assertTrue($container->has($key.'1'));
-        $this->assertTrue($container->has($key.'2'));
-        $this->assertTrue($container->has($key.'3'));
+        $container->set('test', new Model());
+    }
+
+    /**
+     * @depends testExtras
+     */
+    public function testSetContainerException($container)
+    {
+        $this->expectException(ContainerException::class);
+
+        $container->bind('test', 'test');
+        $container->set('test', new Model());
+    }
+
+    /**
+     * @depends testExtras
+     */
+    public function testSetInvalidArgumentException($container)
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $container->bind(Model::class);
+        $container->set(Model::class, 'string');
+    }
+
+    /**
+     * @depends testExtras
+     */
+    public function testUpdateInvalidArgumentException($container)
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $container->update(1, 'string');
+    }
+
+    /**
+     * @depends testExtras
+     */
+    public function testUpdateNotFoundException($container)
+    {
+        $this->expectException(NotFoundException::class);
+
+        $container->update('string', 'string');
     }
 }
