@@ -47,5 +47,7 @@ class CacheHandlerTest extends TestCase
         $this->assertTrue($container->has($key.'2'));
         $this->assertTrue($container->has($key.'3'));
         $this->assertTrue($container->has($class));
+
+        $container->clear(true);
     }
 }

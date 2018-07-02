@@ -14,20 +14,15 @@ trait CacheHandler
     protected $cacher;
 
     /**
-     * @var Cache driver.
-     */
-    protected $servicesName = 'injector_services';
-
-    /**
      * Returns the cache driver.
      *
      * @return object Psr\SimpleCache\CacheInterface instance.
      */
-    public function cache()
+    protected function cache()
     {
         /* Checks if the CacheInterface is already instantiated. */
         if (!$this->cacher instanceof CacheInterface) {
-            $this->cacher = Cache::driver($this->getConfig('cache_driver', ConfigAwareInterface::CACHE_DRIVER));
+            $this->cacher = Cache::driver($this->getCacheDriverName());
         }
 
         return $this->cacher;
@@ -40,7 +35,7 @@ trait CacheHandler
      */
     public function pick()
     {
-        $this->services = $this->cache()->get($this->servicesName, []);
+        $this->services = $this->cache()->get($this->getCacheServicesName(), []);
 
         return true;
     }
@@ -52,8 +47,8 @@ trait CacheHandler
      */
     public function drop()
     {
-        if (!$this->cache()->has($this->servicesName)) {
-            $this->cache()->set($this->servicesName, $this->services);
+        if (!$this->cache()->has($this->getCacheServicesName())) {
+            $this->cache()->set($this->getCacheServicesName(), $this->services);
         }
 
         return true;

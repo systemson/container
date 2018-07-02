@@ -2,9 +2,9 @@
 
 namespace Amber\Container;
 
-use Amber\Container\Container\Binder;
+use Amber\Container\Container\SimpleBinder;
 
-class ServiceContainer extends Binder
+class ServiceContainer extends SimpleBinder
 {
     /**
      * @var object ServiceContainer Instance.

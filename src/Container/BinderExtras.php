@@ -7,8 +7,25 @@ use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Service\Service;
 
-trait ServicesTrait
+trait BinderExtras
 {
+    /**
+     * Gets an instance of the specified Service.
+     *
+     * @param string $service   The service to be instantiated.
+     * @param array  $arguments Optional. The arguments for the constructor.
+     *
+     * @return object The instance of the class
+     */
+    protected function instanciate(Service $service, $arguments = [])
+    {
+        if (empty($service->arguments)) {
+            $service->setArguments($this->getArguments($service, $arguments));
+        }
+
+        return $service->getInstance($service->getArguments());
+    }
+
     /**
      * Binds or Updates an item to the Container's map by a unique key.
      *
@@ -91,10 +108,16 @@ trait ServicesTrait
     /**
      * Clears the Container's map.
      *
+     * @param bool $clear_cache Tells the cleared to empty the cache.
+     *
      * @return void
      */
-    public function clear()
+    public function clear($clear_cache = false)
     {
+        if ($clear_cache) {
+            $this->cache()->clear();
+        }
+
         $this->services = [];
 
         return true;

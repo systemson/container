@@ -2,6 +2,9 @@
 
 namespace Amber\Container;
 
+/**
+ * @todo This class should be removed since it was moved to Amber\Common.
+ */
 class Reflector
 {
     /**

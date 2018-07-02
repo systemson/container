@@ -58,7 +58,7 @@ class ServiceTest extends TestCase
 
         /* Test setArguments() */
         $service->setArguments($arguments);
-        $this->assertSame($arguments, $service->arguments);
+        $this->assertSame($arguments, $service->getArguments());
 
         return $container->locate('id');
     }

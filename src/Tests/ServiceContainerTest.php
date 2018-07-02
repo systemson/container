@@ -2,9 +2,10 @@
 
 namespace Amber\Container\Tests;
 
-use Amber\Container\Container\Binder;
+use Amber\Container\Container\SimpleBinder;
 use Amber\Container\ServiceContainer;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 
 class ServiceContainerTest extends TestCase
 {
@@ -20,7 +21,13 @@ class ServiceContainerTest extends TestCase
 
         /* Checks if the Container returns an instance of Binder */
         $this->assertInstanceOf(
-            Binder::class,
+            ContainerInterface::class,
+            $example = $container->getInstance()
+        );
+
+        /* Checks if the Container returns an instance of Binder */
+        $this->assertInstanceOf(
+            SimpleBinder::class,
             $example = $container->getInstance()
         );
     }

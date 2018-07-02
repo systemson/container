@@ -7,11 +7,9 @@ use Amber\Container\Exception\ContainerException;
 trait DependenciesHandler
 {
     /**
-     * @todo Should be protected.
-     *
      * @var array The arguments for the service constructor. If the service is a class.
      */
-    public $arguments = [];
+    protected $arguments = [];
 
     /**
      * @var array The parameters required for the class constructor.

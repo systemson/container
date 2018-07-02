@@ -2,13 +2,13 @@
 
 namespace Amber\Container\Config;
 
-interface ConfigAwareInterface
+use Amber\Config\ConfigAwareInterface as BaseInterface;
+
+interface ConfigAwareInterface extends BaseInterface
 {
     const ENVIRONMENT = 0;
 
     const CACHE_DRIVER = 'file';
-
-    public function setConfig(array $config);
-
-    public function getConfig(string $key, $default = null);
+    
+    const CACHE_SERVICES_NAME = 'injector_services';
 }

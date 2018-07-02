@@ -2,32 +2,29 @@
 
 namespace Amber\Container\Config;
 
+use Amber\Config\ConfigAware as BaseConfig;
+
 trait ConfigAware
 {
-    /**
-     * @var array The config values.
-     */
-    protected $config = [];
+    use BaseConfig;
 
-    public function setConfig(array $config)
+    /**
+     * Returns the Container's cache driver.
+     *
+     * @return string The cache driver's name.
+     */
+    protected function getCacheDriverName()
     {
-        foreach ($config as $key => $value) {
-            $this->config[$key] = $value;
-        }
+        return $this->getConfig('cache_driver', ConfigAwareInterface::CACHE_DRIVER);
     }
 
-    public function getConfig(string $key, $default = null)
+    /**
+     * Returns the cache name for the services map.
+     *
+     * @return string The cache name.
+     */
+    protected function getCacheServicesName()
     {
-        $config = $this->config;
-
-        foreach (explode('.', $key) as $search) {
-            if (isset($config[$search])) {
-                $config = $config[$search];
-            } else {
-                return $default;
-            }
-        }
-
-        return $config;
+        return $this->getConfig('cache_services_name', ConfigAwareInterface::CACHE_SERVICES_NAME);
     }
 }
