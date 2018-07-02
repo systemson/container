@@ -3,7 +3,6 @@
 namespace Amber\Container\Tests;
 
 use Amber\Container\Injector;
-use Amber\Container\Tests\Example\ChildModel;
 use Amber\Container\Tests\Example\Model;
 use PHPUnit\Framework\TestCase;
 
