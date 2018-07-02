@@ -3,7 +3,6 @@
 namespace Amber\Container\Container;
 
 use Amber\Cache\Cache;
-use Amber\Container\Config\ConfigAwareInterface;
 use Psr\SimpleCache\CacheInterface;
 
 trait CacheHandler
