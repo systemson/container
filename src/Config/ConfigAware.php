@@ -15,7 +15,7 @@ trait ConfigAware
      */
     protected function getCacheDriverName()
     {
-        return $this->getConfig('cache_driver', ConfigAwareInterface::CACHE_DRIVER);
+        return $this->getConfig('cache_driver', static::CACHE_DRIVER);
     }
 
     /**
@@ -25,6 +25,6 @@ trait ConfigAware
      */
     protected function getCacheServicesName()
     {
-        return $this->getConfig('cache_services_name', ConfigAwareInterface::CACHE_SERVICES_NAME);
+        return $this->getConfig('cache_services_name', static::CACHE_SERVICES_NAME);
     }
 }
