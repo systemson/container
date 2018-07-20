@@ -4,7 +4,7 @@ namespace Amber\Container\Service;
 
 use Amber\Container\Exception\ContainerException;
 use Amber\Container\Exception\InvalidArgumentException;
-use Amber\Container\Reflector;
+use Amber\Reflector\Reflector;
 
 trait ClassHandler
 {
@@ -50,9 +50,9 @@ trait ClassHandler
     }
 
     /**
-     * Gets an instance of the Amber\Container\Reflector for the current class.
+     * Gets an instance of the Amber\Reflector\Reflector for the current class.
      *
-     * @return object Amber\Container\Reflector instance.
+     * @return object Amber\Reflector\Reflector instance.
      */
     protected function getReflection()
     {
