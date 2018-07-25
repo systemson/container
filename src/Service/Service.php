@@ -1,6 +1,7 @@
 <?php
 
 namespace Amber\Container\Service;
+
 use Amber\Validator\Validator;
 
 class Service
