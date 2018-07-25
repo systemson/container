@@ -7,6 +7,7 @@ use Amber\Container\Container\SimpleBinder;
 final class ServiceContainer extends SimpleBinder
 {
     /**
+     *
      * @var object ServiceContainer Instance.
      */
     private static $instance;

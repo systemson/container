@@ -9,26 +9,31 @@ use Amber\Reflector\Reflector;
 trait ClassHandler
 {
     /**
+     *
      * @var object The class reflection.
      */
     protected $reflection;
 
     /**
+     *
      * @var array The class public properties.
      */
     protected $properties = [];
 
     /**
+     *
      * @var array The class public methods.
      */
     protected $methods = [];
 
     /**
+     *
      * @var object The class instance.
      */
     protected $instance;
 
     /**
+     *
      * @var bool Singleton condition for the class.
      */
     protected $singleton = false;
@@ -102,7 +107,6 @@ trait ClassHandler
 
     /**
      * Sets an instance for the Service.
-     *
      *
      * @param array $instance The instance of the service.
      *

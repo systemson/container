@@ -8,6 +8,7 @@ use Psr\SimpleCache\CacheInterface;
 trait CacheHandler
 {
     /**
+     *
      * @var Cache driver.
      */
     protected $cacher;

@@ -62,6 +62,7 @@ class BinderTest extends TestCase
     }
 
     /**
+     *
      * @depends testBinder
      */
     public function testMultipleBinder($container)
@@ -71,17 +72,18 @@ class BinderTest extends TestCase
         $string = 'string';
 
         for ($x = 0; $x < 5; $x++) {
-            $multiple[$key.$x] = $string.$x;
+            $multiple[$key . $x] = $string . $x;
         }
 
         /* Test strings */
         $this->assertTrue($container->bindMultiple($multiple));
         $this->assertSame(array_values($multiple), $container->getMultiple(array_keys($multiple)));
         $this->assertTrue($container->unbindMultiple(array_keys($multiple)));
-        $this->assertFalse($container->has($multiple[$key.'0']));
+        $this->assertFalse($container->has($multiple[$key . '0']));
     }
 
     /**
+     *
      * @depends testBinder
      */
     public function testGetInvalidArgumentException($container)
@@ -93,6 +95,7 @@ class BinderTest extends TestCase
     }
 
     /**
+     *
      * @depends testBinder
      */
     public function testGetNotFoundException($container)
@@ -104,6 +107,7 @@ class BinderTest extends TestCase
     }
 
     /**
+     *
      * @depends testBinder
      */
     public function testHasInvalidArgumentException($container)
@@ -115,6 +119,7 @@ class BinderTest extends TestCase
     }
 
     /**
+     *
      * @depends testBinder
      */
     public function testBindInvalidArgumentException($container)
@@ -126,6 +131,7 @@ class BinderTest extends TestCase
     }
 
     /**
+     *
      * @depends testBinder
      */
     public function testUnbindInvalidArgumentException($container)

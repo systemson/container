@@ -7,16 +7,20 @@ use Amber\Container\Exception\ContainerException;
 trait DependenciesHandler
 {
     /**
+     *
      * @var array The arguments for the service constructor. If the service is a class.
+
      */
     protected $arguments = [];
 
     /**
+     *
      * @var array The parameters required for the class constructor.
      */
     protected $parameters = [];
 
     /**
+     *
      * @var array The injectable properties of the class.
      */
     protected $injectables = [];
@@ -49,7 +53,6 @@ trait DependenciesHandler
     {
         /* Throws an ContainerException if the current service is not a class. */
         $this->validateClass();
-
         return $this->arguments;
     }
 
@@ -71,7 +74,7 @@ trait DependenciesHandler
             $this->arguments[] = $argument;
         }
 
-        return $this;
+            return $this;
     }
 
     /**

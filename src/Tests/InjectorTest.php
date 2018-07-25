@@ -26,10 +26,13 @@ class InjectorTest extends TestCase
         //$this->assertTrue($container->has($model));
         $this->assertInstanceOf(
             $controller,
-            $container->mount($controller, [
+            $container->mount(
+                $controller,
+                [
                 1,
                 $container->get($model),
-            ])
+                ]
+            )
         );
         $this->assertInstanceOf($controller, $container->mount($controller));
 
@@ -56,6 +59,7 @@ class InjectorTest extends TestCase
     }
 
     /**
+     *
      * @depends testInjector
      */
     public function testInvalidArgumentException($container)
@@ -66,6 +70,7 @@ class InjectorTest extends TestCase
     }
 
     /**
+     *
      * @depends testInjector
      */
     public function testNotFoundException($container)

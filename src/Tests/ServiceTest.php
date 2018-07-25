@@ -64,6 +64,7 @@ class ServiceTest extends TestCase
     }
 
     /**
+     *
      * @depends testService
      */
     public function testGetParametersException($service)
@@ -74,6 +75,7 @@ class ServiceTest extends TestCase
     }
 
     /**
+     *
      * @depends testService
      */
     public function testGetInjectablesException($service)
@@ -84,6 +86,7 @@ class ServiceTest extends TestCase
     }
 
     /**
+     *
      * @depends testService
      */
     public function testGetInstanceException($service)
@@ -94,6 +97,7 @@ class ServiceTest extends TestCase
     }
 
     /**
+     *
      * @depends testService
      */
     public function testSingletonException($service)
@@ -104,6 +108,7 @@ class ServiceTest extends TestCase
     }
 
     /**
+     *
      * @depends testService
      */
     public function testSetArgumentsException($service)

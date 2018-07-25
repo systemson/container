@@ -21,9 +21,9 @@ class CacheHandlerTest extends TestCase
         $object = new $class();
 
         /* Test pick() and drop() */
-        $this->assertTrue($container->bind($key.'1', $string));
-        $this->assertTrue($container->bind($key.'2', $string));
-        $this->assertTrue($container->bind($key.'3', $string));
+        $this->assertTrue($container->bind($key . '1', $string));
+        $this->assertTrue($container->bind($key . '2', $string));
+        $this->assertTrue($container->bind($key . '3', $string));
         $this->assertTrue($container->bind($class));
 
         /* Stores the services in the cache */
@@ -32,9 +32,9 @@ class CacheHandlerTest extends TestCase
         /* Cleares the services and checks that no keys exists */
         $this->assertTrue($container->clear());
         $this->assertTrue($container->isEmpty());
-        $this->assertFalse($container->has($key.'1'));
-        $this->assertFalse($container->has($key.'2'));
-        $this->assertFalse($container->has($key.'3'));
+        $this->assertFalse($container->has($key . '1'));
+        $this->assertFalse($container->has($key . '2'));
+        $this->assertFalse($container->has($key . '3'));
         $this->assertFalse($container->has($class));
 
         /* Load the services from the cache */
@@ -42,9 +42,9 @@ class CacheHandlerTest extends TestCase
 
         /* Tests that the services are being restored from the cache */
         $this->assertFalse($container->isEmpty());
-        $this->assertTrue($container->has($key.'1'));
-        $this->assertTrue($container->has($key.'2'));
-        $this->assertTrue($container->has($key.'3'));
+        $this->assertTrue($container->has($key . '1'));
+        $this->assertTrue($container->has($key . '2'));
+        $this->assertTrue($container->has($key . '3'));
         $this->assertTrue($container->has($class));
 
         $container->clear(true);

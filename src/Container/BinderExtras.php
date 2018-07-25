@@ -25,7 +25,6 @@ trait BinderExtras
 
         return $service->getInstance($service->getArguments());
     }
-
     /**
      * Binds or Updates an item to the Container's map by a unique key.
      *
@@ -61,12 +60,11 @@ trait BinderExtras
      */
     public function set($key, $instance)
     {
+
         if (!$this->has($key)) {
             throw new NotFoundException("No entry was found for {$key}.");
         }
-
         $service = $this->locate($key);
-
         if ($service->type != 'class') {
             throw new ContainerException("Service {$key} is not a class.");
         }
@@ -78,7 +76,9 @@ trait BinderExtras
             return true;
         }
 
-        throw new InvalidArgumentException("Argument provided for {$key} is not an instance of {$service->value} class.");
+        throw new InvalidArgumentException(
+            "Argument provided for {$key} is not an instance of {$service->value} class."
+        );
     }
 
     /**
@@ -97,7 +97,6 @@ trait BinderExtras
         if (!$this->isString($key)) {
             throw new InvalidArgumentException('Key argument must be a non empty string');
         }
-
         if (!$this->has($key)) {
             throw new NotFoundException("No entry was found for {$key}.");
         }
@@ -114,10 +113,10 @@ trait BinderExtras
      */
     public function clear($clear_cache = false)
     {
+
         if ($clear_cache) {
             $this->cache()->clear();
         }
-
         $this->services = [];
 
         return true;

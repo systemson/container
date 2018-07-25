@@ -47,9 +47,9 @@ class BinderExtrasTest extends TestCase
         $this->assertTrue($container->unbind($key));
 
         /* Test clear() */
-        $this->assertTrue($container->bind($key.'1', $string));
-        $this->assertTrue($container->bind($key.'2', $number));
-        $this->assertTrue($container->bind($key.'3', $array));
+        $this->assertTrue($container->bind($key . '1', $string));
+        $this->assertTrue($container->bind($key . '2', $number));
+        $this->assertTrue($container->bind($key . '3', $array));
         $this->assertFalse($container->isEmpty());
         $this->assertSame(3, $container->count());
         $this->assertTrue($container->clear());
@@ -59,6 +59,7 @@ class BinderExtrasTest extends TestCase
     }
 
     /**
+     *
      * @depends testExtras
      */
     public function testPutException($container)
@@ -69,6 +70,7 @@ class BinderExtrasTest extends TestCase
     }
 
     /**
+     *
      * @depends testExtras
      */
     public function testSetNotFoundException($container)
@@ -79,6 +81,7 @@ class BinderExtrasTest extends TestCase
     }
 
     /**
+     *
      * @depends testExtras
      */
     public function testSetContainerException($container)
@@ -90,6 +93,7 @@ class BinderExtrasTest extends TestCase
     }
 
     /**
+     *
      * @depends testExtras
      */
     public function testSetInvalidArgumentException($container)
@@ -101,6 +105,7 @@ class BinderExtrasTest extends TestCase
     }
 
     /**
+     *
      * @depends testExtras
      */
     public function testUpdateInvalidArgumentException($container)
@@ -111,6 +116,7 @@ class BinderExtrasTest extends TestCase
     }
 
     /**
+     *
      * @depends testExtras
      */
     public function testUpdateNotFoundException($container)

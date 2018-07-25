@@ -40,6 +40,7 @@ class PusherTest extends TestCase
     }
 
     /**
+     *
      * @depends testPusher
      */
     public function testInjection($container)
@@ -63,6 +64,7 @@ class PusherTest extends TestCase
     }
 
     /**
+     *
      * @depends testPusher
      */
     public function testPusherContainerException($container)

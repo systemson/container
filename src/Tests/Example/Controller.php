@@ -5,6 +5,7 @@ namespace Amber\Container\Tests\Example;
 class Controller
 {
     /**
+     *
      * @inject Amber\Container\Tests\Example\View
      *
      * @var string
@@ -12,6 +13,7 @@ class Controller
     public $view;
 
     /**
+     *
      * @var Amber\Container\Tests\Example\Model
      */
     public $model;
