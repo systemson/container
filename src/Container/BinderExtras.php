@@ -60,7 +60,6 @@ trait BinderExtras
      */
     public function set($key, $instance)
     {
-
         if (!$this->has($key)) {
             throw new NotFoundException("No entry was found for {$key}.");
         }
@@ -113,7 +112,6 @@ trait BinderExtras
      */
     public function clear($clear_cache = false)
     {
-
         if ($clear_cache) {
             $this->cache()->clear();
         }

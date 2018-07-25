@@ -74,7 +74,7 @@ trait DependenciesHandler
             $this->arguments[] = $argument;
         }
 
-            return $this;
+        return $this;
     }
 
     /**
