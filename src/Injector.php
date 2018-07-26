@@ -48,7 +48,7 @@ class Injector extends Binder implements ConfigAwareInterface
         $service = $this->findAndBind($class)->singleton(true);
 
         /* Gets an instance of the class */
-        $instance = $this->instanciate($service, $arguments);
+        $instance = $this->instantiate($service, $arguments);
 
         $this->cache()->set($class, $instance, 15);
 

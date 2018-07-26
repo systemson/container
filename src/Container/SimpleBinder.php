@@ -63,7 +63,7 @@ class SimpleBinder implements ContainerInterface
             return $service->value;
         }
 
-        return $this->instanciate($service);
+        return $this->instantiate($service);
     }
 
     /**

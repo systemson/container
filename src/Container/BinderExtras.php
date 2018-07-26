@@ -17,7 +17,7 @@ trait BinderExtras
      *
      * @return object The instance of the class
      */
-    protected function instanciate(Service $service, $arguments = [])
+    protected function instantiate(Service $service, $arguments = [])
     {
         if (empty($service->arguments)) {
             $service->setArguments($this->getArguments($service, $arguments));
