@@ -7,7 +7,7 @@ Simple PHP DI Container.
 ## Current State
 The project is under testing for conceptual and pattern designing. It may (and most likely will) change a lot from the current state.
 
-Only after the tests are over it will have a final roadmap for a pre-realase, and will be included in packagist.org.
+Only after the tests are over it will have a final roadmap for a pre-realase.
 
 ## Instalation
 
