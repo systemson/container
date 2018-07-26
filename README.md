@@ -15,9 +15,9 @@ Only after the tests are over it will have a final roadmap for a pre-realase, an
 composer require amber/container
 ```
 
-## API
+## API (Draft)
 
-### Basic Usage
+### Basic Usage (PSR-11 compliance)
 
 ```php
 use Amber\Container\Injector;
@@ -70,3 +70,6 @@ $container->getMultiple($keys);
 ```php
 $container->unbindMultiple($keys);
 ```
+
+### Advanced Usage
+Coming soon...
