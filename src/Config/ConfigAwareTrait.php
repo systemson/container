@@ -2,9 +2,9 @@
 
 namespace Amber\Container\Config;
 
-use Amber\Config\ConfigAware as BaseConfig;
+use Amber\Config\ConfigAwareTrait as BaseConfig;
 
-trait ConfigAware
+trait ConfigAwareTrait
 {
     use BaseConfig;
 
@@ -13,7 +13,7 @@ trait ConfigAware
      *
      * @return string The cache driver's name.
      */
-    protected function getCacheDriverName()
+    protected function getCacheDriverNameConfig()
     {
         return $this->getConfig('cache_driver', static::CACHE_DRIVER);
     }
@@ -23,7 +23,7 @@ trait ConfigAware
      *
      * @return string The cache name.
      */
-    protected function getCacheServicesName()
+    protected function getCacheServicesNameConfig()
     {
         return $this->getConfig('cache_services_name', static::CACHE_SERVICES_NAME);
     }

@@ -2,8 +2,8 @@
 
 namespace Amber\Container;
 
-use Amber\Container\Config\ConfigAware;
 use Amber\Container\Config\ConfigAwareInterface;
+use Amber\Container\Config\ConfigAwareTrait;
 use Amber\Container\Container\Binder;
 use Amber\Container\Container\CacheHandler;
 use Amber\Container\Container\Pusher;
@@ -11,7 +11,7 @@ use Amber\Container\Exception\InvalidArgumentException;
 
 class Injector extends Binder implements ConfigAwareInterface
 {
-    use Pusher, ConfigAware, CacheHandler;
+    use Pusher, ConfigAwareTrait, CacheHandler;
 
     /**
      * The Injector constructor.

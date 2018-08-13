@@ -22,7 +22,7 @@ trait CacheHandler
     {
         /* Checks if the CacheInterface is already instantiated. */
         if (!$this->cacher instanceof CacheInterface) {
-            $this->cacher = Cache::driver($this->getCacheDriverName());
+            $this->cacher = Cache::driver($this->getCacheDriverNameConfig());
         }
 
         return $this->cacher;
@@ -35,7 +35,7 @@ trait CacheHandler
      */
     public function pick()
     {
-        $this->services = $this->cache()->get($this->getCacheServicesName(), []);
+        $this->services = $this->cache()->get($this->getCacheServicesNameConfig(), []);
 
         return true;
     }
@@ -47,8 +47,8 @@ trait CacheHandler
      */
     public function drop()
     {
-        if (!$this->cache()->has($this->getCacheServicesName())) {
-            $this->cache()->set($this->getCacheServicesName(), $this->services);
+        if (!$this->cache()->has($this->getCacheServicesNameConfig())) {
+            $this->cache()->set($this->getCacheServicesNameConfig(), $this->services);
         }
 
         return true;
