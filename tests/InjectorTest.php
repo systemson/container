@@ -1,13 +1,13 @@
 <?php
 
-namespace Amber\Container\Tests;
+namespace Tests;
 
 use Amber\Cache\Cache;
 use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Injector;
-use Amber\Container\Tests\Example\Controller;
-use Amber\Container\Tests\Example\Model;
+use Tests\Example\Controller;
+use Tests\Example\Model;
 use PHPUnit\Framework\TestCase;
 
 class InjectorTest extends TestCase
@@ -29,8 +29,8 @@ class InjectorTest extends TestCase
             $container->mount(
                 $controller,
                 [
-                1,
-                $container->get($model),
+                    1,
+                    $container->get($model),
                 ]
             )
         );

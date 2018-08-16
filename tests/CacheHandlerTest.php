@@ -1,9 +1,9 @@
 <?php
 
-namespace Amber\Container\Tests;
+namespace Tests;
 
 use Amber\Container\Injector;
-use Amber\Container\Tests\Example\Model;
+use Tests\Example\Model;
 use PHPUnit\Framework\TestCase;
 
 class CacheHandlerTest extends TestCase
