@@ -1,12 +1,12 @@
 <?php
 
-namespace Amber\Container\Tests\Example;
+namespace Tests\Example;
 
 class Controller
 {
     /**
      *
-     * @inject Amber\Container\Tests\Example\View
+     * @inject Tests\Example\View
      *
      * @var string
      */

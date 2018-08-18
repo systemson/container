@@ -1,6 +1,6 @@
 <?php
 
-namespace Amber\Container\Tests;
+namespace Tests;
 
 use Amber\Container\Container\SimpleBinder;
 use Amber\Container\ServiceContainer;

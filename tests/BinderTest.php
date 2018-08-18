@@ -1,11 +1,11 @@
 <?php
 
-namespace Amber\Container\Tests;
+namespace Tests;
 
 use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Injector;
-use Amber\Container\Tests\Example\Model;
+use Tests\Example\Model;
 use PHPUnit\Framework\TestCase;
 
 class BinderTest extends TestCase

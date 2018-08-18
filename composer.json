@@ -16,6 +16,11 @@
             "Amber\\Container\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "require": {
         "php": ">=7.0.0",
         "psr/container": "^1.0",
@@ -31,6 +36,6 @@
         "test": "phpunit --verbose --coverage-html ./tmp/coverage/",
         "docs": "phpdoc -d ./src -i Tests/ -t ./tmp/docs/api",
         "sniff": "phpcs --standard=PSR12 ./src",
-        "fix": "phpcbf --standard=PSR12 ./src"
+        "fix-cs": "phpcbf --standard=PSR12 ./src"
     }
 }

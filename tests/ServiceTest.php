@@ -1,12 +1,12 @@
 <?php
 
-namespace Amber\Container\Tests;
+namespace Tests;
 
 use Amber\Container\Exception\ContainerException;
 use Amber\Container\Injector;
-use Amber\Container\Tests\Example\Controller;
-use Amber\Container\Tests\Example\Model;
-use Amber\Container\Tests\Example\View;
+use Tests\Example\Controller;
+use Tests\Example\Model;
+use Tests\Example\View;
 use PHPUnit\Framework\TestCase;
 
 class ServiceTest extends TestCase

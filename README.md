@@ -1,5 +1,10 @@
+[![Latest Stable Version](https://poser.pugx.org/amber/container/v/stable.png)](https://packagist.org/packages/amber/container)
+[![Latest Beta Version](https://img.shields.io/packagist/vpre/amber/container.svg)](https://packagist.org/packages/amber/container)
 [![Build Status](https://travis-ci.org/systemson/container.svg?branch=master)](https://travis-ci.org/systemson/container)
-[![StyleCI](https://styleci.io/repos/126626182/shield?branch=master)](https://styleci.io/repos/126626182)
+[![PHP-Eye](https://php-eye.com/badge/amber/container/tested.svg?style=flat)](https://php-eye.com/package/amber/container)
+[![StyleCI](https://styleci.io/repos/126605518/shield?branch=master)](https://styleci.io/repos/126605518)
+[![Total Downloads](https://poser.pugx.org/amber/container/downloads.png)](https://packagist.org/packages/amber/container)
+
 
 # Container
 Simple PHP DI Container.
