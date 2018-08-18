@@ -20,9 +20,14 @@ class BinderTest extends TestCase
         $number = 1;
         $array = [1, 2, 3, 4, 5];
         $class = Model::class;
+        $anonymous  = new class extends Model {
+        };
         $object = new $class();
+        $function = function ($value) {
+            return $value;
+        };
 
-        /* Test strings */
+        /* Tests strings */
         $this->assertTrue($container->bind($key, $string));
         $this->assertTrue($container->has($key));
         $this->assertSame($string, $container->get($key));
@@ -30,33 +35,48 @@ class BinderTest extends TestCase
         $this->assertFalse($container->has($key));
         $this->assertFalse($container->unbind($key));
 
-        /* Test numbers */
+        /* Tests numbers */
         $this->assertTrue($container->bind($key, $number));
         $this->assertTrue($container->has($key));
         $this->assertSame($number, $container->get($key));
         $this->assertTrue($container->unbind($key));
         $this->assertFalse($container->has($key));
 
-        /* Test arrays */
+        /* Tests arrays */
         $this->assertTrue($container->bind($key, $array));
         $this->assertTrue($container->has($key));
         $this->assertSame($array, $container->get($key));
         $this->assertTrue($container->unbind($key));
         $this->assertFalse($container->has($key));
 
-        /* Test objects */
+        /* Tests objects */
         $this->assertTrue($container->bind($key, $object));
         $this->assertTrue($container->has($key));
         $this->assertSame($object, $container->get($key));
         $this->assertTrue($container->unbind($key));
         $this->assertFalse($container->has($key));
 
-        /* Test classes */
+        /* Tests classes */
         $this->assertTrue($container->bind($class));
         $this->assertTrue($container->has($class));
         $this->assertInstanceOf($class, $container->get($class));
         $this->assertTrue($container->unbind($class));
         $this->assertFalse($container->has($class));
+
+        /* Tests anonymous classes */
+        $this->assertTrue($container->bind($key, $anonymous));
+        $this->assertTrue($container->has($key));
+        $this->assertSame($anonymous, $container->get($key));
+        $this->assertInstanceOf(Model::class, $container->get($key));
+        $this->assertTrue($container->unbind($key));
+        $this->assertFalse($container->has($key));
+
+        /* Tests anonymous function */
+        $this->assertTrue($container->bind($key, $function));
+        $this->assertTrue($container->has($key));
+        $this->assertSame($function, $container->get($key));
+        $this->assertTrue($container->unbind($key));
+        $this->assertFalse($container->has($key));
 
         return $container;
     }
