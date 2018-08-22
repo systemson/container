@@ -14,8 +14,7 @@ $container->bind(Model::class);
 
 declare(ticks=1);
 
-$benchmark->add('get', function() use ($container) {
-
+$benchmark->add('get', function () use ($container) {
     $container->bind(Model::class);
     $container->get(Model::class);
     $container->unbind(Model::class);
@@ -23,8 +22,7 @@ $benchmark->add('get', function() use ($container) {
     return $container;
 });
 
-$benchmark->add('mount', function() use ($container) {
-
+$benchmark->add('mount', function () use ($container) {
     $container->mount(Model::class);
 
     return $container;
@@ -34,8 +32,7 @@ $container->drop();
 
 $container->clear();
 
-$benchmark->add('pick', function() use ($container) {
-
+$benchmark->add('pick', function () use ($container) {
     $container->pick();
     $container->get(Model::class);
 
