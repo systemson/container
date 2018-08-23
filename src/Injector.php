@@ -16,7 +16,7 @@ class Injector extends Binder implements ConfigAwareInterface
     /**
      * The Injector constructor.
      *
-     * @param array $config The configurations for the Injector.
+     * @param array $config The configurations for the Container.
      */
     public function __construct($config = [])
     {
@@ -41,8 +41,8 @@ class Injector extends Binder implements ConfigAwareInterface
         }
 
         /* Checks if the instance of the class is in the cache */
-        if ($this->cache()->has($class)) {
-            return $this->cache()->get($class);
+        if ($this->getCache()->has($class)) {
+            return $this->getCache()->get($class);
         }
 
         $service = $this->findAndBind($class)->singleton(true);
@@ -50,7 +50,7 @@ class Injector extends Binder implements ConfigAwareInterface
         /* Gets an instance of the class */
         $instance = $this->instantiate($service, $arguments);
 
-        $this->cache()->set($class, $instance, 15);
+        $this->getCache()->set($class, $instance, 15);
 
         return $instance;
     }

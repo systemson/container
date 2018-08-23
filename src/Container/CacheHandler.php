@@ -3,39 +3,21 @@
 namespace Amber\Container\Container;
 
 use Amber\Cache\Cache;
-use Psr\SimpleCache\CacheInterface;
+use Amber\Cache\CacheAware\CacheAwareTrait;
+use Amber\Cache\Driver\CacheDriver;
 
 trait CacheHandler
 {
-    /**
-     *
-     * @var Cache driver.
-     */
-    protected $cacher;
-
-    /**
-     * Returns the cache driver.
-     *
-     * @return object Psr\SimpleCache\CacheInterface instance.
-     */
-    protected function cache()
-    {
-        /* Checks if the CacheInterface is already instantiated. */
-        if (!$this->cacher instanceof CacheInterface) {
-            $this->cacher = Cache::driver($this->getCacheDriverNameConfig());
-        }
-
-        return $this->cacher;
-    }
+    use CacheAwareTrait;
 
     /**
      * Retrieves the Container's map from the cache.
      *
-     * @return void
+     * @return boolen true
      */
     public function pick()
     {
-        $this->services = $this->cache()->get($this->getCacheServicesNameConfig(), []);
+        $this->services = $this->getCache()->get($this->getConfig('cache_services_name', []));
 
         return true;
     }
@@ -47,8 +29,8 @@ trait CacheHandler
      */
     public function drop()
     {
-        if (!$this->cache()->has($this->getCacheServicesNameConfig())) {
-            $this->cache()->set($this->getCacheServicesNameConfig(), $this->services);
+        if (!$this->getCache()->has($this->getConfig('cache_services_name'))) {
+            $this->getCache()->set($this->getConfig('cache_services_name'), $this->services);
         }
 
         return true;

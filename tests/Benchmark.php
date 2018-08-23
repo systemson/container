@@ -10,6 +10,14 @@ $benchmark = new Benchmark();
 
 $container = new Injector();
 
+$configs = [
+	'cache' => [
+		'cache_driver' => 'apcu',
+	],
+];
+
+$container->setConfig($configs);
+
 $container->bind(Model::class);
 
 declare(ticks=1);
@@ -39,6 +47,6 @@ $benchmark->add('pick', function () use ($container) {
     return $container;
 });
 
-$benchmark->setCount(1000);
-
 $benchmark->run();
+
+$container->clear(true);

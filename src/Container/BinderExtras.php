@@ -106,14 +106,14 @@ trait BinderExtras
     /**
      * Clears the Container's map.
      *
-     * @param bool $clear_cache Tells the cleared to empty the cache.
+     * @param bool $clear_cache Whether to empty the cache.
      *
      * @return void
      */
     public function clear($clear_cache = false)
     {
         if ($clear_cache) {
-            $this->cache()->clear();
+            $this->getCache()->clear();
         }
         $this->services = [];
 
