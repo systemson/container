@@ -38,6 +38,6 @@
         "docs": "phpdoc -d ./src -i Tests/ -t ./tmp/docs/api",
         "sniff": "phpcs --standard=PSR12 ./src",
         "fix-cs": "phpcbf --standard=PSR12 ./src",
-        "speed": "E:/Datos/TESTS/php/php.exe ./tests/Benchmark.php"
+        "speed": "php ./tests/Benchmark.php"
     }
 }
