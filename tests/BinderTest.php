@@ -78,6 +78,11 @@ class BinderTest extends TestCase
         $this->assertTrue($container->unbind($key));
         $this->assertFalse($container->has($key));
 
+        $container->clear();
+
+        // Tests bindAndGet()
+        $this->assertSame($string, $container->bindAndGet($key, $string));
+
         return $container;
     }
 
@@ -100,6 +105,11 @@ class BinderTest extends TestCase
         $this->assertSame(array_values($multiple), $container->getMultiple(array_keys($multiple)));
         $this->assertTrue($container->unbindMultiple(array_keys($multiple)));
         $this->assertFalse($container->has($multiple[$key . '0']));
+
+        $container->clear();
+
+        // Tests bindAndGetMultuiple()
+        $this->assertSame(array_values($multiple), $container->bindAndGetMultiple($multiple));
     }
 
     /**

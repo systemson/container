@@ -25,6 +25,7 @@ trait BinderExtras
 
         return $service->getInstance($service->getArguments());
     }
+
     /**
      * Binds or Updates an item to the Container's map by a unique key.
      *

@@ -25,7 +25,7 @@ trait MultipleBinder
      *
      * @param array $items An array of items to get.
      *
-     * @return bool true
+     * @return array The values of the items.
      */
     final public function getMultiple(array $items)
     {
