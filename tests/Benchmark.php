@@ -11,9 +11,9 @@ $benchmark = new Benchmark();
 $container = new Injector();
 
 $configs = [
-	'cache' => [
-		'cache_driver' => 'apcu',
-	],
+    'cache' => [
+        'cache_driver' => 'apcu',
+    ],
 ];
 
 $container->setConfig($configs);
