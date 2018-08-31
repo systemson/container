@@ -24,14 +24,21 @@ class ClosureClass
      * @param string $method The class method to call.
      * @param array  $args   The class constructor arguments.
      */
-    public function __construct($class, $method, $args = [])
+    public function __construct($callable, $args = [])
     {
+        $array = explode('@', $callable);
+
+        $class = $array[0];
+        $method = $array[1] ?? null;
+
         $this->instance = (new Service($class, $class))->getInstance($args);
         $this->method = $method;
     }
 
     /**
      * Invokes the class method.
+     *
+     * @todo Test classes without methods, called by the __invoke magic method.
      *
      * @param array $args The arguments for the called method.
      *

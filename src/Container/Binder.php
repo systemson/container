@@ -2,6 +2,8 @@
 
 namespace Amber\Container\Container;
 
+use Amber\Container\Exception\InvalidArgumentException;
+
 /**
  * Class to handle the Container's binder.
  */

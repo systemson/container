@@ -58,7 +58,7 @@ class Invoker
      */
     public function with(...$args)
     {
-        $this->arguments = $args;
+        $this->arguments = call_user_func_array('array_merge', $args);
 
         return $this;
     }
@@ -87,8 +87,7 @@ class Invoker
     public function do(...$args)
     {
         $closure = $this->getClosure(
-            $this->class,
-            $this->method,
+            $this->class . '@' . $this->method,
             $this->container->bindAndGetMultiple($this->arguments)
         );
 
@@ -104,8 +103,8 @@ class Invoker
      *
      * @return ClosureClass
      */
-    public static function getClosure($class, $method, $args = [])
+    public static function getClosure($callable, $args = [])
     {
-        return new ClosureClass($class, $method, $args);
+        return new ClosureClass($callable, $args);
     }
 }

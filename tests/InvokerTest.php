@@ -13,13 +13,11 @@ class InvokerTest extends TestCase
     {
         $invoker = new Invoker();
 
-        $args = [
-            'id' => 1,
-            Model::class => Model::class,
-        ];
+        $id = ['id' => 1];
+        $class = [Model::class => Model::class];
 
         $model = $invoker->from(Controller::class)
-        ->with($args)
+        ->with($id, $class)
         ->call('getModel')
         ->do();
 
@@ -33,7 +31,7 @@ class InvokerTest extends TestCase
             new Model(),
         ];
 
-        $closure = Invoker::getClosure('Tests\Example\Controller', 'getModel', $args);
+        $closure = Invoker::getClosure('Tests\Example\Controller@getModel', $args);
 
         $this->assertInstanceOf(Model::class, $closure());
     }

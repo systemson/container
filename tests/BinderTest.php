@@ -164,6 +164,18 @@ class BinderTest extends TestCase
      *
      * @depends testBinder
      */
+    public function testBindAndGetInvalidArgumentException($container)
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        /* Test strings */
+        $container->bindAndGet(1, 'value');
+    }
+
+    /**
+     *
+     * @depends testBinder
+     */
     public function testUnbindInvalidArgumentException($container)
     {
         $this->expectException(InvalidArgumentException::class);
