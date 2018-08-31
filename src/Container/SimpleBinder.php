@@ -2,6 +2,10 @@
 
 namespace Amber\Container\Container;
 
+use Amber\Collection\CollectionAware\CollectionAwareInterface;
+use Amber\Collection\CollectionAware\CollectionAwareTrait;
+use Amber\Container\Config\ConfigAwareTrait;
+use Amber\Container\Config\ConfigAwareInterface;
 use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Service\Service;
 use Amber\Validator\Validator;
@@ -10,11 +14,19 @@ use Psr\Container\ContainerInterface;
 /**
  * Class for PSR-11 Container compliance.
  */
-class SimpleBinder implements ContainerInterface
+class SimpleBinder implements ContainerInterface, ConfigAwareInterface, CollectionAwareInterface
 {
-    use Finder, MultipleBinder, Validator;
+    use Finder, MultipleBinder, Validator, ConfigAwareTrait, CollectionAwareTrait;
 
-    protected $services = [];
+    /**
+     * The Container constructor.
+     *
+     * @param array $config The configurations for the Container.
+     */
+    public function __construct($config = [])
+    {
+        $this->setConfig($config);
+    }
 
     /**
      * Binds an item to the Container's map by a unique key.
@@ -82,7 +94,7 @@ class SimpleBinder implements ContainerInterface
             throw new InvalidArgumentException('Key argument must be a non empty string');
         }
 
-        return isset($this->services[$key]);
+        return $this->getCollection()->has($key);
     }
 
     /**
@@ -101,8 +113,8 @@ class SimpleBinder implements ContainerInterface
             throw new InvalidArgumentException('Key argument must be a non empty string');
         }
 
-        if (isset($this->services[$key])) {
-            unset($this->services[$key]);
+        if ($this->getCollection()->has($key)) {
+            $this->getCollection()->remove($key);
 
             return true;
         }

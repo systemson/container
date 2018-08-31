@@ -43,7 +43,7 @@ trait BinderExtras
             throw new InvalidArgumentException('Key argument must be a non empty string');
         }
 
-        $this->services[$key] = new Service($key, $value ?? $key);
+        $this->getCollection()->put($key, new Service($key, $value ?? $key));
 
         return true;
     }
@@ -116,7 +116,7 @@ trait BinderExtras
         if ($clear_cache) {
             $this->getCache()->clear();
         }
-        $this->services = [];
+        $this->getCollection()->clear();
 
         return true;
     }
@@ -128,7 +128,7 @@ trait BinderExtras
      */
     public function count()
     {
-        return count($this->services);
+        return $this->getCollection()->count();
     }
 
     /**
@@ -138,7 +138,7 @@ trait BinderExtras
      */
     public function isEmpty()
     {
-        return $this->count() == 0;
+        return $this->getCollection()->isEmpty();
     }
 
     /**
@@ -148,6 +148,6 @@ trait BinderExtras
      */
     public function services()
     {
-        return $this->services;
+        return $this->getCollection()->all();
     }
 }

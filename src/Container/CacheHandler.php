@@ -5,6 +5,7 @@ namespace Amber\Container\Container;
 use Amber\Cache\Cache;
 use Amber\Cache\CacheAware\CacheAwareTrait;
 use Amber\Cache\Driver\CacheDriver;
+use Amber\Collection\Collection;
 
 trait CacheHandler
 {
@@ -17,7 +18,14 @@ trait CacheHandler
      */
     public function pick()
     {
-        $this->services = $this->getCache()->get($this->getConfig('cache_services_name', []));
+        $this->setCollection(
+            new Collection(
+                $this->getCache()->get(
+                    $this->getConfig('cache_services_name'),
+                    []
+                )
+            )
+        );
 
         return true;
     }
@@ -30,7 +38,7 @@ trait CacheHandler
     public function drop()
     {
         if (!$this->getCache()->has($this->getConfig('cache_services_name'))) {
-            $this->getCache()->set($this->getConfig('cache_services_name'), $this->services);
+            $this->getCache()->set($this->getConfig('cache_services_name'), $this->getCollection()->toArray());
         }
 
         return true;

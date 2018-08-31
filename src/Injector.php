@@ -2,26 +2,14 @@
 
 namespace Amber\Container;
 
-use Amber\Container\Config\ConfigAwareInterface;
-use Amber\Container\Config\ConfigAwareTrait;
 use Amber\Container\Container\Binder;
 use Amber\Container\Container\CacheHandler;
 use Amber\Container\Container\Pusher;
 use Amber\Container\Exception\InvalidArgumentException;
 
-class Injector extends Binder implements ConfigAwareInterface
+class Injector extends Binder
 {
-    use Pusher, ConfigAwareTrait, CacheHandler;
-
-    /**
-     * The Injector constructor.
-     *
-     * @param array $config The configurations for the Container.
-     */
-    public function __construct($config = [])
-    {
-        $this->setConfig($config);
-    }
+    use Pusher, CacheHandler;
 
     /**
      * Gets an instance of the specified class, and stores it.

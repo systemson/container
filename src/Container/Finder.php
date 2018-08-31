@@ -19,10 +19,10 @@ trait Finder
     public function locate($key)
     {
         if (!$this->has($key)) {
-            throw new NotFoundException("No entry was found for {$key}");
+            throw new NotFoundException("No entry was found for \"{$key}\"");
         }
 
-        return $this->services[$key];
+        return $this->getCollection()->get($key);
     }
 
     /**
@@ -38,7 +38,7 @@ trait Finder
             $this->bind($key);
         }
 
-        return $this->services[$key];
+        return $this->getCollection()->get($key);
     }
 
     /**
