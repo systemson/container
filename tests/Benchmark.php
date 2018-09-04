@@ -12,7 +12,7 @@ $container = new Injector();
 
 $configs = [
     'cache' => [
-        'cache_driver' => 'apcu',
+        'cache_driver' => 'json',
     ],
 ];
 
@@ -49,4 +49,4 @@ $benchmark->add('pick', function () use ($container) {
 
 $benchmark->run();
 
-$container->clear(true);
+//$container->clear(true);
