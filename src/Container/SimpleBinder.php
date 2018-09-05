@@ -7,7 +7,7 @@ use Amber\Collection\CollectionAware\CollectionAwareTrait;
 use Amber\Container\Config\ConfigAwareTrait;
 use Amber\Container\Config\ConfigAwareInterface;
 use Amber\Container\Exception\InvalidArgumentException;
-use Amber\Container\Service\Service;
+use Amber\Container\Service\ServiceClass;
 use Amber\Validator\Validator;
 use Psr\Container\ContainerInterface;
 

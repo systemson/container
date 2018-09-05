@@ -5,7 +5,7 @@ namespace Amber\Container\Container;
 use Amber\Container\Exception\ContainerException;
 use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Exception\NotFoundException;
-use Amber\Container\Service\Service;
+use Amber\Container\Service\ServiceClass;
 
 trait BinderExtras
 {
@@ -17,7 +17,7 @@ trait BinderExtras
      *
      * @return object The instance of the class
      */
-    protected function instantiate(Service $service, $arguments = [])
+    protected function instantiate(ServiceClass $service, $arguments = [])
     {
         if (empty($service->arguments)) {
             $service->setArguments($this->getArguments($service, $arguments));
@@ -43,7 +43,7 @@ trait BinderExtras
             throw new InvalidArgumentException('Key argument must be a non empty string');
         }
 
-        $this->getCollection()->put($key, new Service($key, $value ?? $key));
+        $this->getCollection()->put($key, new ServiceClass($key, $value ?? $key));
 
         return true;
     }

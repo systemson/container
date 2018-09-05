@@ -4,7 +4,7 @@ namespace Amber\Container\Service;
 
 use Amber\Validator\Validator;
 
-class Service
+class ServiceClass
 {
     use Validator, ClassHandler, DependenciesHandler;
 

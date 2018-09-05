@@ -2,7 +2,7 @@
 
 namespace Amber\Container;
 
-use Amber\Container\Invoker\ClosureClass;
+use Amber\Container\Service\ClosureClass;
 
 class Invoker
 {
@@ -32,7 +32,9 @@ class Invoker
     public function __construct()
     {
         $this->container = new Injector();
-        $this->container->setConfig(['cache_driver', 'array']);
+        $this->container->setConfig(['cache' => [
+            'cache_driver' => 'array'
+        ]]);
     }
 
     /**
@@ -56,7 +58,7 @@ class Invoker
      *
      * @return static
      */
-    public function with(...$args)
+    public function buildWith(...$args)
     {
         $this->arguments = call_user_func_array('array_merge', $args);
 

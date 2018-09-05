@@ -3,7 +3,7 @@
 namespace Amber\Container\Container;
 
 use Amber\Container\Exception\NotFoundException;
-use Amber\Container\Service\Service;
+use Amber\Container\Service\ServiceClass;
 
 trait Finder
 {
@@ -65,7 +65,7 @@ trait Finder
      *
      * @return array The arguments for the class constructor.
      */
-    protected function getArguments(Service $service, array $arguments = [])
+    protected function getArguments(ServiceClass $service, array $arguments = [])
     {
         if (!empty($arguments)) {
             return $arguments;

@@ -4,6 +4,9 @@ namespace Amber\Container;
 
 use Amber\Container\Container\SimpleBinder;
 
+/**
+ * @deprecated
+ */
 final class ServiceContainer extends SimpleBinder
 {
     /**

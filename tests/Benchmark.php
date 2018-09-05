@@ -12,7 +12,7 @@ $container = new Injector();
 
 $configs = [
     'cache' => [
-        'cache_driver' => 'json',
+        'cache_driver' => 'apcu',
     ],
 ];
 

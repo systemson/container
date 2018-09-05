@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class InvokerTest extends TestCase
 {
-    public function testInvoker()
+    public function testInvokerWithConstructorParams()
     {
         $invoker = new Invoker();
 
@@ -17,11 +17,22 @@ class InvokerTest extends TestCase
         $class = [Model::class => Model::class];
 
         $model = $invoker->from(Controller::class)
-        ->with($id, $class)
+        ->buildWith($id, $class)
         ->call('getModel')
         ->do();
 
         $this->assertInstanceOf(Model::class, $model);
+    }
+
+    public function testInvokerWithoutConstructorParams()
+    {
+        $invoker = new Invoker();
+
+        $id = $invoker->from(Model::class)
+        ->call('getId')
+        ->do();
+
+        $this->assertSame(1, $id);
     }
 
     public function testStaticInvoker()
