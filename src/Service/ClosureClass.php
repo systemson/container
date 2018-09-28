@@ -27,6 +27,16 @@ class ClosureClass
     protected $instance;
 
     /**
+     * @var array The method to invoke before the main action.
+     */
+    protected $before;
+
+    /**
+     * @var array The method to invoke after the main action.
+     */
+    protected $after;
+
+    /**
      * The class constructor.
      *
      * @param string $callable  The class and method to instantiate in the format "ThisClass@thisMethod".
@@ -47,7 +57,7 @@ class ClosureClass
     /**
      * Invokes the class method.
      *
-     * @todo Test classes without methods, called by the __invoke magic method.
+     * @todo Test classes called by it's own __invoke magic method.
      *
      * @param array $args The arguments for the called method.
      *
@@ -55,7 +65,11 @@ class ClosureClass
      */
     public function __invoke(...$args)
     {
-        return call_user_func_array([$this->getInstance(), $this->method], $args);
+        $this->beforeAction();
+        $return = call_user_func_array([$this->getInstance(), $this->method], $args);
+        $this->afterAction();
+
+        return $return;
     }
 
     /**
@@ -72,5 +86,69 @@ class ClosureClass
         }
 
         return $this->instance;
+    }
+
+    /**
+     * Sets the method to call before the main action is called.
+     *
+     * @todo MUST validate that this method is callable from the class.
+     *
+     * @param string $method    The method to call before the main action.
+     * @param array  $arguments Optional. The arguments to pass to the method.
+     *
+     * @return void
+     */
+    public function setBeforeAction($method, array $arguments = [])
+    {
+        $this->before = (object) [
+            'method' => $method,
+            'arguments' => $arguments,
+        ];
+    }
+
+    /**
+     * Calls the specified method before the main action is called.
+     *
+     * @todo Should work for calling a method from another class.
+     *
+     * @return void
+     */
+    protected function beforeAction()
+    {
+        if (isset($this->before->method)) {
+            call_user_func_array([$this->getInstance(), $this->before->method], $this->before->arguments);
+        }
+    }
+
+    /**
+     * Sets the method to call after the main action is called.
+     *
+     * @todo MUST validate that this method is callable from the class.
+     *
+     * @param string $method    The method to call before the main action.
+     * @param array  $arguments Optional. The arguments to pass to the method.
+     *
+     * @return void
+     */
+    public function setAfterAction($method, array $arguments = [])
+    {
+        $this->after = (object) [
+            'method' => $method,
+            'arguments' => $arguments,
+        ];
+    }
+
+    /**
+     * Calls the specified method after the main action is called.
+     *
+     * @todo Should work for calling a method from another class.
+     *
+     * @return void
+     */
+    protected function afterAction()
+    {
+        if (isset($this->after->method)) {
+            call_user_func_array([$this->getInstance(), $this->after->method], $this->after->arguments);
+        }
     }
 }

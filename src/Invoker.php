@@ -4,6 +4,11 @@ namespace Amber\Container;
 
 use Amber\Container\Service\ClosureClass;
 
+/**
+ * Wrapper class to get a callable object from a specified class and method.
+ *
+ * @todo Should be moved to it's own package.
+ */
 class Invoker
 {
     /**
@@ -25,6 +30,16 @@ class Invoker
      * @var object The instance of the Amber\Container\Injector.
      */
     protected $container;
+
+    /**
+     * @var array
+     */
+    protected $before = [];
+
+    /**
+     * @var array
+     */
+    protected $after = [];
 
     /**
      * The invoker constructor.
@@ -80,6 +95,42 @@ class Invoker
     }
 
     /**
+     * Sets the method to call before the main action is called.
+     *
+     * @param string $method The method to call before the main action.
+     * @param array  $args   Optional. The arguments to pass to the method.
+     *
+     * @return static
+     */
+    public function before($method, ...$args)
+    {
+        $this->before = (object) [
+            'method' => $method,
+            'arguments' => $args ?? [],
+        ];
+
+        return $this;
+    }
+
+    /**
+     * Sets the method to call after the main action is called.
+     *
+     * @param string $method The method to call before the main action.
+     * @param array  $args   Optional. The arguments to pass to the method.
+     *
+     * @return static
+     */
+    public function after($method, ...$args)
+    {
+        $this->after = (object) [
+            'method' => $method,
+            'arguments' => $args ?? [],
+        ];
+
+        return $this;
+    }
+
+    /**
      * Calls the class method and pass the arguments.
      *
      * @param mixed|array $args The class method arguments.
@@ -92,6 +143,14 @@ class Invoker
             $this->class . '@' . $this->method,
             $this->container->bindAndGetMultiple($this->arguments)
         );
+
+        if (isset($this->before->method)) {
+            $closure->setBeforeAction($this->before->method, $this->before->arguments);
+        }
+
+        if (isset($this->after->method)) {
+            $closure->setAfterAction($this->after->method, $this->after->arguments);
+        }
 
         return $closure($args);
     }
