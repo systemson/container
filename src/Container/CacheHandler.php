@@ -40,7 +40,7 @@ trait CacheHandler
         if (!$this->getCache()->has($this->getConfig('cache_services_name'))) {
             $this->getCache()->set(
                 $this->getConfig('cache_services_name'),
-                $this->getCollection()->toArray()
+                $this->services()
             );
         }
 

@@ -7,6 +7,12 @@ use Amber\Container\Container\CacheHandler;
 use Amber\Container\Container\Pusher;
 use Amber\Container\Exception\InvalidArgumentException;
 
+/**
+ * Handles the dependency injection.
+ *
+ * @todo Load class config data for the instantiation.
+ * @todo Load and bind service providers from config.
+ */
 class Injector extends Binder
 {
     use Pusher, CacheHandler;

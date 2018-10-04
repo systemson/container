@@ -5,7 +5,7 @@ namespace Amber\Container;
 use Amber\Container\Service\ClosureClass;
 
 /**
- * Wrapper class to get a callable object from a specified class and method.
+ * Wrapper class to obtain a callable object from a specified class and method.
  *
  * @todo Should be moved to it's own package.
  */
