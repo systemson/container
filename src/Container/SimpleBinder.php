@@ -26,6 +26,8 @@ class SimpleBinder implements ContainerInterface, ConfigAwareInterface, Collecti
     public function __construct($config = [])
     {
         $this->setConfig($config);
+
+        $this->bindMultiple($this->getConfig('container.services', []));
     }
 
     /**

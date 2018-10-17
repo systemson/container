@@ -3,18 +3,13 @@
 namespace Amber\Container;
 
 use Amber\Container\Container\SimpleBinder;
+use Amber\Utils\Implementations\AbstractSingleton;
 
 /**
  * @deprecated
  */
-final class ServiceContainer extends SimpleBinder
+final class ServiceContainer extends AbstractSingleton
 {
-    /**
-     *
-     * @var object ServiceContainer Instance.
-     */
-    private static $instance;
-
     /**
      * Get the instance of the ServiceContainer class.
      *
@@ -22,8 +17,8 @@ final class ServiceContainer extends SimpleBinder
      */
     public static function getInstance()
     {
-        if (!self::$instance instanceof self) {
-            self::$instance = new self();
+        if (!self::$instance instanceof SimpleBinder) {
+            self::$instance = new SimpleBinder();
         }
 
         return self::$instance;

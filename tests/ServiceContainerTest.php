@@ -13,22 +13,16 @@ class ServiceContainerTest extends TestCase
     {
         $container = ServiceContainer::getInstance();
 
-        /* Checks if the Container returns an instance of ServiceContainer */
-        $this->assertInstanceOf(
-            ServiceContainer::class,
-            $container->getInstance()
-        );
-
-        /* Checks if the Container returns an instance of Binder */
+        /* Checks if the Container returns an instance of Psr\Container\ContainerInterface */
         $this->assertInstanceOf(
             ContainerInterface::class,
-            $example = $container->getInstance()
+            $container
         );
 
-        /* Checks if the Container returns an instance of Binder */
+        /* Checks if the Container returns an instance of SimpleBinder */
         $this->assertInstanceOf(
             SimpleBinder::class,
-            $example = $container->getInstance()
+            $container
         );
     }
 }

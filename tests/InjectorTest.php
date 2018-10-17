@@ -8,22 +8,28 @@ use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Injector;
 use Tests\Example\Controller;
 use Tests\Example\Model;
+use Amber\Config\Config;
 use PHPUnit\Framework\TestCase;
 
 class InjectorTest extends TestCase
 {
     public function testInjector()
     {
-        $container = new Injector();
-
         $model = Model::class;
         $controller = Controller::class;
 
-        /* Bind dependencies */
-        $this->assertTrue($container->bind('id', 1));
-        $this->assertTrue($container->bind($model));
+        /* Binds dependencies from config. */
+        $config = ['container' => [
+            'services' => [
+                'id' => 1,
+                $model,
+                ],
+            ],
+        ];
 
-        //$this->assertTrue($container->has($model));
+        $container = new Injector($config);
+
+        $this->assertTrue($container->has($model));
         $this->assertInstanceOf(
             $controller,
             $container->mount(
@@ -54,6 +60,8 @@ class InjectorTest extends TestCase
         $this->assertFalse($container->has($controller));
 
         Cache::clear();
+        $container->clear();
+        Config::clear();
 
         return $container;
     }

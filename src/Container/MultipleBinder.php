@@ -14,6 +14,8 @@ trait MultipleBinder
     final public function bindMultiple(array $items)
     {
         foreach ($items as $key => $value) {
+            $key = is_int($key) ? $value : $key;
+
             $this->bind($key, $value);
         }
 

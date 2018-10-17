@@ -11,7 +11,7 @@ use Amber\Container\Exception\InvalidArgumentException;
  * Handles the dependency injection.
  *
  * @todo Load class config data for the instantiation.
- * @todo Load and bind service providers from config.
+ * @todo Load and bind dependencies from config.
  */
 class Injector extends Binder
 {
