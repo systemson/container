@@ -6,7 +6,7 @@ use Amber\Config\ConfigAwareInterface as BaseInterface;
 
 interface ConfigAwareInterface extends BaseInterface
 {
-    const CACHE_DRIVER = 'file';
+    const PACKAGE_NAME = 'container';
 
     const CACHE_SERVICES_NAME = 'injector_services';
 }

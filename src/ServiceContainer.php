@@ -11,6 +11,11 @@ use Amber\Utils\Implementations\AbstractSingleton;
 final class ServiceContainer extends AbstractSingleton
 {
     /**
+     * @var SimpleBinder instance
+     */
+    private static $instance;
+
+    /**
      * Get the instance of the ServiceContainer class.
      *
      * @return object ServiceContainer Instance.
