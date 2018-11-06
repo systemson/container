@@ -2,6 +2,8 @@
 
 namespace Amber\Container;
 
+use RuntimeException;
+
 /**
  * @todo Should be moved to it's own package.
  */
@@ -42,6 +44,11 @@ abstract class Facade
         return static::$accessor;
     }
 
+    public static function root()
+    {
+        return static::getContainer()->get(static::getAccesor());
+    }
+
     /**
      * Handle dynamic, static calls to the object.
      *
@@ -54,9 +61,9 @@ abstract class Facade
      */
     public static function __callStatic($method, $args)
     {
-        $instance = static::getContainer()->get(static::getAccesor());
+        $instance = self::root();
 
-        if (! $instance) {
+        if (!$instance) {
             throw new RuntimeException('A facade root has not been set.');
         }
 

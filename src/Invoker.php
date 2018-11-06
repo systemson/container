@@ -140,7 +140,7 @@ class Invoker
     public function do(...$args)
     {
         $closure = $this->getClosure(
-            $this->class . '@' . $this->method,
+            $this->class . '::' . $this->method,
             $this->container->bindAndGetMultiple($this->arguments)
         );
 

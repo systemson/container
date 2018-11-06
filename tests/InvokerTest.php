@@ -56,7 +56,7 @@ class InvokerTest extends TestCase
 
         $new_id = 2;
 
-        $closure = Invoker::getClosure('\Tests\Example\Model@getId');
+        $closure = Invoker::getClosure('\Tests\Example\Model::getId');
         $closure->setAfterAction('setId', [$new_id]);
 
         $this->assertSame(1, $closure());
@@ -71,7 +71,7 @@ class InvokerTest extends TestCase
             new Model(),
         ];
 
-        $closure = Invoker::getClosure('\Tests\Example\Controller@getModel', $args);
+        $closure = Invoker::getClosure('\Tests\Example\Controller::getModel', $args);
 
         $this->assertInstanceOf(Model::class, $closure());
     }

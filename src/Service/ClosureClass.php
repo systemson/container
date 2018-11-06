@@ -44,7 +44,7 @@ class ClosureClass
      */
     public function __construct(string $callable, array $args = [])
     {
-        $array = explode('@', $callable);
+        $array = explode('::', $callable);
 
         $class = $array[0];
         $method = $array[1] ?? null;
