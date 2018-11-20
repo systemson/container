@@ -3,7 +3,8 @@
 namespace Amber\Container\Exception;
 
 use Psr\Container\ContainerExceptionInterface;
+use Exception;
 
-class ContainerException extends \Exception implements ContainerExceptionInterface
+class ContainerException extends Exception implements ContainerExceptionInterface
 {
 }

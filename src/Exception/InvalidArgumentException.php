@@ -2,6 +2,8 @@
 
 namespace Amber\Container\Exception;
 
-class InvalidArgumentException extends \InvalidArgumentException
+use InvalidArgumentException as BaseException;
+
+class InvalidArgumentException extends BaseException
 {
 }
