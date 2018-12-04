@@ -15,14 +15,14 @@ abstract class Facade
     protected static $container;
 
     /**
-     * @var The class instance of the class to call.
-     */
-    protected static $instance;
-
-    /**
      * @var The class accessor.
      */
     protected static $accessor;
+
+    /**
+     * @var The instance of the class.
+     */
+    protected static $instance;
 
     public static function setContainer($container)
     {
