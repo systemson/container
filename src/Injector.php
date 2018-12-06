@@ -6,6 +6,11 @@ use Amber\Container\Container\Binder;
 use Amber\Container\Container\CacheHandler;
 use Amber\Container\Container\Pusher;
 use Amber\Container\Exception\InvalidArgumentException;
+use Psr\Container\ContainerInterface;
+use Amber\Collection\CollectionAware\CollectionAwareInterface;
+use Amber\Collection\CollectionAware\CollectionAwareTrait;
+use Amber\Container\Config\ConfigAwareTrait;
+use Amber\Container\Config\ConfigAwareInterface;
 
 /**
  * Handles the dependency injection.
@@ -14,9 +19,22 @@ use Amber\Container\Exception\InvalidArgumentException;
  * @todo Load and bind dependencies from config.
  * @todo This class should validate for a ClassAwareInterface to inject depedencies.
  */
-class Injector extends Binder
+class Injector extends Binder implements ContainerInterface, ConfigAwareInterface, CollectionAwareInterface
 {
-    use Pusher, CacheHandler;
+    use Pusher, CacheHandler, ConfigAwareTrait, CollectionAwareTrait;
+
+    /**
+     * The Container constructor.
+     *
+     * @param array $config The configurations for the Container.
+     */
+    public function __construct($config = [])
+    {
+        $this->setConfig($config);
+        $this->initCollection();
+
+        $this->bindMultiple($this->getConfig('container.services', []));
+    }
 
     /**
      * Gets an instance of the specified class, and stores it.
