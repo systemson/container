@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true">
+<phpunit colors="true" verbose="false">
     <testsuites>
         <testsuite name="Amber Test Suite">
             <directory>./tests/</directory>
@@ -13,4 +13,7 @@
             </exclude>
         </whitelist>
     </filter>
+    <logging>
+        <log type="coverage-html" target="./tmp/report" lowUpperBound="75" highLowerBound="90"/>
+    </logging>
 </phpunit>

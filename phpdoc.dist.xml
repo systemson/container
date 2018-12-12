@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+    <title>Amber Package</title>
+    <parser>
+        <target>./tmp/cache/phpdoc</target>
+    </parser>
+    <transformer>
+        <target>./tmp/docs/</target>
+    </transformer>
+    <transformations>
+    </transformations>
+    <files>
+        <directory>./src</directory>
+        <ignore>./test/*</ignore>
+    </files>
+</phpdoc>

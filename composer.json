@@ -28,16 +28,22 @@
         "amber/cache": "dev-master"
     },
     "require-dev": {
-        "phpdocumentor/phpdocumentor": "^2.0",
+        "phpdocumentor/phpdocumentor": "dev-master",
         "phpunit/phpunit": "^6.5|^7.0",
         "squizlabs/php_codesniffer": "^3.3",
         "lavoiesl/php-benchmark": "^1.4"
     },
     "scripts": {
-        "test": "phpunit --verbose --coverage-html ./tmp/coverage/",
-        "docs": "phpdoc -d ./src -i Tests/ -t ./tmp/docs/api",
+        "test": "phpunit",
+        "docs": "phpdoc",
         "sniff": "phpcs --standard=PSR12 ./src",
         "fix-cs": "phpcbf --standard=PSR12 ./src",
         "speed": "php ./tests/Benchmark.php"
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "process-timeout": 0
     }
 }
