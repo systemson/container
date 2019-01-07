@@ -3,48 +3,40 @@
 namespace Amber\Container;
 
 use RuntimeException;
+use Amber\Utils\Implementations\AbstractWrapper;
 
 /**
  * @todo Should be moved to it's own package.
  */
-abstract class Facade
+abstract class ContainerFacade extends AbstractWrapper
 {
     /**
+     * @todo MUST be moved to a ContainerAwareTrait
+     *
      * @var The DI container.
      */
     protected static $container;
 
     /**
-     * @var The class accessor.
+     * @todo MUST be moved to a ContainerAwareTrait
      */
-    protected static $accessor;
-
-    /**
-     * @var The instance of the class.
-     */
-    protected static $instance;
-
     public static function setContainer($container)
     {
         static::$container = $container;
     }
 
+    /**
+     * @todo MUST be moved to a ContainerAwareTrait
+     */
     public static function getContainer()
     {
         return static::$container;
     }
 
-    public static function setAccessor($accessor)
-    {
-        static::$accesor = $accessor;
-    }
-
-    public static function getAccessor()
-    {
-        return static::$accessor;
-    }
-
-    public static function root()
+    /**
+     * Returns the instance of the class.
+     */
+    public static function getInstance()
     {
         return static::getContainer()->get(static::getAccesor());
     }
@@ -59,9 +51,9 @@ abstract class Facade
      *
      * @throws \RuntimeException
      */
-    public static function __callStatic($method, $args)
+    public static function __callStatic($method, $args = [])
     {
-        $instance = self::root();
+        $instance = self::getInstance();
 
         if (!$instance) {
             throw new RuntimeException('A facade root has not been set.');
