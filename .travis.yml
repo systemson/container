@@ -15,4 +15,7 @@ before_install:
 
 script:
   - composer install
-  - composer test
+  - php vendor/bin/phpunit --coverage-php build/cov/coverage-${component_name}.cov
+
+after_success:
+  - travis_retry php vendor/bin/php-coveralls
