@@ -15,5 +15,7 @@
     </filter>
     <logging>
         <log type="coverage-html" target="./tmp/report" lowUpperBound="75" highLowerBound="90"/>
+        <log type="coverage-php" target="build/cov/coverage.cov"/>
+        <log type="coverage-clover" target="./tmp/clover/coverage.xml"/>
     </logging>
 </phpunit>
