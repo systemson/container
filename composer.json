@@ -40,6 +40,12 @@
         "docs": "phpdoc",
         "sniff": "phpcs --standard=PSR12 ./src",
         "fix-cs": "phpcbf --standard=PSR12 ./src",
+        "full-check": [
+            "phpunit",
+            "phpdoc",
+            "phpcs --standard=PSR12 ./src",
+            "phpcbf --standard=PSR12 ./src"
+        ],
         "speed": "php ./tests/Benchmark.php"
     },
     "config": {
