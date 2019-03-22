@@ -5,22 +5,22 @@ namespace Tests\Example;
 class Controller
 {
     /**
-     *
+     * @var Amber\Container\Tests\Example\Model
+     */
+    public $model;
+
+    /**
      * @inject Tests\Example\View
      *
      * @var string
      */
     public $view;
 
-    /**
-     *
-     * @var Amber\Container\Tests\Example\Model
-     */
-    public $model;
-
-    public function __construct(int $id, Model $model)
+    public function __construct(Model $model, View $view, int $optional = 1)
     {
         $this->model = $model;
+        $this->view = $view;
+        $this->id = $optional;
     }
 
     public function getModel()
@@ -31,5 +31,10 @@ class Controller
     public function getView()
     {
         return $this->view;
+    }
+
+    public function setId(int $id)
+    {
+        return $this->id = $id;
     }
 }

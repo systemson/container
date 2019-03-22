@@ -1,6 +1,6 @@
 <?php
 
-namespace Amber\Container\Container;
+namespace Amber\Container\Base;
 
 trait MultipleBinder
 {
