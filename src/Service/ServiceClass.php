@@ -17,16 +17,6 @@ class ServiceClass implements \ArrayAccess
     public $class;
 
     /**
-     * @var string The class alias.
-     */
-    public $alias;
-
-    /**
-     * @var Container
-     */
-    public $container;
-
-    /**
      * @var mixed The class instance.
      */
     protected $instance;
@@ -51,11 +41,9 @@ class ServiceClass implements \ArrayAccess
      *
      * @param string $class The value of the service.
      */
-    public function __construct(string $class, Container $container)
+    public function __construct(string $class)
     {
         $this->class = $class;
-        $this->alias = base64_encode($class);
-        $this->container = $container;
     }
 
     /**

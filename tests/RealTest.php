@@ -5,6 +5,7 @@ namespace Tests;
 use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Container;
+use Amber\Container\App;
 use Tests\Example\Controller;
 use Tests\Example\Model;
 use Tests\Example\View;
@@ -34,5 +35,22 @@ class RealTest extends TestCase
     	$this->assertInstanceOf(Controller::class, $controller);
         $this->assertSame($controller, $container->get(Controller::class));
         $this->assertEquals(53, $controller->id);
+    }
+
+    public function testClosure()
+    {
+        $container = new Container();
+
+        $container->bind(Model::class);
+        $container->bind(View::class);
+        
+        $callback = $container->getClosureFor(
+            Controller::class,
+            'index',
+            [
+                'name' => 'world',
+            ]);
+
+        $this->assertEquals('Hello world.', $callback());
     }
 }

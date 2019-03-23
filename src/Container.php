@@ -26,12 +26,9 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
      *
      * @param array $config The configurations for the Container.
      */
-    public function __construct($config = [])
+    public function __construct()
     {
-        //$this->setConfig($config);
         $this->initCollection();
-
-        //$this->bindMultiple($this->getConfig('container.services', []));
     }
 
     public function initCollection()
@@ -286,5 +283,14 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
         $this->bind($alias, $class);
 
         return $this->locate($alias);
+    }
+
+    public function getClosureFor(string $class, string $method, array $args = [])
+    {
+        $instance = $this->make($class);
+
+        return \Closure::fromCallable(function () use ($instance, $method, $args) {
+            return call_user_func_array([$instance, $method], $args);
+        });
     }
 }

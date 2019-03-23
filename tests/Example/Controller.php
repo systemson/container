@@ -38,4 +38,9 @@ class Controller
     {
         return $this->id = $id;
     }
+
+    public function index(string $name): string
+    {
+        return $this->view->hello($name);
+    }
 }
