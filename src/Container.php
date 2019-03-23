@@ -28,10 +28,10 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
      */
     public function __construct($config = [])
     {
-        $this->setConfig($config);
+        //$this->setConfig($config);
         $this->initCollection();
 
-        $this->bindMultiple($this->getConfig('container.services', []));
+        //$this->bindMultiple($this->getConfig('container.services', []));
     }
 
     public function initCollection()
@@ -170,25 +170,24 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
         $arguments = [];
 
         foreach ($params as $param) {
-            if (!is_null($class = $param->getClass())) {
-                $key = $class->getName();
+            $key = !is_null($param->getClass()) ? $param->getClass()->getName() : $param->name;
 
-                if ($service->hasArgument($key)) {
-                    $subService = $service->getArgument($key);
+            if ($service->hasArgument($key)) {
+                $subService = $service->getArgument($key);
 
-                    if (!$subService instanceof ServiceClass) {
-                        $arguments[] = $subService;
-                    } else {
-                        $arguments[] = $this->instantiate($subService);
-                    }
+                if (!$subService instanceof ServiceClass) {
+                    $arguments[] = $subService;
                 } else {
-                    $arguments[] = $this->get($key);
+                    $arguments[] = $this->instantiate($subService);
                 }
-            } else {
-                $key = $param->name;
 
-                if ($this->has($key) && !$param->isOptional()) {
-                    $arguments[] =  $this->get($key);
+            } else {
+                try {
+                    $arguments[] = $this->get($key);
+                } catch (NotFoundException $e) {
+                    if (!$param->isOptional()) {
+                        throw new NotFoundException("No entry was found for \"{$key}\".");
+                    }
                 }
             }
         }

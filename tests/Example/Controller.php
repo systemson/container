@@ -15,6 +15,7 @@ class Controller
      * @var string
      */
     public $view;
+    public $id;
 
     public function __construct(Model $model, View $view, int $optional = 1)
     {

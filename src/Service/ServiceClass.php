@@ -9,12 +9,17 @@ use Amber\Container\Exception\InvalidArgumentException;
 
 class ServiceClass implements \ArrayAccess
 {
-    use Validator;
+    use Validator, ArgumentsHandlerTrait;
 
     /**
      * @var string The class name.
      */
     public $class;
+
+    /**
+     * @var string The class alias.
+     */
+    public $alias;
 
     /**
      * @var Container
@@ -37,19 +42,9 @@ class ServiceClass implements \ArrayAccess
     protected $singleton = false;
 
     /**
-     * @var array The arguments for the service constructor.
-     */
-    protected $arguments = [];
-
-    /**
-     * @var array The parameters required for the class constructor.
-     */
-    protected $parameters = [];
-
-    /**
      * @var array
      */
-    protected $call = [];
+    protected $callback = [];
 
     /**
      * The Service constructor.
@@ -59,6 +54,7 @@ class ServiceClass implements \ArrayAccess
     public function __construct(string $class, Container $container)
     {
         $this->class = $class;
+        $this->alias = base64_encode($class);
         $this->container = $container;
     }
 
@@ -110,7 +106,7 @@ class ServiceClass implements \ArrayAccess
             return $this->instance;
         }
 
-        $instance = $this->newInstance($arguments);
+        $instance = $this->new($arguments);
 
         if ($this->isSingleton()) {
             return $this->instance = $instance;
@@ -126,17 +122,16 @@ class ServiceClass implements \ArrayAccess
      *
      * @return mixed The instance of the reflected class
      */
-    public function newInstance($arguments = [])
+    protected function new($arguments = [])
     {
         if (!empty($arguments)) {
-            //$arguments = array_map(function ($value) {return array_values($value)[0];}, $arguments));
-            $instance = $this->getReflection()->newInstanceArgs(array_values($arguments));
+            $instance = $this->getReflection()->newInstanceArgs($arguments);
         } else {
             $instance = $this->getReflection()->newInstance();
         }
 
-        foreach ($this->call as $method) {
-            $this->callback($method->name, $method->args);
+        foreach ($this->callback as $method) {
+            call_user_func_array([$instance, $method->name], $method->args);
         }
 
         return $instance;
@@ -179,87 +174,22 @@ class ServiceClass implements \ArrayAccess
         return $this->singleton;
     }
 
-    /**
-     * Gets the constructor paramaters for the current class.
-     *
-     * @return array The parameters for the class constructor.
-     */
-    public function getParameters(): array
-    {
-        if (!empty($this->parameters)) {
-            return $this->parameters;
-        }
-
-        $constructor = $this->getReflection()->getConstructor();
-
-        return $this->parameters = $constructor ? $constructor->getParameters() : [];
-    }
-
-    /**
-     * Gets the arguments for the Service.
-     *
-     * @param array $arguments The arguments for the class constructor.
-     *
-     * @return array The arguments for the class constructor.
-     */
-    public function getArguments(): array
-    {
-        return $this->container->getCollection()->get("{$this->class}_arguments") ?? [];
-    }
-
-    /**
-     * Stores the arguments for the Service.
-     *
-     * @param array $arguments The arguments for the class constructor.
-     *
-     * @return self The current service.
-     */
-    public function setArguments(array $arguments = []): self
-    {
-        foreach ($arguments as $key => $value) {
-            $this->container->getCollection()->pushTo("{$this->class}_arguments", [
-                $key => $value
-            ]);
-        }
-
-        return $this;
-    }
-
-    public function hasArgument(string $key, string $type = null): bool
-    {
-        $args = $this->getArguments();
-
-        return isset($args[$key]);
-    }
-
-    public function getArgument(string $key): bool
-    {
-        $args = $this->getArguments();
-
-        return $args[$key];
-    }
-
     public function afterConstruct(string $method, ...$args)
     {
-        $methods = get_class_methods($this);
+        $methods = get_class_methods($this->class);
 
-        if (in_array($method, $methods)) {
-            $this->callback[] = (object) [
-                'name' => $method,
-                'arguments' => $args,
-            ];
+        if (!in_array($method, $methods)) {
+            throw new \Exception("Method \"{$method}\" does not exists.", 1);
+            
         }
 
-        // Must throw an exception
-    }
+        $this->callback[] = (object) [
+            'name' => $method,
+            'args' => $args,
+        ];
 
-    public function call($method, $args)
-    {
-        if (get_class_methods($this)) {
-            return call_user_func_array([$this, $method], $args);
-        }
 
-        // Must throw an exception
+        return $this;
     }
 
     public function offsetExists($key)

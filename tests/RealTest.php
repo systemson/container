@@ -12,8 +12,6 @@ use PHPUnit\Framework\TestCase;
 
 class RealTest extends TestCase
 {
-
-
     public function testRegister()
     {
     	$container = new Container();
@@ -24,7 +22,8 @@ class RealTest extends TestCase
     	$service = $container->register(Controller::class)
     	->singleton()
     	->setArguments(['optional' => 2])
-    	->afterConstruct('setId', 5);
+    	->afterConstruct('setId', 53);
+
 
     	$reflection = new \ReflectionClass(Controller::class);
     	$constructor = $reflection->getConstructor();
@@ -33,5 +32,7 @@ class RealTest extends TestCase
     	$controller = $container->get(Controller::class);
 
     	$this->assertInstanceOf(Controller::class, $controller);
+        $this->assertSame($controller, $container->get(Controller::class));
+        $this->assertEquals(53, $controller->id);
     }
 }
