@@ -162,7 +162,15 @@ class ServiceClass
         return $this->singleton;
     }
 
-    public function afterConstruct(string $method, ...$args)
+    /**
+     * Method to call after the class is build
+     *
+     * @param string $method The class method to call.
+     * @param array  $args   The arguments for the method.
+     *
+     * @return self
+     */
+    public function afterConstruct(string $method, ...$args): self
     {
         $methods = get_class_methods($this->class);
 
@@ -174,7 +182,6 @@ class ServiceClass
             'name' => $method,
             'args' => $args,
         ];
-
 
         return $this;
     }

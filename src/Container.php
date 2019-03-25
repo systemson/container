@@ -13,6 +13,7 @@ use Psr\Container\ContainerInterface;
 use Amber\Validator\Validator;
 use Amber\Collection\Collection;
 use Amber\Container\Base\MultipleBinder;
+use Closure;
 
 /**
  * Class for PSR-11 Container compliance.
@@ -289,14 +290,23 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
         return $this->locate($alias);
     }
 
-    public function getClosureFor(string $class, string $method, array $binds = [])
+    /**
+     * Gets a closure for calling a method of the provided class.
+     *
+     * @param string $class  The class to instantiate.
+     * @param string $method The class method to call.
+     * @param array  $binds  The arguments for the method.
+     *
+     * @return Closure
+     */
+    public function getClosureFor(string $class, string $method, array $binds = []): Closure
     {
         $instance = $this->make($class);
         $service = $this->locate($class)->setArguments($binds);
 
         $args = $this->getArguments($service, $method);
 
-        return \Closure::fromCallable(function () use ($instance, $method, $args) {
+        return Closure::fromCallable(function () use ($instance, $method, $args) {
             return call_user_func_array([$instance, $method], $args);
         });
     }
