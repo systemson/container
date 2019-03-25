@@ -10,9 +10,6 @@
 # Container
 Simple PHP DI Container.
 
-## Current State
-The project is under testing for conceptual and pattern designing. It may (and most likely will) change a lot from the current state.
-
 ## Instalation
 
 ```
@@ -24,9 +21,9 @@ composer require amber/container
 ### Basic Usage (PSR-11 compliance)
 
 ```php
-use Amber\Container\Injector;
+use Amber\Container\Container;
 
-$container = new Injector();
+$container = new Container();
 ```
 
 ### bind()
