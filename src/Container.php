@@ -24,8 +24,6 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
 
     /**
      * The Container constructor.
-     *
-     * @param array $config The configurations for the Container.
      */
     public function __construct()
     {
@@ -145,7 +143,6 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
      * Gets an instance of the specified Service.
      *
      * @param string $service   The service to be instantiated.
-     * @param array  $arguments Optional. The arguments for the constructor.
      *
      * @return object The instance of the class
      */
@@ -155,10 +152,10 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
     }
 
     /**
-     * Gets the arguments for a Service's constructor.
+     * Gets the arguments for a Service's method.
      *
-     * @param array $service   The params needed by the constructor.
-     * @param array $arguments Optional. The arguments previously passed to the container.
+     * @param array $service The params needed by the constructor.
+     * @param array $method  Optional. The method to get the arguments from.
      *
      * @return array The arguments for the class constructor.
      */
@@ -270,7 +267,7 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
      * Binds an item to the Container and return the service.
      *
      * @param string $class The item's class.
-     * @param string $class The item's alias.
+     * @param string $alias The item's alias.
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
      *
