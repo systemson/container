@@ -193,4 +193,26 @@ class ContainerTest extends TestCase
         /* Test strings */
         $container->put(1);
     }
+
+    /**
+     * @depends testContainer
+     */
+    public function testMakeInvalidArgumentException($container)
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        /* Test strings */
+        $container->make(1);
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testRegisterInvalidArgumentException($container)
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        /* Test strings */
+        $container->register(1);
+    }
 }

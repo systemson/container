@@ -168,7 +168,6 @@ class ServiceClass implements \ArrayAccess
 
         if (!in_array($method, $methods)) {
             throw new \Exception("Method \"{$method}\" does not exists.", 1);
-            
         }
 
         $this->callback[] = (object) [

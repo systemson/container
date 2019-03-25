@@ -24,8 +24,7 @@
     "require": {
         "php": ">=7.2.0",
         "psr/container": "^1.0",
-        "amber/common": "dev-master",
-        "amber/cache": "dev-master"
+        "amber/common": "dev-master"
     },
     "require-dev": {
         "php-coveralls/php-coveralls": "^2.1",
@@ -35,14 +34,13 @@
     },
     "scripts": {
         "test": "phpunit",
-        "docs": "phpdoc",
+        "docs": "php sami.phar update samiConfig.php -v",
         "sniff": "phpcs --standard=PSR12 ./src",
         "fix-cs": "phpcbf --standard=PSR12 ./src",
         "full-check": [
-            "phpunit",
-            "phpdoc",
-            "phpcs --standard=PSR12 ./src",
-            "phpcbf --standard=PSR12 ./src"
+            "@test",
+            "@docs",
+            "@sniff"
         ],
         "speed": "php ./tests/Benchmark.php"
     },

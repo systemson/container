@@ -156,9 +156,9 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
      *
      * @return array The arguments for the class constructor.
      */
-    protected function getArguments(ServiceClass $service)
+    protected function getArguments(ServiceClass $service, string $method = '__construct'): array
     {
-        $params = $service->getParameters();
+        $params = $service->getParameters($method);
 
         if (empty($params)) {
             return [];
@@ -177,7 +177,6 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
                 } else {
                     $arguments[] = $this->instantiate($subService);
                 }
-
             } else {
                 try {
                     $arguments[] = $this->get($key);
@@ -285,9 +284,12 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
         return $this->locate($alias);
     }
 
-    public function getClosureFor(string $class, string $method, array $args = [])
+    public function getClosureFor(string $class, string $method, array $binds = [])
     {
         $instance = $this->make($class);
+        $service = $this->locate($class)->setArguments($binds);
+
+        $args = $this->getArguments($service, $method);
 
         return \Closure::fromCallable(function () use ($instance, $method, $args) {
             return call_user_func_array([$instance, $method], $args);

@@ -24,15 +24,19 @@ trait ArgumentsHandlerTrait
      *
      * @return array The parameters for the class constructor.
      */
-    public function getParameters(): array
+    public function getParameters(string $method = '__construct')
     {
-        if (!empty($this->parameters)) {
-            return $this->parameters;
+        if (isset($this->parameters[$method])) {
+            return $this->parameters[$method];
         }
 
-        $constructor = $this->getReflection()->getConstructor();
+        $reflection = $this->getReflection();
 
-        return $this->parameters = $constructor ? $constructor->getParameters() : [];
+        if ($reflection->hasMethod($method)) {
+            $methodReflection = $reflection->getMethod($method);
+
+            return $this->parameters[$method] = $methodReflection->getParameters() ?? [];
+        }
     }
 
     public function setArgument(string $key, $value): self
