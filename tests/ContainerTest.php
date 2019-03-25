@@ -197,6 +197,17 @@ class ContainerTest extends TestCase
     /**
      * @depends testContainer
      */
+    public function testPutInvalidArgumentException2($container)
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        /* Test strings */
+        $container->put('this_is_not_a_class');
+    }
+
+    /**
+     * @depends testContainer
+     */
     public function testMakeInvalidArgumentException($container)
     {
         $this->expectException(InvalidArgumentException::class);

@@ -100,6 +100,11 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
             throw new InvalidArgumentException('Key argument must be a non empty string.');
         }
 
+        /* Throws an InvalidArgumentException on invalid type. */
+        if (is_null($value) && !$this->isClass($key)) {
+            throw new InvalidArgumentException("Argument \"{$key}\" must be a valid class.");
+        }
+
         if (!$this->isClass($value ?? $key)) {
             $this->getCollection()->put($key, $value);
             return true;

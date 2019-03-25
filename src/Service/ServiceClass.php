@@ -7,7 +7,7 @@ use Amber\Container\Container;
 use ReflectionClass;
 use Amber\Container\Exception\InvalidArgumentException;
 
-class ServiceClass implements \ArrayAccess
+class ServiceClass
 {
     use Validator, ArgumentsHandlerTrait;
 
@@ -51,7 +51,7 @@ class ServiceClass implements \ArrayAccess
      *
      * @return ReflectionClass
      */
-    protected function getReflection(): ReflectionClass
+    public function getReflection(): ReflectionClass
     {
         if (!$this->reflection instanceof ReflectionClass) {
             $this->reflection = new ReflectionClass($this->class);
@@ -177,36 +177,5 @@ class ServiceClass implements \ArrayAccess
 
 
         return $this;
-    }
-
-    public function offsetExists($key)
-    {
-        $props = $this->toArray();
-
-        return isset($props[$key]);
-    }
-
-    public function offsetGet($key)
-    {
-        $props = $this->toArray();
-
-        return $props[$key] ?? null;
-    }
-
-    public function offsetSet($key, $value)
-    {
-        if ($this->offsetExists($key)) {
-            $this->{$key} = $value;
-        }
-    }
-
-    public function offsetUnset($key)
-    {
-        $this->offsetSet($key, null);
-    }
-
-    public function toArray(): array
-    {
-        return get_object_vars($this);
     }
 }
