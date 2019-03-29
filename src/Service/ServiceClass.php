@@ -119,7 +119,12 @@ class ServiceClass
         }
 
         foreach ($this->callback as $method) {
-            call_user_func_array([$instance, $method->name], $method->args);
+            $args = $method->args;
+            
+            if ($callback = $args[0] instanceof \Closure) {
+                $args[0] = $args[0]();
+            }
+            call_user_func_array([$instance, $method->name], $args);
         }
 
         return $instance;
