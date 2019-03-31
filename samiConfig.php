@@ -20,6 +20,6 @@ return new Sami($dir, array(
     'title'                => 'Amber/Collection API',
     'build_dir'            => __DIR__.'/tmp/build/%version%',
     'cache_dir'            => __DIR__.'/tmp/cache/sami/%version%',
-    'remote_repository'    => new GitHubRemoteRepository('systemson/collection', dirname($dir)),
+    'remote_repository'    => new GitHubRemoteRepository('systemson/container', dirname($dir)),
     'default_opened_level' => 10,
 ));
