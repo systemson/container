@@ -69,7 +69,7 @@ class ServiceClass
      *
      * @return self The current service.
      */
-    public function setInstance(object $instance): self
+    public function setInstance($instance): self
     {
         if (!$instance instanceof $this->class) {
             InvalidArgumentException::mustBeInstanceOf($this->class);
@@ -88,7 +88,7 @@ class ServiceClass
      *
      * @return object The instance of the reflected class
      */
-    public function getInstance($arguments = []): object
+    public function getInstance($arguments = [])
     {
         if ($this->instance instanceof $this->class) {
             return $this->instance;
@@ -110,7 +110,7 @@ class ServiceClass
      *
      * @return object The instance of the reflected class
      */
-    protected function new($arguments = []): object
+    protected function new($arguments = [])
     {
         if (!empty($arguments)) {
             $instance = $this->getReflection()->newInstanceArgs($arguments);
