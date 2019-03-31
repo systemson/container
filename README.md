@@ -1,8 +1,11 @@
+![GitHub last commit](https://img.shields.io/github/last-commit/systemson/container.svg)
 [![Latest Stable Version](https://poser.pugx.org/amber/container/v/stable.png)](https://packagist.org/packages/amber/container)
 [![Latest Beta Version](https://img.shields.io/packagist/vpre/amber/container.svg)](https://packagist.org/packages/amber/container)
+![PHP from Packagist](https://img.shields.io/packagist/php-v/amber/container.svg)
 [![Build Status](https://travis-ci.org/systemson/container.svg?branch=master)](https://travis-ci.org/systemson/container)
 [![Coverage Status](https://coveralls.io/repos/github/systemson/container/badge.svg?branch=master)](https://coveralls.io/github/systemson/container?branch=master)
 [![Total Downloads](https://poser.pugx.org/amber/container/downloads.png)](https://packagist.org/packages/amber/container)
+![GitHub](https://img.shields.io/github/license/systemson/container.svg)
 
 
 
