@@ -18,19 +18,14 @@ use Closure;
 /**
  * Class for PSR-11 Container compliance.
  */
-class Container implements ContainerInterface, ConfigAwareInterface, CollectionAwareInterface
+class Container implements ContainerInterface, CollectionAwareInterface
 {
-    use ConfigAwareTrait, CollectionAwareTrait, MultipleBinder, Validator;
+    use CollectionAwareTrait, MultipleBinder, Validator;
 
     /**
      * The Container constructor.
      */
     public function __construct()
-    {
-        $this->initCollection();
-    }
-
-    public function initCollection()
     {
         $this->setCollection(new Collection());
     }
@@ -48,11 +43,11 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (!$this->isString($key)) {
-            throw new InvalidArgumentException('Key argument must be a non empty string.');
+            InvalidArgumentException::mustBeString();
         }
 
         if (!$this->has($key)) {
-            throw new NotFoundException("No entry was found for \"{$key}\".");
+            NotFoundException::throw($key);
         }
 
         return $this->getCollection()->get($key);
@@ -72,7 +67,7 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (!$this->isString($key)) {
-            throw new InvalidArgumentException('Key argument must be a non empty string.');
+            InvalidArgumentException::mustBeString();
         }
 
         if (!$this->has($key)) {
@@ -96,12 +91,12 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (!$this->isString($key)) {
-            throw new InvalidArgumentException('Key argument must be a non empty string.');
+            InvalidArgumentException::mustBeString();
         }
 
         /* Throws an InvalidArgumentException on invalid type. */
         if (is_null($value) && !$this->isClass($key)) {
-            throw new InvalidArgumentException("Argument \"{$key}\" must be a valid class.");
+            InvalidArgumentException::mustBeClass($key);
         }
 
         if (!$this->isClass($value ?? $key)) {
@@ -109,7 +104,7 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
             return true;
         }
 
-        $this->getCollection()->put($key, new ServiceClass($value ?? $key, $this));
+        $this->getCollection()->put($key, new ServiceClass($value ?? $key));
         return true;
     }
 
@@ -126,7 +121,7 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (!$this->isString($key)) {
-            throw new InvalidArgumentException('Key argument must be a non empty string.');
+            InvalidArgumentException::mustBeString();
         }
 
         /* Retrieves the service from the map. */
@@ -172,26 +167,31 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
         foreach ($params as $param) {
             $key = !is_null($param->getClass()) ? $param->getClass()->getName() : $param->name;
 
-            if ($service->hasArgument($key)) {
-                $subService = $service->getArgument($key);
-
-                if (!$subService instanceof ServiceClass) {
-                    $arguments[] = $subService;
-                } else {
-                    $arguments[] = $this->instantiate($subService);
-                }
-            } else {
-                try {
-                    $arguments[] = $this->get($key);
-                } catch (NotFoundException $e) {
-                    if (!$param->isOptional()) {
-                        throw new NotFoundException("No entry was found for \"{$key}\".");
-                    }
+            try {
+                $arguments[] = $this->getArgumentsFromService($service, $key) ?? $this->get($key);
+            } catch (NotFoundException $e) {
+                if (!$param->isOptional()) {
+                    NotFoundException::throw($key);
                 }
             }
         }
 
         return $arguments;
+    }
+
+    protected function getArgumentsFromService(ServiceClass $service, string $key)
+    {
+        if (!$service->hasArgument($key)) {
+            return;
+        }
+
+        $subService = $service->getArgument($key);
+
+        if (!$subService instanceof ServiceClass) {
+            return $subService;
+        } else {
+            return $this->instantiate($subService);
+        }
     }
 
     /**
@@ -207,7 +207,7 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (!$this->isString($key)) {
-            throw new InvalidArgumentException('Key argument must be a non empty string.');
+            InvalidArgumentException::mustBeString();
         }
 
         return $this->getCollection()->has($key);
@@ -226,7 +226,7 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (!$this->isString($key)) {
-            throw new InvalidArgumentException('Key argument must be a non empty string.');
+            InvalidArgumentException::mustBeString();
         }
 
         return $this->getCollection()->delete($key);
@@ -255,7 +255,7 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (!$this->isClass($class)) {
-            throw new InvalidArgumentException("Argument \"$class\" must be a valid class.");
+            InvalidArgumentException::mustBeClass($class);
         }
 
         $this->bind($class);
@@ -277,7 +277,7 @@ class Container implements ContainerInterface, ConfigAwareInterface, CollectionA
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (!$this->isClass($class)) {
-            throw new InvalidArgumentException("Argument \"$class\" must be a valid class.");
+            InvalidArgumentException::mustBeClass($class);
         }
 
         $alias = $alias ?? $class;

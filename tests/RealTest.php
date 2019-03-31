@@ -22,11 +22,6 @@ class RealTest extends TestCase
         ->setArguments(['optional' => 2])
         ->afterConstruct('setId', 53);
 
-
-        $reflection = new \ReflectionClass(Controller::class);
-        $constructor = $reflection->getConstructor();
-        $params = $constructor->getParameters();
-
         $controller = $container->get(Controller::class);
 
         $this->assertInstanceOf(Controller::class, $controller);
@@ -44,5 +39,41 @@ class RealTest extends TestCase
         $callback = $container->getClosureFor(Controller::class, 'index', ['name' => 'world']);
 
         $this->assertEquals('Hello world.', $callback());
+    }
+
+    public function testBindDirectlyToService()
+    {
+        $container = new Container();
+
+        $service = $container->register(Controller::class)
+        ->setArgument(View::class)
+        ->setArgument(Model::class)
+        ->setArgument('optional', 2);
+
+        $controller = $container->get(Controller::class);
+
+        $this->assertInstanceOf(Controller::class, $controller);
+        $this->assertEquals($controller, $container->get(Controller::class));
+        $this->assertNotSame($controller, $container->get(Controller::class));
+    }
+
+    public function testBindClosureDirectlyToService()
+    {
+        $container = new Container();
+
+        $service = $container->register(Controller::class)
+        ->setArgument(View::class)
+        ->setArgument(Model::class)
+        ->setArgument('optional', 2)
+        ->afterConstruct('setId', function() {
+            return 53;
+        });
+
+        $controller = $container->get(Controller::class);
+
+        $this->assertInstanceOf(Controller::class, $controller);
+        $this->assertEquals($controller, $container->get(Controller::class));
+        $this->assertNotSame($controller, $container->get(Controller::class));
+        $this->assertEquals(53, $controller->id);
     }
 }

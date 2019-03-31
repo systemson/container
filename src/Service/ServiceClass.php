@@ -63,22 +63,22 @@ class ServiceClass
     /**
      * Sets an instance for the Service.
      *
-     * @param array $instance The instance of the service.
+     * @param object $instance The instance of the service.
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
      *
      * @return self The current service.
      */
-    public function setInstance($instance): self
+    public function setInstance(object $instance): self
     {
-        if ($instance instanceof $this->class) {
-            $this->instance = $instance;
-            $this->singleton();
-
-            return $this;
+        if (!$instance instanceof $this->class) {
+            InvalidArgumentException::mustBeInstanceOf($this->class);
         }
 
-        throw new InvalidArgumentException("Argument provided is not an instance of {$this->class}");
+        $this->instance = $instance;
+        $this->singleton();
+
+        return $this;
     }
 
     /**
@@ -86,9 +86,9 @@ class ServiceClass
      *
      * @param array $arguments Optional. The arguments for the class constructor.
      *
-     * @return mixed The instance of the reflected class
+     * @return object The instance of the reflected class
      */
-    public function getInstance($arguments = [])
+    public function getInstance($arguments = []): object
     {
         if ($this->instance instanceof $this->class) {
             return $this->instance;
@@ -108,9 +108,9 @@ class ServiceClass
      *
      * @param array $arguments The arguments for the class constructor.
      *
-     * @return mixed The instance of the reflected class
+     * @return object The instance of the reflected class
      */
-    protected function new($arguments = [])
+    protected function new($arguments = []): object
     {
         if (!empty($arguments)) {
             $instance = $this->getReflection()->newInstanceArgs($arguments);

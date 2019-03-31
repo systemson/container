@@ -6,6 +6,7 @@ use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Container;
 use Tests\Example\Model;
+use Tests\Example\Controller;
 use PHPUnit\Framework\TestCase;
 
 class ContainerTest extends TestCase
@@ -179,7 +180,6 @@ class ContainerTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        /* Test strings */
         $container->locate(1);
     }
 
@@ -190,7 +190,6 @@ class ContainerTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        /* Test strings */
         $container->put(1);
     }
 
@@ -201,7 +200,6 @@ class ContainerTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        /* Test strings */
         $container->put('this_is_not_a_class');
     }
 
@@ -212,7 +210,6 @@ class ContainerTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        /* Test strings */
         $container->make(1);
     }
 
@@ -225,5 +222,28 @@ class ContainerTest extends TestCase
 
         /* Test strings */
         $container->register(1);
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testGetArgumentsNotFoundException($container)
+    {
+        $this->expectException(NotFoundException::class);
+
+        /* Test strings */
+        $container->make(Controller::class);
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testSetArgumentsInvalidArgumentException($container)
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        /* Test strings */
+        $container->register(Controller::class)
+        ->setArgument('this_is_not_a_class');
     }
 }

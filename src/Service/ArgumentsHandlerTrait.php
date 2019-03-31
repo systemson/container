@@ -20,7 +20,7 @@ trait ArgumentsHandlerTrait
     protected $parameters = [];
 
     /**
-     * Gets the constructor paramaters for the current class.
+     * Gets the method paramaters for the current class.
      *
      * @return array The parameters for the class constructor.
      */
@@ -39,37 +39,56 @@ trait ArgumentsHandlerTrait
         }
     }
 
-    public function setArgument(string $key, $value): self
+    /**
+     * Stores a Service argument by its key.
+     *
+     * @param string $key   The argument key.
+     * @param mixed  $value The argument value.
+     *
+     * @return self The current service.
+     */
+    public function setArgument(string $key, $value = null): self
     {
-        $this->arguments[$key] = $value;
+        /* Throws an InvalidArgumentException on invalid type. */
+        if (is_null($value) && !$this->isClass($key)) {
+            InvalidArgumentException::mustBeClass($key);
+        }
+
+        if (!$this->isClass($value ?? $key)) {
+            $this->arguments[$key] = $value;
+        } else {
+            $this->arguments[$key] = new ServiceClass($value ?? $key);
+        }
 
         return $this;
     }
 
+    /**
+     * Whether an argument is binded to the Service.
+     *
+     * @param string $key The argument key.
+     *
+     * @return bool.
+     */
     public function hasArgument(string $key): bool
     {
         return isset($this->arguments[$key]);
     }
 
+    /**
+     * Gets a Service argument by its key.
+     *
+     * @param string $key The argument key.
+     *
+     * @return array.
+     */
     public function getArgument(string $key)
     {
         return $this->arguments[$key];
     }
 
     /**
-     * Gets the arguments for the Service.
-     *
-     * @param array $arguments The arguments for the class constructor.
-     *
-     * @return array The arguments for the class constructor.
-     */
-    public function getArguments(): array
-    {
-        return $this->arguments;
-    }
-
-    /**
-     * Stores the arguments for the Service.
+     * Stores the Service arguments.
      *
      * @param array $arguments The arguments for the class constructor.
      *
@@ -82,5 +101,15 @@ trait ArgumentsHandlerTrait
         }
 
         return $this;
+    }
+
+    /**
+     * Gets the Service arguments.
+     *
+     * @return array.
+     */
+    public function getArguments(): array
+    {
+        return $this->arguments;
     }
 }
