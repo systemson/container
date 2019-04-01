@@ -62,7 +62,9 @@ class RealTest extends TestCase
         $container = new Container();
 
         $service = $container->register(Controller::class)
-        ->setArgument(View::class)
+        ->setArgument(View::class, function () {
+            return new View();
+        })
         ->setArgument(Model::class)
         ->setArgument('optional', 2)
         ->afterConstruct('setId', function() {

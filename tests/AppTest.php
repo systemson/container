@@ -23,8 +23,8 @@ class AppTest extends TestCase
         $anonymous  = new class extends Model {
         };
         $object = new $class();
-        $function = function ($value) {
-            return $value;
+        $function = function () use ($string) {
+            return $string;
         };
 
         /* Tests strings */
@@ -87,7 +87,8 @@ class AppTest extends TestCase
         $this->assertTrue(App::bind($key, $function));
         $this->assertFalse(App::bind($key, $function));
         $this->assertTrue(App::has($key));
-        $this->assertSame($function, App::get($key));
+        $this->assertSame($function(), App::get($key));
+        $this->assertSame($string, App::get($key));
         $this->assertTrue(App::unbind($key));
         $this->assertFalse(App::unbind($key));
         $this->assertFalse(App::has($key));

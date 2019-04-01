@@ -127,11 +127,13 @@ class Container implements ContainerInterface, CollectionAwareInterface
         /* Retrieves the service from the map. */
         $service = $this->locate($key);
 
-        if (!$service instanceof ServiceClass) {
-            return $service;
+        if ($service instanceof ServiceClass) {
+            return $this->instantiate($service);
+        } elseif ($service instanceof Closure) {
+            return $service();
         }
 
-        return $this->instantiate($service);
+        return $service;
     }
 
     /**

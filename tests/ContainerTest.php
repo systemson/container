@@ -24,8 +24,8 @@ class ContainerTest extends TestCase
         $anonymous  = new class extends Model {
         };
         $object = new $class();
-        $function = function ($value) {
-            return $value;
+        $function = function () use ($string) {
+            return $string;
         };
 
         /* Tests strings */
@@ -88,7 +88,8 @@ class ContainerTest extends TestCase
         $this->assertTrue($container->bind($key, $function));
         $this->assertFalse($container->bind($key, $function));
         $this->assertTrue($container->has($key));
-        $this->assertSame($function, $container->get($key));
+        $this->assertSame($function(), $container->get($key));
+        $this->assertSame($string, $container->get($key));
         $this->assertTrue($container->unbind($key));
         $this->assertFalse($container->unbind($key));
         $this->assertFalse($container->has($key));
