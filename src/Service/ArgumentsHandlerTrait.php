@@ -84,7 +84,13 @@ trait ArgumentsHandlerTrait
      */
     public function getArgument(string $key)
     {
-        return $this->arguments[$key];
+        $value = $this->arguments[$key];
+
+        if ($value instanceof \Closure) {
+            return $value();
+        }
+
+        return $value;
     }
 
     /**
