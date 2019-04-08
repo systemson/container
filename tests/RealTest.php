@@ -41,7 +41,7 @@ class RealTest extends TestCase
         $this->assertEquals('Hello world.', $callback());
     }
 
-    public function testBindDirectlyToService()
+    public function testBindingAllDirectlyToService()
     {
         $container = new Container();
 
@@ -57,7 +57,7 @@ class RealTest extends TestCase
         $this->assertNotSame($controller, $container->get(Controller::class));
     }
 
-    public function testBindClosureDirectlyToService()
+    public function testBindingClosureDirectlyToService()
     {
         $container = new Container();
 
