@@ -8,6 +8,9 @@ use Tests\Example\Model;
 use Tests\Example\View;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @todo MUST test depencies that need other depdencies recursively.
+ */
 class RealTest extends TestCase
 {
     public function testRegister()

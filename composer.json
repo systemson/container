@@ -37,12 +37,18 @@
         "docs": "php sami.phar update samiConfig.php -v",
         "sniff": "phpcs --standard=PSR12 ./src",
         "fix-cs": "phpcbf --standard=PSR12 ./src",
+        "pull": [
+            "git pull",
+            "composer update -vvv"
+        ],
         "full-check": [
             "@test",
             "@docs",
             "@sniff"
         ],
-        "speed": "php ./tests/Benchmark.php"
+        "post-update-cmd": [
+            "@test"
+        ]
     },
     "config": {
         "preferred-install": "dist",

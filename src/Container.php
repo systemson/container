@@ -173,7 +173,8 @@ class Container implements ContainerInterface, CollectionAwareInterface
                 $arguments[] = $this->getArgumentsFromService($service, $key) ?? $this->get($key);
             } catch (NotFoundException $e) {
                 if (!$param->isOptional()) {
-                    NotFoundException::throw($key);
+                    $msg = $e->getMessage() . " Requested for {$key}::{$method}()";
+                    throw new NotFoundException($msg);
                 }
             }
         }
