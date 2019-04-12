@@ -20,8 +20,7 @@ class RealTest extends TestCase
         $container->bind(Model::class);
         $container->bind(View::class);
 
-        $service = $container->register(Controller::class)
-        ->singleton()
+        $service = $container->singleton(Controller::class)
         ->setArguments(['optional' => 2])
         ->afterConstruct('setId', 53);
 

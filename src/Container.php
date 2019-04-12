@@ -291,6 +291,24 @@ class Container implements ContainerInterface, CollectionAwareInterface
     }
 
     /**
+     * Binds an item to the Container and return the service.
+     *
+     * @param string $class The item's class.
+     * @param string $alias The item's alias.
+     *
+     * @throws Amber\Container\Exception\InvalidArgumentException
+     *
+     * @return ServiceClass
+     */
+    public function singleton(string $class, string $alias = null): ServiceClass
+    {
+        $service = $this->register($class, $alias);
+        $service->singleton();
+
+        return $service;
+    }
+
+    /**
      * Gets a closure for calling a method of the provided class.
      *
      * @param string $class  The class to instantiate.
