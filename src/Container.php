@@ -2,25 +2,26 @@
 
 namespace Amber\Container;
 
+use Amber\Cache\CacheAware\CacheAwareInterface;
+use Amber\Cache\CacheAware\CacheAwareTrait;
+use Amber\Collection\Collection;
+use Amber\Collection\CollectionAware\CollectionAwareInterface;
+use Amber\Collection\CollectionAware\CollectionAwareTrait;
 use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Service\ServiceClass;
-use Amber\Collection\CollectionAware\CollectionAwareInterface;
-use Amber\Collection\CollectionAware\CollectionAwareTrait;
-use Amber\Container\Config\ConfigAwareTrait;
-use Amber\Container\Config\ConfigAwareInterface;
-use Psr\Container\ContainerInterface;
 use Amber\Validator\Validator;
-use Amber\Collection\Collection;
-use Amber\Container\Base\MultipleBinder;
+use Psr\Container\ContainerInterface;
+use Amber\Container\Traits\MultipleBinderTrait;
+use Amber\Container\Traits\CacheHandlerTrait;
 use Closure;
 
 /**
  * Class for PSR-11 Container compliance.
  */
-class Container implements ContainerInterface, CollectionAwareInterface
+class Container implements ContainerInterface, CollectionAwareInterface, CacheAwareInterface
 {
-    use CollectionAwareTrait, MultipleBinder, Validator;
+    use CollectionAwareTrait, CacheAwareTrait, MultipleBinderTrait, CacheHandlerTrait, Validator;
 
     /**
      * The Container constructor.
@@ -70,11 +71,7 @@ class Container implements ContainerInterface, CollectionAwareInterface
             InvalidArgumentException::mustBeString();
         }
 
-        if (!$this->has($key)) {
-            return $this->put($key, $value);
-        }
-
-        return false;
+        return $this->put($key, $value);
     }
 
     /**
@@ -87,7 +84,7 @@ class Container implements ContainerInterface, CollectionAwareInterface
      *
      * @return bool True on success.
      */
-    public function put($key, $value = null)
+    public function put($key, $value = null): bool
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (!$this->isString($key)) {
@@ -100,12 +97,10 @@ class Container implements ContainerInterface, CollectionAwareInterface
         }
 
         if (!$this->isClass($value ?? $key)) {
-            $this->getCollection()->put($key, $value);
-            return true;
+            return $this->getCollection()->add($key, $value);
         }
 
-        $this->getCollection()->put($key, new ServiceClass($value ?? $key));
-        return true;
+        return $this->getCollection()->add($key, new ServiceClass($value ?? $key));
     }
 
     /**
@@ -154,7 +149,7 @@ class Container implements ContainerInterface, CollectionAwareInterface
      * @param array $service The params needed by the constructor.
      * @param array $method  Optional. The method to get the arguments from.
      *
-     * @return array The arguments for the class constructor.
+     * @return array The arguments for the class method.
      */
     protected function getArguments(ServiceClass $service, string $method = '__construct'): array
     {
@@ -167,13 +162,17 @@ class Container implements ContainerInterface, CollectionAwareInterface
         $arguments = [];
 
         foreach ($params as $param) {
-            $key = !is_null($param->getClass()) ? $param->getClass()->getName() : $param->name;
+            if (!is_null($param->getClass())) {
+                $key = $param->getClass()->getName();
+            } else {
+                $key = $param->name;
+            }
 
             try {
-                $arguments[] = $this->getArgumentsFromService($service, $key) ?? $this->get($key);
+                $arguments[] = $this->getArgumentFromService($service, $key) ?? $this->get($key);
             } catch (NotFoundException $e) {
                 if (!$param->isOptional()) {
-                    $msg = $e->getMessage() . " Requested for {$key}::{$method}()";
+                    $msg = $e->getMessage() . " Requested on [{$service->class}::{$method}()].";
                     throw new NotFoundException($msg);
                 }
             }
@@ -182,7 +181,15 @@ class Container implements ContainerInterface, CollectionAwareInterface
         return $arguments;
     }
 
-    protected function getArgumentsFromService(ServiceClass $service, string $key)
+    /**
+     * Gets the arguments for a Service's method from the it's arguments bag.
+     *
+     * @param array $service The params needed by the constructor.
+     * @param array $key     The argument's key.
+     *
+     * @return mixed The argument's value.
+     */
+    protected function getArgumentFromService(ServiceClass $service, string $key)
     {
         if (!$service->hasArgument($key)) {
             return;
@@ -192,9 +199,9 @@ class Container implements ContainerInterface, CollectionAwareInterface
 
         if (!$subService instanceof ServiceClass) {
             return $subService;
-        } else {
-            return $this->instantiate($subService);
         }
+
+        return $this->instantiate($subService);
     }
 
     /**

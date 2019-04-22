@@ -1,8 +1,8 @@
 <?php
 
-namespace Amber\Container\Base;
+namespace Amber\Container\Traits;
 
-trait MultipleBinder
+trait MultipleBinderTrait
 {
     /**
      * Binds multiple items to the Container's map by their unique keys.

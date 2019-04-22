@@ -26,16 +26,12 @@ trait ArgumentsHandlerTrait
      */
     public function getParameters(string $method = '__construct')
     {
-        if (isset($this->parameters[$method])) {
-            return $this->parameters[$method];
-        }
-
         $reflection = $this->getReflection();
 
         if ($reflection->hasMethod($method)) {
             $methodReflection = $reflection->getMethod($method);
 
-            return $this->parameters[$method] = $methodReflection->getParameters() ?? [];
+            return $methodReflection->getParameters() ?? [];
         }
     }
 

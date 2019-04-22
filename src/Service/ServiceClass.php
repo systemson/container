@@ -53,11 +53,7 @@ class ServiceClass
      */
     public function getReflection(): ReflectionClass
     {
-        if (!$this->reflection instanceof ReflectionClass) {
-            $this->reflection = new ReflectionClass($this->class);
-        }
-
-        return $this->reflection;
+        return new ReflectionClass($this->class);
     }
 
     /**

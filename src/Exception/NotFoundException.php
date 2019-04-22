@@ -8,6 +8,6 @@ class NotFoundException extends ContainerException implements NotFoundExceptionI
 {
     public static function throw(string $key)
     {
-        throw new self("No entry was found for \"{$key}\".");
+        throw new self("No entry was found for [{$key}].");
     }
 }
