@@ -176,7 +176,7 @@ class ServiceClass
         $methods = get_class_methods($this->class);
 
         if (!in_array($method, $methods)) {
-            throw new \Exception("Method \"{$method}\" does not exists.", 1);
+            throw new InvalidArgumentException("Method [{$this->class}::{$method}()] does not exists.");
         }
 
         $this->callback[] = (object) [

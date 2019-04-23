@@ -2,7 +2,6 @@
 
 namespace Amber\Container;
 
-use Amber\Container\Container;
 use Amber\Utils\Implementations\AbstractWrapper;
 
 class App extends AbstractWrapper

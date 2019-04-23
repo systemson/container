@@ -96,9 +96,6 @@ class ContainerTest extends TestCase
 
         $container->clear();
 
-        // Tests bindAndGet()
-        //$this->assertSame($string, $container->bindAndGet($key, $string));
-
         return $container;
     }
 
@@ -246,5 +243,16 @@ class ContainerTest extends TestCase
         /* Test strings */
         $container->register(Controller::class)
         ->setArgument('this_is_not_a_class');
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testPutInvalidArgumentExceptionNotSubclassOf($container)
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        /* Test strings */
+        $container->bind(Controller::class, Model::class);
     }
 }

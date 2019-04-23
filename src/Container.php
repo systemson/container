@@ -3,17 +3,20 @@
 namespace Amber\Container;
 
 use Amber\Cache\CacheAware\CacheAwareInterface;
-use Amber\Cache\CacheAware\CacheAwareTrait;
-use Amber\Collection\Collection;
-use Amber\Collection\CollectionAware\CollectionAwareInterface;
-use Amber\Collection\CollectionAware\CollectionAwareTrait;
-use Amber\Container\Exception\InvalidArgumentException;
-use Amber\Container\Exception\NotFoundException;
-use Amber\Container\Service\ServiceClass;
+use Amber\Collection\{
+    Collection,
+    CollectionAware\CollectionAwareInterface,
+    CollectionAware\CollectionAwareTrait,
+};
+use Amber\Container\{
+    Exception\InvalidArgumentException,
+    Exception\NotFoundException,
+    Service\ServiceClass,
+    Traits\MultipleBinderTrait,
+    Traits\CacheHandlerTrait,
+};
 use Amber\Validator\Validator;
 use Psr\Container\ContainerInterface;
-use Amber\Container\Traits\MultipleBinderTrait;
-use Amber\Container\Traits\CacheHandlerTrait;
 use Closure;
 
 /**
@@ -21,7 +24,7 @@ use Closure;
  */
 class Container implements ContainerInterface, CollectionAwareInterface, CacheAwareInterface
 {
-    use CollectionAwareTrait, CacheAwareTrait, MultipleBinderTrait, CacheHandlerTrait, Validator;
+    use CollectionAwareTrait, MultipleBinderTrait, CacheHandlerTrait, Validator;
 
     /**
      * The Container constructor.
@@ -82,7 +85,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
      *
-     * @return bool True on success.
+     * @return bool True on success. False if key already exists.
      */
     public function put($key, $value = null): bool
     {
@@ -94,6 +97,10 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
         /* Throws an InvalidArgumentException on invalid type. */
         if (is_null($value) && !$this->isClass($key)) {
             InvalidArgumentException::mustBeClass($key);
+        }
+
+        if ($this->isClass($key, $value) && $key != $value && !is_subclass_of($value, $key)) {
+            throw new InvalidArgumentException("Class [$value] must be a subclass of [$key]");
         }
 
         if (!$this->isClass($value ?? $key)) {
@@ -309,14 +316,12 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
      */
     public function singleton(string $class, string $alias = null): ServiceClass
     {
-        $service = $this->register($class, $alias);
-        $service->singleton();
-
-        return $service;
+        return $this->register($class, $alias)
+        ->singleton();
     }
 
     /**
-     * Gets a closure for calling a method of the provided class.
+     * Gets a closure for a method of the provided class.
      *
      * @param string $class  The class to instantiate.
      * @param string $method The class method to call.
@@ -327,7 +332,8 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
     public function getClosureFor(string $class, string $method, array $binds = []): Closure
     {
         $instance = $this->make($class);
-        $service = $this->locate($class)->setArguments($binds);
+        $service = $this->locate($class)
+        ->setArguments($binds);
 
         $args = $this->getArguments($service, $method);
 

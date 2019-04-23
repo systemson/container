@@ -22,7 +22,7 @@ trait ArgumentsHandlerTrait
     /**
      * Gets the method paramaters for the current class.
      *
-     * @return array The parameters for the class constructor.
+     * @return array The parameters for the class method.
      */
     public function getParameters(string $method = '__construct')
     {
@@ -50,10 +50,10 @@ trait ArgumentsHandlerTrait
             InvalidArgumentException::mustBeClass($key);
         }
 
-        if (!$this->isClass($value ?? $key)) {
-            $this->arguments[$key] = $value;
-        } else {
+        if ($this->isClass($value ?? $key)) {
             $this->arguments[$key] = new ServiceClass($value ?? $key);
+        } else {
+            $this->arguments[$key] = $value;
         }
 
         return $this;

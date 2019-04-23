@@ -2,11 +2,12 @@
 
 namespace Amber\Container\Traits;
 
-use Psr\SimpleCache\CacheInterface;
-use Amber\Collection\Collection;
+use Amber\Cache\CacheAware\CacheAwareTrait;
 
 trait CacheHandlerTrait
 {
+    use CacheAwareTrait;
+
     public function drop(): void
     {
         $cache = $this->getCache();

@@ -4,7 +4,7 @@ require_once 'vendor/autoload.php';
 
 use Lavoiesl\PhpBenchmark\Benchmark;
 use Amber\Container\Container;
-use Amber\Cache\Driver\SimpleCache as Cache;
+use Amber\Cache\Driver\ApcuCache as Cache;
 use Tests\Example\Controller;
 use Tests\Example\Model;
 use Tests\Example\View;
