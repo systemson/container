@@ -92,7 +92,7 @@ $container->getMultiple($keys);
 $container->unbindMultiple($keys);
 ```
 
-### Advanced Usage
+## Advanced Usage
 
 ### make()
 #### Binds and Gets a Service from the Container's map by its unique key.
@@ -124,6 +124,16 @@ singleton(string $class, string $alias = null): ServiceClass
 $container->singleton($class);
 ```
 
+### getClosureFor()
+####  Gets a closure for a method of the provided class.
+getClosureFor(string $class, string $method, array $binds = []): Closure
+**param** string $class *The class to instantiate.*
+**param** string $method *The class method to call.*
+**param** array  $binds *The arguments for the service.*
+**return** Closure
 
+```php
+$container->getClosureFor($class, $method);
+```
 
-More coming soon...
+**More coming soon...**
