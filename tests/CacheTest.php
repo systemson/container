@@ -51,6 +51,14 @@ class CacheTest extends TestCase
         $this->assertTrue($container->has('object'));
 
         $container->drop();
+        $container->clear();
+
+        $this->assertFalse($container->has($key));
+        $this->assertFalse($container->has('number'));
+        $this->assertFalse($container->has('array'));
+        $this->assertFalse($container->has('class'));
+        $this->assertFalse($container->has('object'));
+
         $container->pick();
 
         $this->assertTrue($container->has($key));

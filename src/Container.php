@@ -117,7 +117,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
      *
-     * @return mixed The value of the item.
+     * @return mixed The service value.
      */
     final public function get($key)
     {
@@ -305,7 +305,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
     }
 
     /**
-     * Binds an item to the Container and return the service.
+     * Binds an item to the Container as singleton and return the service.
      *
      * @param string $class The item's class.
      * @param string $alias The item's alias.
@@ -325,7 +325,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
      *
      * @param string $class  The class to instantiate.
      * @param string $method The class method to call.
-     * @param array  $binds  The arguments for the method.
+     * @param array  $binds  The arguments for the service.
      *
      * @return Closure
      */
