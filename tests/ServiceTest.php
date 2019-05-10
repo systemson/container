@@ -29,6 +29,12 @@ class ServiceTest extends TestCase
     	$this->assertTrue($service->isSingleton());
     	$this->assertSame($controller, $service->getInstance());
 
+    	$this->assertInstanceOf(ServiceClass::class, $service->setInstance(function () use ($controller) {return $controller;}));
+
+    	$this->assertSame($controller, $service->getInstance());
+    	$this->assertTrue($service->isSingleton());
+    	$this->assertSame($controller, $service->getInstance());
+
     	$this->assertInstanceOf(ServiceClass::class, $service->clear());
 
     	$this->assertEquals($controller, $service->getInstance([$model, $view]));

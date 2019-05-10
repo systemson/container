@@ -67,6 +67,10 @@ class ServiceClass
      */
     public function setInstance($instance): self
     {
+        if ($instance instanceof \Closure) {
+            $instance = $instance();
+        }
+
         if (!$instance instanceof $this->class) {
             InvalidArgumentException::mustBeInstanceOf($this->class);
         }
