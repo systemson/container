@@ -69,7 +69,7 @@ class RealTest extends TestCase
         })
         ->setArgument(Model::class)
         ->setArgument('optional', 2)
-        ->afterConstruct('setId', function() {
+        ->afterConstruct('setId', function () {
             return 53;
         });
 

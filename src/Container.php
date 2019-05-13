@@ -96,28 +96,32 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
 
         /* Throws an InvalidArgumentException on invalid type. */
         if (is_null($value) && !$this->isClass($key)) {
-            InvalidArgumentException::mustBeClass($key);
+            InvalidArgumentException::identifierMustBeClass($key);
         }
 
-        if ($this->isClass($key, $value) && $key != $value && !is_subclass_of($value, $key)) {
-            throw new InvalidArgumentException("Class [$value] must be a subclass of [$key]");
+        $value = $value ?? $key;
+
+        if ($this->isClass($key, $value)) {
+            if (is_a($value, $key, true)) {
+                return $this->getCollection()->add($key, new ServiceClass($value));
+            } else {
+                throw new InvalidArgumentException("Class [$value] must be a subclass of [$key], or the same class.");
+            }
         }
 
-        if (!$this->isClass($value ?? $key)) {
-            return $this->getCollection()->add($key, $value);
-        }
-
-        return $this->getCollection()->add($key, new ServiceClass($value ?? $key));
+        return $this->getCollection()->add($key, $value);
     }
 
     /**
-     * Gets an item from the Container's map by its unique key.
+     * Finds an entry of the container by its identifier and returns it.
      *
-     * @param string $key The unique item's key.
+     * @param string $id Identifier of the entry to look for.
      *
-     * @throws Amber\Container\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException    Identifier argument must be a non empty string.
+     * @throws NotFoundExceptionInterface  No entry was found for **this** identifier.
+     * @throws ContainerExceptionInterface Error while retrieving the entry.
      *
-     * @return mixed The service value.
+     * @return mixed Entry.
      */
     final public function get($key)
     {
@@ -272,7 +276,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (!$this->isClass($class)) {
-            InvalidArgumentException::mustBeClass($class);
+            InvalidArgumentException::identifierMustBeClass($class);
         }
 
         $this->bind($class);
@@ -294,7 +298,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (!$this->isClass($class)) {
-            InvalidArgumentException::mustBeClass($class);
+            InvalidArgumentException::identifierMustBeClass($class);
         }
 
         $alias = $alias ?? $class;
@@ -321,7 +325,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
     }
 
     /**
-     * Gets a closure for a method of the provided class.
+     * Gets a closure for calling a method of the provided class.
      *
      * @param string $class  The class to instantiate.
      * @param string $method The class method to call.
@@ -332,6 +336,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
     public function getClosureFor(string $class, string $method, array $binds = []): Closure
     {
         $instance = $this->make($class);
+
         $service = $this->locate($class)
         ->setArguments($binds);
 

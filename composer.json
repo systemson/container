@@ -37,8 +37,8 @@
     "scripts": {
         "test": "phpunit",
         "docs": "php sami.phar update samiConfig.php -v",
-        "sniff": "phpcs --standard=PSR12 ./src",
-        "fix-cs": "phpcbf --standard=PSR12 ./src",
+        "sniff": "phpcs --standard=PSR12 ./src ./tests",
+        "fix-cs": "phpcbf --standard=PSR12 ./src ./tests",
         "speed": "php ./tests/Benchmark.php",
         "pull": [
             "git pull",
@@ -58,5 +58,10 @@
         "sort-packages": true,
         "optimize-autoloader": true,
         "process-timeout": 0
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.1.x-dev"
+        }
     }
 }

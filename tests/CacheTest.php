@@ -25,11 +25,11 @@ class CacheTest extends TestCase
         $object = new $class();
 
         $container->bindMultiple([
-        	$key => $string,
-        	'number' => $number,
-        	'array' => $array,
-        	'class' => $class,
-        	'object' => $object
+            $key => $string,
+            'number' => $number,
+            'array' => $array,
+            'class' => $class,
+            'object' => $object
         ]);
 
         $container->drop();

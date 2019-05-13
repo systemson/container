@@ -47,7 +47,7 @@ trait ArgumentsHandlerTrait
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (is_null($value) && !$this->isClass($key)) {
-            InvalidArgumentException::mustBeClass($key);
+            InvalidArgumentException::identifierMustBeClass($key);
         }
 
         if ($this->isClass($value ?? $key)) {

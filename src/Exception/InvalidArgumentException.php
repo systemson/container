@@ -8,12 +8,12 @@ class InvalidArgumentException extends BaseException
 {
     public static function mustBeString()
     {
-        throw new self('Key argument must be a non empty string.');
+        throw new self('Identifier must be a non empty string.');
     }
 
-    public static function mustBeClass(string $key)
+    public static function identifierMustBeClass(string $id)
     {
-        throw new self("Argument [{$key}] must be a valid class.");
+        throw new self("Identifier [{$id}] must be a valid class.");
     }
 
     public static function mustBeInstanceOf(string $class)
