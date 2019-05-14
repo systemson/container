@@ -35,103 +35,110 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
     }
 
     /**
-     * Returns a Service from the Container's map by its unique key.
+     * Returns a Service from the Container's map by its identifier.
      *
-     * @param string $key The unique item's key.
+     * @param string $id The entry's identifier.
      *
-     * @throws Amber\Container\Exception\NotFoundException
+     * @throws Amber\Container\Exception\InvalidArgumentException Identifier must be a non empty string.
+     * @throws Amber\Container\Exception\NotFoundException        No entry was found for [$id] identifier.
      *
-     * @return mixed The value of the item.
+     * @return mixed
      */
-    public function locate($key)
+    public function locate($id)
     {
-        /* Throws an InvalidArgumentException on invalid type. */
-        if (!$this->isString($key)) {
+        if (!$this->isString($id)) {
             InvalidArgumentException::mustBeString();
         }
 
-        if (!$this->has($key)) {
-            NotFoundException::throw($key);
+        if (!$this->has($id)) {
+            NotFoundException::throw($id);
         }
 
-        return $this->getCollection()->get($key);
+        return $this->getCollection()->get($id);
     }
 
     /**
-     * Binds an item to the Container's map by a unique key.
+     * Binds an entry to the container by its identifier.
      *
-     * @param string $key   The unique item's key.
-     * @param mixed  $value The value of the item.
+     * When no $value is provided $id must be a valid class.
+     * When $id and $value are classes, $value must be a subclass of $id, or the same class.
+     *
+     * @param string $id    The entry's identifier.
+     * @param mixed  $value Optional. The entry's value.
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
+     *         Identifier must be a non empty string.
+     *         Identifier [$id] must be a valid class.
+     *         Class [$value] must be a subclass of [$id], or the same.
      *
-     * @return bool True on success. False if key already exists.
+     * @return bool True on success. False if identifier already exists.
      */
-    final public function bind($key, $value = null)
+    final public function bind($id, $value = null): bool
     {
-        /* Throws an InvalidArgumentException on invalid type. */
-        if (!$this->isString($key)) {
+        if (!$this->isString($id)) {
             InvalidArgumentException::mustBeString();
         }
 
-        return $this->put($key, $value);
+        return $this->put($id, $value);
     }
 
     /**
      * Binds or Updates an item to the Container's map by a unique key.
      *
-     * @param string $key   The unique item's key.
-     * @param mixed  $value The value of the item.
+     * @param string $id    The entry's identifier.
+     * @param mixed  $value Optional. The entry's value.
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
+     *         Identifier must be a non empty string.
+     *         Identifier [$id] must be a valid class.
+     *         Class [$value] must be a subclass of [$id], or the same.
      *
-     * @return bool True on success. False if key already exists.
+     * @return bool True on success. False if identifier already exists.
      */
-    public function put($key, $value = null): bool
+    public function put($id, $value = null): bool
     {
-        /* Throws an InvalidArgumentException on invalid type. */
-        if (!$this->isString($key)) {
+        if (!$this->isString($id)) {
             InvalidArgumentException::mustBeString();
         }
 
-        /* Throws an InvalidArgumentException on invalid type. */
-        if (is_null($value) && !$this->isClass($key)) {
-            InvalidArgumentException::identifierMustBeClass($key);
+        if (is_null($value) && !$this->isClass($id)) {
+            InvalidArgumentException::identifierMustBeClass($id);
         }
 
-        $value = $value ?? $key;
+        $value = $value ?? $id;
 
-        if ($this->isClass($key, $value)) {
-            if (is_a($value, $key, true)) {
-                return $this->getCollection()->add($key, new ServiceClass($value));
+        if ($this->isClass($id, $value)) {
+            if (is_a($value, $id, true)) {
+                return $this->getCollection()->add($id, new ServiceClass($value));
             } else {
-                throw new InvalidArgumentException("Class [$value] must be a subclass of [$key], or the same class.");
+                throw new InvalidArgumentException("Class [$value] must be a subclass of [$id], or the same class.");
             }
         }
 
-        return $this->getCollection()->add($key, $value);
+        return $this->getCollection()->add($id, $value);
     }
 
     /**
      * Finds an entry of the container by its identifier and returns it.
      *
-     * @param string $id Identifier of the entry to look for.
+     * @param string $id The entry's identifier.
      *
-     * @throws InvalidArgumentException    Identifier argument must be a non empty string.
-     * @throws NotFoundExceptionInterface  No entry was found for **this** identifier.
-     * @throws ContainerExceptionInterface Error while retrieving the entry.
+     * @throws Amber\Container\Exception\InvalidArgumentException
+     *         Identifier must be a non empty string.
+     * @throws Amber\Container\Exception\NotFoundExceptionInterface
+     *         No entry was found for [$id] identifier.
+     * @throws Amber\Container\Exception\ContainerExceptionInterface
+     *         Error while retrieving the entry.
      *
-     * @return mixed Entry.
+     * @return mixed The entry.
      */
-    final public function get($key)
+    final public function get($id)
     {
-        /* Throws an InvalidArgumentException on invalid type. */
-        if (!$this->isString($key)) {
+        if (!$this->isString($id)) {
             InvalidArgumentException::mustBeString();
         }
 
-        /* Retrieves the service from the map. */
-        $service = $this->locate($key);
+        $service = $this->locate($id);
 
         if ($service instanceof ServiceClass) {
             return $this->instantiate($service);
@@ -216,41 +223,40 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
     }
 
     /**
-     * Checks for the existance of an item on the Container's map by its unique key.
+     * Wether an entry is present in the container.
      *
-     * @param string $key The unique item's key.
+     * `has($id)` returning true does not mean that `get($id)` will not throw an exception.
+     * It does however mean that `get($id)` will not throw a `NotFoundExceptionInterface`.
      *
-     * @throws Amber\Container\Exception\InvalidArgumentException
+     * @param string $id The entry's identifier.
      *
      * @return bool
      */
-    final public function has($key)
+    final public function has($id): bool
     {
         /* Throws an InvalidArgumentException on invalid type. */
-        if (!$this->isString($key)) {
+        if (!$this->isString($id)) {
             InvalidArgumentException::mustBeString();
         }
 
-        return $this->getCollection()->has($key);
+        return $this->getCollection()->has($id);
     }
 
     /**
-     * Unbinds an item from the Container's map by its unique key.
+     * Unbinds an entry from the container by its identifier.
      *
-     * @param string $key The unique item's key.
+     * @param string $id The entry's identifier.
      *
-     * @throws Amber\Container\Exception\InvalidArgumentException
-     *
-     * @return bool true on success, false on failure.
+     * @return bool True on success. False if identifier doesn't exists.
      */
-    final public function unbind($key)
+    final public function unbind($id): bool
     {
         /* Throws an InvalidArgumentException on invalid type. */
-        if (!$this->isString($key)) {
+        if (!$this->isString($id)) {
             InvalidArgumentException::mustBeString();
         }
 
-        return $this->getCollection()->delete($key);
+        return $this->getCollection()->delete($id);
     }
 
     /**
