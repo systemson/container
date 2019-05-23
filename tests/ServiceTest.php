@@ -7,6 +7,7 @@ use Tests\Example\Controller;
 use Tests\Example\Model;
 use Tests\Example\View;
 use PHPUnit\Framework\TestCase;
+use BadMethodCallException;
 
 class ServiceTest extends TestCase
 {
@@ -100,7 +101,7 @@ class ServiceTest extends TestCase
 
     public function testException()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(BadMethodCallException::class);
 
         (new ServiceClass(View::class))->afterConstruct('setId');
     }

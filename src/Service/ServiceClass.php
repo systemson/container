@@ -6,6 +6,7 @@ use Amber\Validator\Validator;
 use Amber\Container\Container;
 use ReflectionClass;
 use Amber\Container\Exception\InvalidArgumentException;
+use BadMethodCallException;
 
 class ServiceClass
 {
@@ -168,7 +169,7 @@ class ServiceClass
     }
 
     /**
-     * Method to call after the class is build
+     * Method to call after the class constructor.
      *
      * @param string $method The class method to call.
      * @param array  $args   The arguments for the method.
@@ -180,7 +181,7 @@ class ServiceClass
         $methods = get_class_methods($this->class);
 
         if (!in_array($method, $methods)) {
-            throw new InvalidArgumentException("Method [{$this->class}::{$method}()] does not exists.");
+            throw new BadMethodCallException("Method [{$this->class}::{$method}()] does not exists.");
         }
 
         $this->callback[] = (object) [
