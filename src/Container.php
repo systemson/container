@@ -179,20 +179,31 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
 
         $arguments = [];
 
+        /*
+         * First we find the name of the parameter or the class name.
+         * Then we retrieve the parameter from the container.
+         */
         foreach ($params as $param) {
+            /* Check if the parameter MUST be an instance of a class */
             if (!is_null($param->getClass())) {
+                // If i'ts an instance, gets the name of the clas.
                 $key = $param->getClass()->getName();
             } else {
+                // Else gets the parameter name.
                 $key = $param->name;
             }
 
+            // Then tries to get the argument from the service itself or from the container
             try {
                 $arguments[] = $this->getArgumentFromService($service, $key) ?? $this->get($key);
             } catch (NotFoundException $e) {
+                // If the parameter is not optional thows an exception.
                 if (!$param->isOptional()) {
                     $msg = $e->getMessage() . " Requested on [{$service->class}::{$method}()].";
                     throw new NotFoundException($msg);
                 }
+                // Else returns the parameter's default value.
+                $arguments[] = $param->getDefaultValue();
             }
         }
 

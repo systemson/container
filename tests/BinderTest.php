@@ -72,12 +72,28 @@ class BinderTest extends TestCase
     /**
      * @depends testContainer
      */
-    public function testGetInvalidArgumentException($container)
+    public function testSetInvalidArgumentException($container)
     {
         $this->expectException(InvalidArgumentException::class);
 
         $service = $container->locate(View::class);
 
         $service->setInstance(new Model());
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testGetInvalidArgumentException($container)
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $service = $container->locate(View::class);
+
+        $service->setInstance(function () {
+            return new Model();
+        });
+
+        $service->getInstance();
     }
 }

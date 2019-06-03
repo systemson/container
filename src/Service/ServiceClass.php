@@ -68,11 +68,7 @@ class ServiceClass
      */
     public function setInstance($instance): self
     {
-        if ($instance instanceof \Closure) {
-            $instance = $instance();
-        }
-
-        if (!$instance instanceof $this->class) {
+        if (!$instance instanceof \Closure && !$instance instanceof $this->class) {
             InvalidArgumentException::mustBeInstanceOf($this->class);
         }
 
@@ -87,12 +83,18 @@ class ServiceClass
      *
      * @param array $arguments Optional. The arguments for the class constructor.
      *
-     * @return object The instance of the reflected class
+     * @return object The instance of the reflected class.
      */
-    public function getInstance($arguments = [])
+    public function getInstance($arguments = []): object
     {
+        if ($this->instance instanceof \Closure) {
+            $this->instance = $this->instance->__invoke();
+        }
+
         if ($this->instance instanceof $this->class) {
             return $this->instance;
+        } elseif (!is_null($this->instance)) {
+            InvalidArgumentException::mustBeInstanceOf($this->class);
         }
 
         $instance = $this->new($arguments);
