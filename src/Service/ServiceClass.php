@@ -85,7 +85,7 @@ class ServiceClass
      *
      * @return object The instance of the reflected class.
      */
-    public function getInstance($arguments = []): object
+    public function getInstance($arguments = [])
     {
         if ($this->instance instanceof \Closure) {
             $this->instance = $this->instance->__invoke();
