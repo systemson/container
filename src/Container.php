@@ -6,14 +6,14 @@ use Amber\Cache\CacheAware\CacheAwareInterface;
 use Amber\Collection\{
     Collection,
     CollectionAware\CollectionAwareInterface,
-    CollectionAware\CollectionAwareTrait,
+    CollectionAware\CollectionAwareTrait
 };
 use Amber\Container\{
     Exception\InvalidArgumentException,
     Exception\NotFoundException,
     Service\ServiceClass,
     Traits\MultipleBinderTrait,
-    Traits\CacheHandlerTrait,
+    Traits\CacheHandlerTrait
 };
 use Amber\Validator\Validator;
 use Psr\Container\ContainerInterface;
