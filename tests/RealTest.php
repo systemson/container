@@ -5,15 +5,17 @@ namespace Tests;
 use Amber\Container\Container;
 use Tests\Example\Controller;
 use Tests\Example\Model;
+use Tests\Example\ChildModel;
 use Tests\Example\View;
 use PHPUnit\Framework\TestCase;
+use Amber\Container\Exception\NotFoundException;
 
 /**
  * @todo MUST test depencies that need other depdencies recursively.
  */
 class RealTest extends TestCase
 {
-    public function testRegister()
+    public function testSingleton()
     {
         $container = new Container();
 
@@ -29,6 +31,25 @@ class RealTest extends TestCase
         $this->assertInstanceOf(Controller::class, $controller);
         $this->assertSame($controller, $container->get(Controller::class));
         $this->assertEquals(53, $controller->id);
+    }
+
+    public function testSingletonWithAlias()
+    {
+        $container = new Container();
+
+        $service = $container->singleton(Model::class, ChildModel::class);
+
+        $model = $container->get(Model::class);
+
+        $this->assertInstanceOf(Model::class, $model);
+        $this->assertSame($model, $container->get(Model::class));
+
+        // Must throw NotFoundException since the ChildModel is not binded by it's own name but by it's father name
+        try {
+            $container->get(ChildModel::class);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(NotFoundException::class, $e);
+        }
     }
 
     public function testClosure()

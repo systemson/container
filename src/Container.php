@@ -304,8 +304,8 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
     /**
      * Binds an item to the Container and return the service.
      *
-     * @param string $class The item's class.
-     * @param string $alias The item's alias.
+     * @param string $class
+     * @param string $alias
      *
      * @throws Amber\Container\Exception\InvalidArgumentException
      *
@@ -318,11 +318,13 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
             InvalidArgumentException::identifierMustBeClass($class);
         }
 
-        $alias = $alias ?? $class;
+        if (is_null($alias)) {
+            $alias = $class;
+        }
 
-        $this->bind($alias, $class);
+        $this->bind($class, $alias);
 
-        return $this->locate($alias);
+        return $this->locate($class);
     }
 
     /**
