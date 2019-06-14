@@ -13,7 +13,7 @@ before_install:
 
 script:
   - composer install
-  - php vendor/bin/phpunit
+  - composer test
 
 after_success:
   - travis_retry php vendor/bin/php-coveralls
