@@ -15,7 +15,7 @@ use Amber\Container\{
     Traits\MultipleBinderTrait,
     Traits\CacheHandlerTrait
 };
-use Amber\Validator\Validator;
+use Amber\Validator\ValidatorTrait;
 use Psr\Container\ContainerInterface;
 use Closure;
 
@@ -24,7 +24,7 @@ use Closure;
  */
 class Container implements ContainerInterface, CollectionAwareInterface, CacheAwareInterface
 {
-    use CollectionAwareTrait, MultipleBinderTrait, CacheHandlerTrait, Validator;
+    use CollectionAwareTrait, MultipleBinderTrait, CacheHandlerTrait, ValidatorTrait;
 
     /**
      * The Container constructor.

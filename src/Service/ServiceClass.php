@@ -2,7 +2,7 @@
 
 namespace Amber\Container\Service;
 
-use Amber\Validator\Validator;
+use Amber\Validator\ValidatorTrait;
 use Amber\Container\Container;
 use ReflectionClass;
 use Amber\Container\Exception\InvalidArgumentException;
@@ -10,7 +10,7 @@ use BadMethodCallException;
 
 class ServiceClass
 {
-    use Validator, ArgumentsHandlerTrait;
+    use ValidatorTrait, ArgumentsHandlerTrait;
 
     /**
      * @var string The class name.
