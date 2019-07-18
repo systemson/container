@@ -119,7 +119,7 @@ $container->make($class);
 ```
 
 ### register()
-#### Binds an item to the Container and return the ServiceClass.
+#### Binds an class to the Container and return the ServiceClass.
 
 register(string $class, string $alias = null): ServiceClass
 
@@ -133,7 +133,7 @@ register(string $class, string $alias = null): ServiceClass
 $container->register($class);
 ```
 ### singleton()
-#### Binds an item to the Container as singleton and return theServiceClassservice.
+#### Binds an class to the Container as singleton and return theServiceClassservice.
 
 singleton(string $class, string $alias = null): ServiceClass
 
