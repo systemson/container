@@ -13,10 +13,10 @@ trait MultipleBinderTrait
      */
     final public function bindMultiple(array $items)
     {
-        foreach ($items as $key => $value) {
-            $key = is_int($key) ? $value : $key;
+        foreach ($items as $identifier => $value) {
+            $identifier = is_int($identifier) ? $value : $identifier;
 
-            $this->bind($key, $value);
+            $this->bind($identifier, $value);
         }
 
         return true;
@@ -31,8 +31,8 @@ trait MultipleBinderTrait
      */
     final public function getMultiple(array $items)
     {
-        foreach ($items as $key) {
-            $services[] = $this->get($key);
+        foreach ($items as $identifier) {
+            $services[] = $this->get($identifier);
         }
 
         return $services;
@@ -47,8 +47,8 @@ trait MultipleBinderTrait
      */
     final public function unbindMultiple(array $items)
     {
-        foreach ($items as $key) {
-            $this->unbind($key);
+        foreach ($items as $identifier) {
+            $this->unbind($identifier);
         }
 
         return true;
