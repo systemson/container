@@ -6,8 +6,8 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class NotFoundException extends ContainerException implements NotFoundExceptionInterface
 {
-    public static function throw(string $id)
+    public static function throw(string $identifier)
     {
-        throw new self("No entry was found for [{$id}] identifier.");
+        throw new self("No entry was found for [{$identifier}] identifier.");
     }
 }

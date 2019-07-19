@@ -11,9 +11,9 @@ class InvalidArgumentException extends BaseException
         throw new self('Identifier must be a non empty string.');
     }
 
-    public static function identifierMustBeClass(string $id)
+    public static function identifierMustBeClass(string $identifier)
     {
-        throw new self("Identifier [{$id}] must be a valid class.");
+        throw new self("Identifier [{$identifier}] must be a valid class.");
     }
 
     public static function mustBeInstanceOf(string $class)
