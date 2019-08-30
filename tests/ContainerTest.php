@@ -6,6 +6,7 @@ use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Container;
 use Tests\Example\Model;
+use Tests\Example\View;
 use Tests\Example\Controller;
 use PHPUnit\Framework\TestCase;
 
@@ -254,5 +255,19 @@ class ContainerTest extends TestCase
 
         /* Test strings */
         $container->bind(Controller::class, Model::class);
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testWrongArgumentType($container)
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $container->bind(View::class);
+        $container->bind(Model::class);
+
+        /* Test strings */
+        $container->getClosureFor(Controller::class, 'setBoolean', ['boolean' => 'string']);
     }
 }

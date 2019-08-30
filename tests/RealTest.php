@@ -64,6 +64,18 @@ class RealTest extends TestCase
         $this->assertEquals('Hello world.', $callback());
     }
 
+    public function testClosureForBoolean()
+    {
+        $container = new Container();
+
+        $container->bind(Model::class);
+        $container->bind(View::class);
+        
+        $callback = $container->getClosureFor(Controller::class, 'setBoolean', ['boolean' => true]);
+
+        $this->assertEquals(true, $callback());
+    }
+
     public function testBindingAllDirectlyToService()
     {
         $container = new Container();

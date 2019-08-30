@@ -24,7 +24,8 @@
     "require": {
         "php": ">=7.2.0",
         "amber/cache": "^1.0@beta",
-        "amber/common": "dev-master",
+        "amber/collection": "^0.6@beta",
+        "amber/validator": "^0.1@dev",
         "psr/container": "^1.0"
     },
     "require-dev": {

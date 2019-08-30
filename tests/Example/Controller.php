@@ -48,4 +48,9 @@ class Controller
     {
         return $this->view->hello($name);
     }
+
+    public function setBoolean(bool $boolean = false)
+    {
+        return $boolean;
+    }
 }

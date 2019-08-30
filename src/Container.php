@@ -113,7 +113,9 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
             if (is_a($value, $identifier, true)) {
                 return $this->getCollection()->add($identifier, new ServiceClass($value));
             } else {
-                throw new InvalidArgumentException("Class [$value] must be a subclass of [$identifier], or the same class.");
+                throw new InvalidArgumentException(
+                    "Class [$value] must be a subclass of [$identifier], or the same class."
+                );
             }
         }
 
@@ -186,10 +188,15 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
          * Then we retrieve the parameter from the container.
          */
         foreach ($params as $param) {
+            // Gets the param type if any.
+            if ($param->hasType()) {
+                $type = $param->getType();
+            }
+
             /* Check if the parameter MUST be an instance of a class */
             if (!is_null($param->getClass())) {
-                // If i'ts an instance, gets the name of the clas.
-                $key = $param->getClass()->getName();
+                // If it is, gets the name of the class.
+                $key = $type->getName();
             } else {
                 // Else gets the parameter name.
                 $key = $param->name;
@@ -197,7 +204,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
 
             // Then tries to get the argument from the service itself or from the container
             try {
-                $arguments[] = $this->getArgumentFromService($service, $key) ?? $this->get($key);
+                $arguments[$key] = $this->getArgumentFromService($service, $key) ?? $this->get($key);
             } catch (NotFoundException $e) {
                 // If the parameter is not optional thows an exception.
                 if (!$param->isOptional()) {
@@ -205,8 +212,22 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
                     throw new NotFoundException($msg);
                 }
                 // Else returns the parameter's default value.
-                $arguments[] = $param->getDefaultValue();
+                $arguments[$key] = $param->getDefaultValue();
             }
+
+            // Gets the argument type.
+            $argumentType = $this->getType($arguments[$key]);
+
+            // Checks if the argument provided is the same type of the parameter.
+            if (!$param->hasType() ||
+                $type->getName() == $argumentType ||
+                ($param->isOptional() && strtolower($argumentType) == 'null') ||
+                is_a($arguments[$key], $type->getName())
+            ) {
+                continue;
+            }
+
+            InvalidArgumentException::wrongArgumentType($key, $type, $argumentType, "{$service->class}::{$method}()");
         }
 
         return $arguments;
