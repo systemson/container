@@ -38,6 +38,8 @@ trait ArgumentsHandlerTrait
     /**
      * Stores a Service argument by its key.
      *
+     * @todo COULD set the argument for a specified method.
+     *
      * @param string $key   The argument key.
      * @param mixed  $value The argument value.
      *

@@ -185,7 +185,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
 
         /*
          * First we find the name of the parameter or the class name.
-         * Then we retrieve the parameter from the container.
+         * Then we get the arguments from the container.
          */
         foreach ($params as $param) {
             // Gets the param type if any.
@@ -193,7 +193,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
                 $type = $param->getType();
             }
 
-            /* Check if the parameter MUST be an instance of a class */
+            // Check if the parameter MUST be an instance of a class.
             if (!is_null($param->getClass())) {
                 // If it is, gets the name of the class.
                 $key = $type->getName();
@@ -206,7 +206,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
             try {
                 $arguments[$key] = $this->getArgumentFromService($service, $key) ?? $this->get($key);
             } catch (NotFoundException $e) {
-                // If the parameter is not optional thows an exception.
+                // If the parameter is not optional throws an exception.
                 if (!$param->isOptional()) {
                     $msg = $e->getMessage() . " Requested on [{$service->class}::{$method}()].";
                     throw new NotFoundException($msg);
@@ -218,16 +218,25 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
             // Gets the argument type.
             $argumentType = $this->getType($arguments[$key]);
 
-            // Checks if the argument provided is the same type of the parameter.
+            // Checks if the argument's type is compatible with the parameter's type.
             if (!$param->hasType() ||
                 $type->getName() == $argumentType ||
+                $this->isParseable($arguments[$key], $type->getName()) ||
+                $this->isParseable($arguments[$key], $type->getName()) ||
                 ($param->isOptional() && strtolower($argumentType) == 'null') ||
                 is_a($arguments[$key], $type->getName())
             ) {
                 continue;
             }
+            // Here it COULD parse the argument to the param type.
+            // It could rely this to a parser class.
 
-            InvalidArgumentException::wrongArgumentType($key, $type, $argumentType, "{$service->class}::{$method}()");
+            InvalidArgumentException::wrongArgumentType(
+                $key,
+                $type,
+                $argumentType,
+                "{$service->class}::{$method}()"
+            );
         }
 
         return $arguments;
@@ -379,13 +388,44 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
     {
         $instance = $this->make($class);
 
+        if (!in_array($method, get_class_methods($instance))) {
+            throw new InvalidArgumentException("Call to undefined {$class}::{$method}()");
+        }
+
         $service = $this->locate($class)
-        ->setArguments($binds);
+            ->setArguments($binds)
+        ;
 
         $args = $this->getArguments($service, $method);
 
         return Closure::fromCallable(function () use ($instance, $method, $args) {
             return call_user_func_array([$instance, $method], $args);
         });
+    }
+
+    /**
+     * Wether an argument can be parsed to the provided type.
+     *
+     * @param mixed  $value
+     * @param string $type
+     *
+     * @return bool
+     */
+    protected function isParseable($value, string $type): bool
+    {
+        switch ($type) {
+            case 'int':
+            case 'double':
+                return is_numeric($value);
+                break;
+
+            case 'bool':
+                return in_array($value, [1, '1', 0, '0'], true);
+                break;
+
+            default:
+                return false;
+                break;
+        }
     }
 }

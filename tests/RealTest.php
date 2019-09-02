@@ -71,9 +71,9 @@ class RealTest extends TestCase
         $container->bind(Model::class);
         $container->bind(View::class);
         
-        $callback = $container->getClosureFor(Controller::class, 'setBoolean', ['boolean' => true]);
+        $callback = $container->getClosureFor(Controller::class, 'setBoolean', ['value' => true]);
 
-        $this->assertEquals(true, $callback());
+        $this->assertTrue($callback->__invoke());
     }
 
     public function testBindingAllDirectlyToService()
@@ -112,5 +112,20 @@ class RealTest extends TestCase
         $this->assertEquals($controller, $container->get(Controller::class));
         $this->assertNotSame($controller, $container->get(Controller::class));
         $this->assertEquals(53, $controller->id);
+    }
+
+    public function testArgumentTypes()
+    {
+        $container = new Container();
+
+        $container->bind(View::class);
+        $container->bind(Model::class);
+
+        /* Test strings */
+        $boolean = $container->getClosureFor(Controller::class, 'setBoolean', ['value' => '1']);
+        $int = $container->getClosureFor(Controller::class, 'setInt', ['value' => '12145']);
+
+        $this->assertEquals(true, $boolean->__invoke());
+        $this->assertEquals('12145', $int->__invoke());
     }
 }

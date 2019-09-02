@@ -268,6 +268,20 @@ class ContainerTest extends TestCase
         $container->bind(Model::class);
 
         /* Test strings */
-        $container->getClosureFor(Controller::class, 'setBoolean', ['boolean' => 'string']);
+        $container->getClosureFor(Controller::class, 'setBoolean', ['value' => 'string']);
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testClosureForUndefinedMEthod($container)
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $container->bind(View::class);
+        $container->bind(Model::class);
+
+        /* Test strings */
+        $container->getClosureFor(Controller::class, 'undefined');
     }
 }
