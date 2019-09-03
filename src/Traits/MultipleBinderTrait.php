@@ -31,6 +31,8 @@ trait MultipleBinderTrait
      */
     final public function getMultiple(array $items)
     {
+        $services = [];
+
         foreach ($items as $identifier) {
             $services[] = $this->get($identifier);
         }

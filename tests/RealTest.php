@@ -23,7 +23,7 @@ class RealTest extends TestCase
         $container->bind(View::class);
 
         $service = $container->singleton(Controller::class)
-        ->setArguments(['optional' => 2])
+        ->setArguments('__construct', ['optional' => 2])
         ->afterConstruct('setId', 53);
 
         $controller = $container->get(Controller::class);
@@ -70,7 +70,7 @@ class RealTest extends TestCase
 
         $container->bind(Model::class);
         $container->bind(View::class);
-        
+
         $callback = $container->getClosureFor(Controller::class, 'setBoolean', ['value' => true]);
 
         $this->assertTrue($callback->__invoke());
@@ -81,9 +81,9 @@ class RealTest extends TestCase
         $container = new Container();
 
         $service = $container->register(Controller::class)
-        ->setArgument(View::class)
-        ->setArgument(Model::class)
-        ->setArgument('optional', 2);
+        ->setArgument('__construct', View::class)
+        ->setArgument('__construct', Model::class)
+        ->setArgument('__construct', 'optional', 2);
 
         $controller = $container->get(Controller::class);
 
@@ -97,11 +97,11 @@ class RealTest extends TestCase
         $container = new Container();
 
         $service = $container->register(Controller::class)
-        ->setArgument(View::class, function () {
+        ->setArgument('__construct', View::class, function () {
             return new View();
         })
-        ->setArgument(Model::class)
-        ->setArgument('optional', 2)
+        ->setArgument('__construct', Model::class)
+        ->setArgument('__construct', 'optional', 2)
         ->afterConstruct('setId', function () {
             return 53;
         });

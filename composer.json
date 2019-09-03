@@ -38,6 +38,7 @@
         "sniff": "phpcs --standard=PSR12 ./src ./tests",
         "fix-cs": "phpcbf --standard=PSR12 ./src ./tests",
         "speed": "php ./tests/Benchmark.php",
+        "type-hint": "psalm --show-info=false",
         "pull": [
             "git pull",
             "composer update -vvv"

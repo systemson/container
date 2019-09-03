@@ -4,9 +4,7 @@ namespace Amber\Container\Service;
 
 use Amber\Validator\ValidatorTrait;
 use Amber\Container\Container;
-use ReflectionClass;
 use Amber\Container\Exception\InvalidArgumentException;
-use BadMethodCallException;
 
 class ServiceClass
 {
@@ -21,11 +19,6 @@ class ServiceClass
      * @var mixed The class instance.
      */
     protected $instance;
-
-    /**
-     * @var ReflectionClass The class reflection.
-     */
-    protected $reflection;
 
     /**
      * @var bool Singleton condition for the class.
@@ -45,16 +38,6 @@ class ServiceClass
     public function __construct(string $class)
     {
         $this->class = $class;
-    }
-
-    /**
-     * Gets an instance of the ReflectionClass for the current class.
-     *
-     * @return ReflectionClass
-     */
-    public function getReflection(): ReflectionClass
-    {
-        return new ReflectionClass($this->class);
     }
 
     /**
@@ -183,7 +166,7 @@ class ServiceClass
         $methods = get_class_methods($this->class);
 
         if (!in_array($method, $methods)) {
-            throw new BadMethodCallException("Method [{$this->class}::{$method}()] does not exists.");
+            throw new \BadMethodCallException("Method [{$this->class}::{$method}()] does not exists.");
         }
 
         $this->callback[] = (object) [

@@ -243,7 +243,7 @@ class ContainerTest extends TestCase
 
         /* Test strings */
         $container->register(Controller::class)
-        ->setArgument('this_is_not_a_class');
+        ->setArgument('__construct', 'this_is_not_a_class');
     }
 
     /**

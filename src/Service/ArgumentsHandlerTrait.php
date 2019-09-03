@@ -4,35 +4,69 @@ namespace Amber\Container\Service;
 
 use Amber\Validator\Validator;
 use Amber\Container\Container;
-use ReflectionClass;
 use Amber\Container\Exception\InvalidArgumentException;
 
 trait ArgumentsHandlerTrait
 {
     /**
-     * @var array The arguments for the service constructor.
+     * @var \ReflectionClass.
+     */
+    protected $reflection;
+
+    /**
+     * @var array
      */
     protected $arguments = [];
 
     /**
-     * @var array The parameters required for the class constructor.
+     * @var array
      */
     protected $parameters = [];
 
     /**
-     * Gets the method paramaters for the current class.
-     *
-     * @return array The parameters for the class method.
+     * @var array
      */
-    public function getParameters(string $method = '__construct')
+    protected $methods = [];
+
+    /**
+     * Gets an instance of the ReflectionClass for the current class.
+     *
+     * @return \ReflectionClass
+     */
+    public function getReflection(): \ReflectionClass
     {
-        $reflection = $this->getReflection();
-
-        if ($reflection->hasMethod($method)) {
-            $methodReflection = $reflection->getMethod($method);
-
-            return $methodReflection->getParameters() ?? [];
+        if ($this->reflection instanceof \ReflectionClass) {
+            return $this->reflection;
         }
+
+        return $this->reflection = new \ReflectionClass($this->class);
+    }
+
+    public function getMethod(string $method): ?ServiceMethod
+    {
+        if (isset($this->methods[$method])) {
+            return $this->methods[$method];
+        }
+
+        if ($this->getReflection()->hasMethod($method)) {
+            return $this->methods[$method] = new ServiceMethod($method, $this->getReflection()->getMethod($method));
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets the method paramaters.
+     *
+     * @return array
+     */
+    public function getParameters(string $method = '__construct'): array
+    {
+        if (($method = $this->getMethod($method)) != null) {
+            return $method->getParameters();
+        }
+
+        return [];
     }
 
     /**
@@ -45,7 +79,7 @@ trait ArgumentsHandlerTrait
      *
      * @return self The current service.
      */
-    public function setArgument(string $key, $value = null): self
+    public function setArgument(string $method, string $key, $value = null): self
     {
         /* Throws an InvalidArgumentException on invalid type. */
         if (is_null($value) && !$this->isClass($key)) {
@@ -53,9 +87,9 @@ trait ArgumentsHandlerTrait
         }
 
         if ($this->isClass($value ?? $key)) {
-            $this->arguments[$key] = new ServiceClass($value ?? $key);
+            $this->getMethod($method)->setArgument($key, new ServiceClass($value ?? $key));
         } else {
-            $this->arguments[$key] = $value;
+            $this->getMethod($method)->setArgument($key, $value);
         }
 
         return $this;
@@ -66,11 +100,11 @@ trait ArgumentsHandlerTrait
      *
      * @param string $key The argument key.
      *
-     * @return bool.
+     * @return bool
      */
-    public function hasArgument(string $key): bool
+    public function hasArgument(string $method, string $key): bool
     {
-        return isset($this->arguments[$key]);
+        return $this->getMethod($method)->hasArgument($key);
     }
 
     /**
@@ -78,11 +112,11 @@ trait ArgumentsHandlerTrait
      *
      * @param string $key The argument key.
      *
-     * @return array.
+     * @return array
      */
-    public function getArgument(string $key)
+    public function getArgument(string $method, string $key)
     {
-        $value = $this->arguments[$key];
+        $value =  $this->getMethod($method)->getArgument($key);
 
         if ($value instanceof \Closure) {
             return $value();
@@ -98,10 +132,10 @@ trait ArgumentsHandlerTrait
      *
      * @return self The current service.
      */
-    public function setArguments(array $arguments = []): self
+    public function setArguments(string $method, array $arguments = []): self
     {
         foreach ($arguments as $key => $value) {
-            $this->setArgument($key, $value);
+            $this->setArgument($method, $key, $value);
         }
 
         return $this;
@@ -110,10 +144,14 @@ trait ArgumentsHandlerTrait
     /**
      * Gets the Service arguments.
      *
-     * @return array.
+     * @return array
      */
-    public function getArguments(): array
+    public function getArguments(string $method): array
     {
-        return $this->arguments;
+        if (($methodRelection = $this->getMethod($method)) != null) {
+            return $methodRelection->getArguments();
+        }
+
+        return [];
     }
 }
