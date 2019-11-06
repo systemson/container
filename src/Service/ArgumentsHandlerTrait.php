@@ -47,13 +47,18 @@ trait ArgumentsHandlerTrait
         return $this->reflection = new \ReflectionClass($this->class);
     }
 
+    public function hasMethod(string $name): bool
+    {
+        return $this->getReflection()->hasMethod($name);
+    }
+
     public function getMethod(string $name): ?ServiceMethod
     {
         if (isset($this->methods[$name])) {
             return $this->methods[$name];
         }
 
-        if ($this->getReflection()->hasMethod($name)) {
+        if ($this->hasMethod($name)) {
             return $this->methods[$name] = new ServiceMethod($name, $this->getReflection()->getMethod($name));
         }
 
@@ -91,24 +96,39 @@ trait ArgumentsHandlerTrait
     /**
      * Stores a Service argument by its key.
      *
-     * @todo COULD set the argument for a specified method.
-     *
-     * @param string $key   The argument key.
-     * @param mixed  $value The argument value.
+     * @param string $identifier The argument key.
+     * @param mixed  $value      The argument value.
+     * @param string $method     Optional. The argument's method.
      *
      * @return self The current service.
      */
-    public function setArgument(string $method, string $key, $value = null): self
+    public function setArgument(string $identifier, $value = null, string $method = null): self
     {
-        /* Throws an InvalidArgumentException on invalid type. */
-        if (is_null($value) && !$this->isClass($key)) {
-            InvalidArgumentException::identifierMustBeClass($key);
+
+        if (is_null($value) && !$this->isClass($identifier)) {
+            InvalidArgumentException::identifierMustBeClass($identifier);
         }
 
-        if ($this->isClass($value ?? $key)) {
-            $this->getMethod($method)->setArgument($key, new ServiceClass($value ?? $key));
+        $value ??= $identifier;
+
+        if ($this->isClass($identifier, $value)) {
+            if (is_a($value, $identifier, true)) {
+                $value = new ServiceClass($value);
+            } else {
+                throw new InvalidArgumentException(
+                    "Class [$value] must be a subclass of [$identifier], or the same class."
+                );
+            }
+        }
+
+        if (is_null($method)) {
+            $this->arguments[$identifier] = $value;
         } else {
-            $this->getMethod($method)->setArgument($key, $value);
+            if (!$this->hasMethod($method)) {
+                InvalidArgumentException::classMethodDoesNotExists($this->class, $method);
+            }
+
+            $this->getMethod($method)->setArgument($identifier, $value);
         }
 
         return $this;
@@ -121,8 +141,16 @@ trait ArgumentsHandlerTrait
      *
      * @return bool
      */
-    public function hasArgument(string $method, string $key): bool
+    public function hasArgument(string $key, string $method = null): bool
     {
+        if (is_null($method)) {
+            return isset($this->arguments[$key]);
+        }
+
+        if (!$this->hasMethod($method)) {
+            InvalidArgumentException::classMethodDoesNotExists($this->class, $method);
+        }
+
         return $this->getMethod($method)->hasArgument($key);
     }
 
@@ -133,15 +161,23 @@ trait ArgumentsHandlerTrait
      *
      * @return array
      */
-    public function getArgument(string $method, string $key)
+    public function getArgument(string $key, string $method = null)
     {
-        $value =  $this->getMethod($method)->getArgument($key);
+        if (is_null($method)) {
+            $value = $this->arguments[$key];
+        } else {
+            if (!$this->hasMethod($method)) {
+                InvalidArgumentException::classMethodDoesNotExists($this->class, $method);
+            }
+
+            $value =  $this->getMethod($method)->getArgument($key) ?? $this->arguments[$key];
+        }
 
         if ($value instanceof \Closure) {
             return $value();
         }
 
-        return $value;
+        return $value ?? null;
     }
 
     /**
@@ -151,10 +187,10 @@ trait ArgumentsHandlerTrait
      *
      * @return self The current service.
      */
-    public function setArguments(string $method, array $arguments = []): self
+    public function setArguments(array $arguments = [], string $method = null): self
     {
         foreach ($arguments as $key => $value) {
-            $this->setArgument($method, $key, $value);
+            $this->setArgument($key, $value, $method);
         }
 
         return $this;

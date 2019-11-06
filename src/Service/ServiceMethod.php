@@ -95,7 +95,7 @@ class ServiceMethod
      */
     public function getArgument(string $key)
     {
-        return $this->arguments[$key];
+        return $this->arguments[$key] ?? null;
     }
 
     /**

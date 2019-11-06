@@ -107,7 +107,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
             InvalidArgumentException::identifierMustBeClass($identifier);
         }
 
-        $value = $value ?? $identifier;
+        $value ??= $identifier;
 
         if ($this->isClass($identifier, $value)) {
             if (is_a($value, $identifier, true)) {
@@ -202,7 +202,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
 
             // Then tries to get the argument from the service itself or from the container
             try {
-                $arguments[$key] = $this->getArgumentFromService($method, $service, $key) ?? $this->get($key);
+                $arguments[$key] = $this->getArgumentFromService($service, $key, $method) ?? $this->get($key);
             } catch (NotFoundException $e) {
                 // If the parameter is not optional throws an exception.
                 if (!$param->isOptional()) {
@@ -288,13 +288,13 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
      *
      * @return mixed The argument's value.
      */
-    protected function getArgumentFromService(string $method, ServiceClass $service, string $key)
+    protected function getArgumentFromService(ServiceClass $service, string $key, string $method = null)
     {
-        if (!$service->hasArgument($method, $key)) {
+        if (!$service->hasArgument($key, $method)) {
             return;
         }
 
-        $subService = $service->getArgument($method, $key);
+        $subService = $service->getArgument($key, $method);
 
         if (!$subService instanceof ServiceClass) {
             return $subService;
@@ -431,7 +431,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
         }
 
         $service = $this->locate($class)
-            ->setArguments($method, $binds)
+            ->setArguments($binds, $method)
         ;
 
         $args = $this->getArguments($service, $method);

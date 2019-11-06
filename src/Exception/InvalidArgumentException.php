@@ -22,6 +22,11 @@ class InvalidArgumentException extends BaseException implements ContainerExcepti
         throw new self("Argument provided is not an instance of [{$class}].");
     }
 
+    public static function classMethodDoesNotExists(string $class, $method)
+    {
+        throw new self("Method [{$class}::{$method}()] does not exists.");
+    }
+
     public static function wrongArgumentType(
         string $paramName,
         string $paramType,

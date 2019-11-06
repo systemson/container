@@ -55,11 +55,11 @@ class ServiceTest extends TestCase
             $service->getParameters('setId')
         );
 
-        $this->assertInstanceOf(ServiceClass::class, $service->setArgument('__construct', Model::class, $model));
-        $this->assertInstanceOf(ServiceClass::class, $service->setArgument('__construct', View::class, $view));
+        $this->assertInstanceOf(ServiceClass::class, $service->setArgument(Model::class, $model, '__construct'));
+        $this->assertInstanceOf(ServiceClass::class, $service->setArgument(View::class, $view, '__construct'));
 
-        $this->assertEquals($model, $service->getArgument('__construct', Model::class));
-        $this->assertEquals($view, $service->getArgument('__construct', View::class));
+        $this->assertEquals($model, $service->getArgument(Model::class, '__construct'));
+        $this->assertEquals($view, $service->getArgument(View::class, '__construct'));
         $this->assertEquals(
             [
                 Model::class => $model,
@@ -69,15 +69,15 @@ class ServiceTest extends TestCase
         );
 
         $this->assertInstanceOf(ServiceClass::class, $service->setArguments(
-            '__construct',
             [
                 Model::class => $model,
                 View::class => $view,
-            ]
+            ],
+            '__construct',
         ));
 
-        $this->assertEquals($model, $service->getArgument('__construct', Model::class));
-        $this->assertEquals($view, $service->getArgument('__construct', View::class));
+        $this->assertEquals($model, $service->getArgument(Model::class, '__construct'));
+        $this->assertEquals($view, $service->getArgument(View::class, '__construct'));
         $this->assertEquals(
             [
                 Model::class => $model,
@@ -129,5 +129,21 @@ class ServiceTest extends TestCase
         $type = current($service->getInjectables())->getType();
 
         $this->assertEquals(Model::class, $type);
+    }
+
+    public function testServiceGlobalArguments()
+    {
+        $service = (new ServiceClass(Controller::class));
+
+        $model = new Model();
+        $view = new View();
+
+        $service
+            ->setArgument(Model::class, $model)
+            ->setArgument(View::class)
+        ;
+
+        $this->assertEquals($model, $service->getArgument(Model::class, '__construct'));
+        $this->assertInstanceOf(ServiceClass::class, $service->getArgument(View::class));
     }
 }

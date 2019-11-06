@@ -23,7 +23,7 @@ class RealTest extends TestCase
         $container->bind(View::class);
 
         $service = $container->singleton(Controller::class)
-        ->setArguments('__construct', ['optional' => 2])
+        ->setArguments(['optional' => 2], '__construct')
         ->afterConstruct('setId', 53);
 
         $controller = $container->get(Controller::class);
@@ -81,9 +81,10 @@ class RealTest extends TestCase
         $container = new Container();
 
         $service = $container->register(Controller::class)
-        ->setArgument('__construct', View::class)
-        ->setArgument('__construct', Model::class)
-        ->setArgument('__construct', 'optional', 2);
+            ->setArgument(View::class, null, '__construct')
+            ->setArgument(Model::class, null, '__construct')
+            ->setArgument('optional', 2, '__construct')
+        ;
 
         $controller = $container->get(Controller::class);
 
@@ -97,11 +98,11 @@ class RealTest extends TestCase
         $container = new Container();
 
         $service = $container->register(Controller::class)
-        ->setArgument('__construct', View::class, function () {
+        ->setArgument(View::class, function () {
             return new View();
-        })
-        ->setArgument('__construct', Model::class)
-        ->setArgument('__construct', 'optional', 2)
+        }, '__construct')
+        ->setArgument(Model::class, null, '__construct')
+        ->setArgument('optional', 2, '__construct')
         ->afterConstruct('setId', function () {
             return 53;
         });
