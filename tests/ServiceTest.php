@@ -106,4 +106,28 @@ class ServiceTest extends TestCase
 
         (new ServiceClass(View::class))->afterConstruct('setId');
     }
+
+    public function testProperties()
+    {
+        $service = (new ServiceClass(Controller::class));
+        $property = $service->getProperty('model');
+
+        if ($property->hasType()) {
+            $this->assertEquals(Model::class, $property->getType());
+        }
+
+        if (!$property->hasValue()) {
+            $property->setValue(Model::class);
+
+            $this->assertEquals(Model::class, $property->getValue());
+        }
+
+        $this->assertEquals($property, $service->getProperty('model'));
+
+        $service->injectProperty('model');
+
+        $type = current($service->getInjectables())->getType();
+
+        $this->assertEquals(Model::class, $type);
+    }
 }

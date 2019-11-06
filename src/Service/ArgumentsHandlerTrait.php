@@ -11,22 +11,27 @@ trait ArgumentsHandlerTrait
     /**
      * @var \ReflectionClass.
      */
-    protected $reflection;
+    protected \ReflectionClass $reflection;
 
     /**
      * @var array
      */
-    protected $arguments = [];
+    protected array $arguments = [];
 
     /**
      * @var array
      */
-    protected $parameters = [];
+    protected array $parameters = [];
 
     /**
      * @var array
      */
-    protected $methods = [];
+    protected array $methods = [];
+
+    /**
+     * @var array
+     */
+    protected array $properties = [];
 
     /**
      * Gets an instance of the ReflectionClass for the current class.
@@ -35,24 +40,38 @@ trait ArgumentsHandlerTrait
      */
     public function getReflection(): \ReflectionClass
     {
-        if ($this->reflection instanceof \ReflectionClass) {
+        if (isset($this->reflection)) {
             return $this->reflection;
         }
 
         return $this->reflection = new \ReflectionClass($this->class);
     }
 
-    public function getMethod(string $method): ?ServiceMethod
+    public function getMethod(string $name): ?ServiceMethod
     {
-        if (isset($this->methods[$method])) {
-            return $this->methods[$method];
+        if (isset($this->methods[$name])) {
+            return $this->methods[$name];
         }
 
-        if ($this->getReflection()->hasMethod($method)) {
-            return $this->methods[$method] = new ServiceMethod($method, $this->getReflection()->getMethod($method));
+        if ($this->getReflection()->hasMethod($name)) {
+            return $this->methods[$name] = new ServiceMethod($name, $this->getReflection()->getMethod($name));
         }
 
         return null;
+    }
+
+    public function getProperty(string $name): ?ServiceProperty
+    {
+        if (!isset($this->properties[$name])) {
+            if ($this->getReflection()->hasProperty($name)) {
+                return $this->properties[$name] = new ServiceProperty(
+                    $name,
+                    $this->getReflection()->getProperty($name)
+                );
+            }
+        }
+
+        return $this->properties[$name];
     }
 
     /**
@@ -153,5 +172,21 @@ trait ArgumentsHandlerTrait
         }
 
         return [];
+    }
+
+    public function injectProperty(string $name, $value = null): self
+    {
+        if (($property = $this->getProperty($name)) == null) {
+            throw new \Exception("Error Processing Request", 1);
+        }
+        
+        $property->setValue($value);
+
+        return $this;
+    }
+
+    public function getInjectables()
+    {
+        return $this->properties;
     }
 }

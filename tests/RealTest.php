@@ -128,4 +128,23 @@ class RealTest extends TestCase
         $this->assertEquals(true, $boolean->__invoke());
         $this->assertEquals('12145', $int->__invoke());
     }
+
+    public function testParameterInjection()
+    {
+        $container = new Container();
+
+        $container->bind(View::class);
+        $container->bind(Model::class);
+
+        /* Test strings */
+        $service = $container->register(Controller::class)
+            ->injectProperty('model')
+            ->injectProperty('view')
+        ;
+
+        $controller = $container->get(Controller::class);
+
+        $this->assertEquals($container->get(View::class), $controller->view);
+        $this->assertEquals($container->get(Model::class), $controller->model);
+    }
 }

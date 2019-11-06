@@ -7,8 +7,8 @@ class Controller
     /**
      * @var Model
      */
-    public $model;
-    // public Model $model; // For PHP 7.4 property injection.
+    //public $model;
+    public Model $model; // For PHP 7.4 property injection.
 
     /**
      * @var View

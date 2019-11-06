@@ -12,12 +12,17 @@ class ServiceMethod
     /**
      * @var \ReflectionMethod
      */
-    public $reflection;
+    public \ReflectionMethod $reflection;
 
     /**
      * @var array
      */
-    protected $arguments = [];
+    protected array $arguments = [];
+
+    /**
+     * @var array
+     */
+    protected array $parameters = [];
 
     /**
      * The Service constructor.
@@ -35,9 +40,23 @@ class ServiceMethod
      *
      * @return array
      */
+    public function hasParameters(): bool
+    {
+        return $this->reflection->getNumberOfParameters() > 0;
+    }
+
+    /**
+     * Gets the method parameters.
+     *
+     * @return array
+     */
     public function getParameters(): array
     {
-        return $this->reflection->getParameters();
+        if (!empty($this->parameters)) {
+            return $this->parameters;
+        }
+
+        return $this->parameters = $this->reflection->getParameters();
     }
 
     /**

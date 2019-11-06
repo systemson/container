@@ -162,7 +162,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
      */
     protected function instantiate(ServiceClass $service)
     {
-        return $service->getInstance($this->getArguments($service));
+        return $service->getInstance($this->getArguments($service), $this->getInjects($service));
     }
 
     /**
@@ -180,8 +180,6 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
         if (empty($params)) {
             return [];
         }
-
-        $arguments = [];
 
         /*
          * First we find the name of the parameter or the class name.
@@ -239,7 +237,47 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
             );
         }
 
-        return $arguments;
+        return $arguments ?? [];
+    }
+
+    /**
+     * Gets the arguments for a Service's method.
+     *
+     * @param array $service The params needed by the constructor.
+     * @param array $method  Optional. The method to get the arguments from.
+     *
+     * @return array The arguments for the class method.
+     */
+    protected function getInjects(ServiceClass $service): array
+    {
+        $properties = $service->getInjectables();
+
+        if (empty($properties)) {
+            return [];
+        }
+
+        /*
+         * First we find the name of the parameter or the class name.
+         * Then we get the arguments from the container.
+         */
+        foreach ($properties as $name => $property) {
+            // Gets the param type if any.
+            if ($property->hasType()) {
+                $type = $property->getType();
+            }
+
+            $alias = $this->isClass($type) ? $type : $property->getName();
+
+            // Then tries to get the argument from the service itself or from the container
+            try {
+                $arguments[$name] = $this->get($alias);
+            } catch (NotFoundException $e) {
+                $msg = $e->getMessage() . " Requested on [{$service->class}::${$name}].";
+                throw new NotFoundException($msg);
+            }
+        }
+
+        return $arguments ?? [];
     }
 
     /**
