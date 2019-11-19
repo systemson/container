@@ -74,6 +74,7 @@ trait ArgumentsHandlerTrait
                     $this->getReflection()->getProperty($name)
                 );
             }
+            return null;
         }
 
         return $this->properties[$name];
@@ -102,21 +103,20 @@ trait ArgumentsHandlerTrait
      *
      * @return self The current service.
      */
-    public function setArgument(string $identifier, $value = null, string $method = null): self
+    public function bindArgument(string $identifier, $value = null, string $method = null): self
     {
-
         if (is_null($value) && !$this->isClass($identifier)) {
             InvalidArgumentException::identifierMustBeClass($identifier);
         }
 
         $value ??= $identifier;
 
-        if ($this->isClass($identifier, $value)) {
-            if (is_a($value, $identifier, true)) {
+        if ($this->isClass($identifier)) {
+            if (($this->isClass($value) && is_a($value, $identifier, true))) {
                 $value = new ServiceClass($value);
-            } else {
+            } elseif (!$value instanceof $identifier && !$value instanceof \Closure) {
                 throw new InvalidArgumentException(
-                    "Class [$value] must be a subclass of [$identifier], or the same class."
+                    "Value argument must be a subclass/instance of [$identifier], or the same class."
                 );
             }
         }
@@ -128,7 +128,7 @@ trait ArgumentsHandlerTrait
                 InvalidArgumentException::classMethodDoesNotExists($this->class, $method);
             }
 
-            $this->getMethod($method)->setArgument($identifier, $value);
+            $this->getMethod($method)->bindArgument($identifier, $value);
         }
 
         return $this;
@@ -164,7 +164,7 @@ trait ArgumentsHandlerTrait
     public function getArgument(string $key, string $method = null)
     {
         if (is_null($method)) {
-            $value = $this->arguments[$key];
+            $value = $this->arguments[$key] ?? null;
         } else {
             if (!$this->hasMethod($method)) {
                 InvalidArgumentException::classMethodDoesNotExists($this->class, $method);
@@ -187,10 +187,10 @@ trait ArgumentsHandlerTrait
      *
      * @return self The current service.
      */
-    public function setArguments(array $arguments = [], string $method = null): self
+    public function bindArguments(array $arguments = [], string $method = null): self
     {
         foreach ($arguments as $key => $value) {
-            $this->setArgument($key, $value, $method);
+            $this->bindArgument($key, $value, $method);
         }
 
         return $this;
@@ -203,17 +203,17 @@ trait ArgumentsHandlerTrait
      */
     public function getArguments(string $method): array
     {
-        if (($methodRelection = $this->getMethod($method)) != null) {
-            return $methodRelection->getArguments();
+        if (($methodRelection = $this->getMethod($method)) == null) {
+            InvalidArgumentException::classMethodDoesNotExists($this->class, $method);
         }
 
-        return [];
+        return $methodRelection->getArguments();
     }
 
     public function injectProperty(string $name, $value = null): self
     {
         if (($property = $this->getProperty($name)) == null) {
-            throw new \Exception("Error Processing Request", 1);
+            throw new InvalidArgumentException("Call to Undefined property: {$this->class}::\${$name}");
         }
         
         $property->setValue($value);

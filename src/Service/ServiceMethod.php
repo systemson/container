@@ -67,7 +67,7 @@ class ServiceMethod
      *
      * @return self
      */
-    public function setArgument(string $key, $value): self
+    public function bindArgument(string $key, $value): self
     {
         $this->arguments[$key] = $value;
 

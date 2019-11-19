@@ -7,16 +7,14 @@ class Controller
     /**
      * @var Model
      */
-    //public $model;
     public Model $model; // For PHP 7.4 property injection.
 
     /**
      * @var View
      */
-    public $view;
-    // public View $view; // For PHP 7.4 property injection.
+    public View $view; // For PHP 7.4 property injection.
 
-    public $id;
+    public int $id; // For PHP 7.4 property injection.
 
     public function __construct(Model $model, View $view, int $optional = 1)
     {

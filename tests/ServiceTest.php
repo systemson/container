@@ -55,8 +55,8 @@ class ServiceTest extends TestCase
             $service->getParameters('setId')
         );
 
-        $this->assertInstanceOf(ServiceClass::class, $service->setArgument(Model::class, $model, '__construct'));
-        $this->assertInstanceOf(ServiceClass::class, $service->setArgument(View::class, $view, '__construct'));
+        $this->assertInstanceOf(ServiceClass::class, $service->bindArgument(Model::class, $model, '__construct'));
+        $this->assertInstanceOf(ServiceClass::class, $service->bindArgument(View::class, $view, '__construct'));
 
         $this->assertEquals($model, $service->getArgument(Model::class, '__construct'));
         $this->assertEquals($view, $service->getArgument(View::class, '__construct'));
@@ -68,7 +68,7 @@ class ServiceTest extends TestCase
             $service->getArguments('__construct')
         );
 
-        $this->assertInstanceOf(ServiceClass::class, $service->setArguments(
+        $this->assertInstanceOf(ServiceClass::class, $service->bindArguments(
             [
                 Model::class => $model,
                 View::class => $view,
@@ -138,11 +138,15 @@ class ServiceTest extends TestCase
         $model = new Model();
         $view = new View();
 
+        $this->assertEmpty($service->getArguments('getModel'));
+
         $service
-            ->setArgument(Model::class, $model)
-            ->setArgument(View::class)
+            ->bindArgument(Model::class, $model)
+            ->bindArgument(View::class)
         ;
 
+        $this->assertTrue($service->getMethod('__construct')->hasParameters());
+        $this->assertTrue($service->hasArgument(Model::class));
         $this->assertEquals($model, $service->getArgument(Model::class, '__construct'));
         $this->assertInstanceOf(ServiceClass::class, $service->getArgument(View::class));
     }

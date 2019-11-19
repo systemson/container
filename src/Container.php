@@ -109,12 +109,12 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
 
         $value ??= $identifier;
 
-        if ($this->isClass($identifier, $value)) {
-            if (is_a($value, $identifier, true)) {
+        if ($this->isClass($identifier)) {
+            if (($this->isClass($value) && is_a($value, $identifier, true))) {
                 return $this->getCollection()->add($identifier, new ServiceClass($value));
-            } else {
+            } elseif (!$value instanceof $identifier && !$value instanceof \Closure) {
                 throw new InvalidArgumentException(
-                    "Class [$value] must be a subclass of [$identifier], or the same class."
+                    "Value argument must be a subclass/instance of [$identifier], or the same class."
                 );
             }
         }
@@ -268,11 +268,11 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
 
             $alias = $this->isClass($type) ? $type : $property->getName();
 
-            // Then tries to get the argument from the service itself or from the container
+            // Then tries to get the argument from the container.
             try {
                 $arguments[$name] = $this->get($alias);
             } catch (NotFoundException $e) {
-                $msg = $e->getMessage() . " Requested on [{$service->class}::${$name}].";
+                $msg = $e->getMessage() . " Requested for [{$service->class}::\${$name}].";
                 throw new NotFoundException($msg);
             }
         }
@@ -281,7 +281,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
     }
 
     /**
-     * Gets the arguments for a Service's method from the it's arguments bag.
+     * Gets the arguments for a Service's method from it's arguments bag.
      *
      * @param array $service The params needed by the constructor.
      * @param array $key     The argument's key.
@@ -431,7 +431,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
         }
 
         $service = $this->locate($class)
-            ->setArguments($binds, $method)
+            ->bindArguments($binds, $method)
         ;
 
         $args = $this->getArguments($service, $method);

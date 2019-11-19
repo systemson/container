@@ -36,6 +36,16 @@ class ServiceProperty
     }
 
     /**
+     * Gets the property name.
+     *
+     * @return
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Gets the property type.
      *
      * @return
