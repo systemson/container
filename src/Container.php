@@ -410,7 +410,8 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
     public function singleton(string $class, string $alias = null): ServiceClass
     {
         return $this->register($class, $alias)
-        ->singleton();
+            ->singleton()
+        ;
     }
 
     /**

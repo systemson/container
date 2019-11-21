@@ -14,6 +14,7 @@ interface ContainerInterface extends PsrInterface
      *
      * When no $value is provided $identifier must be a valid class.
      * When $identifier and $value are classes, $value must be a subclass of $identifier, or the same class.
+     * When $identifier is a class and $value is an object, $value MUST be an instance of $identifier.
      *
      * @param string $identifier      The entry's identifier.
      * @param mixed  $value Optional. The entry's value.
@@ -21,7 +22,7 @@ interface ContainerInterface extends PsrInterface
      * @throws Amber\Container\Exception\InvalidArgumentException
      *         Identifier must be a non empty string.
      *         Identifier [$identifier] must be a valid class.
-     *         Class [$value] must be a subclass of [$identifier], or the same.
+     *         Value argument must be a subclass/instance of [$identifier], or the same class.
      *
      * @return bool True on success. False if identifier already exists.
      */

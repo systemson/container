@@ -38,7 +38,8 @@ $benchmark->add('app', function () use ($app) {
 
     $service = $app->register(Controller::class)
     ->setArguments(['optional' => 2])
-    ->afterConstruct('setId', 53);
+    ->afterConstruct('setId', 53)
+    ;
 
     $app->get(Controller::class);
     $app->get($key);
