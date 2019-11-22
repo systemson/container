@@ -22,9 +22,9 @@ use Closure;
 /**
  * Class for PSR-11 Container compliance.
  */
-class Container implements ContainerInterface, CollectionAwareInterface, CacheAwareInterface
+class Container implements ContainerInterface, CollectionAwareInterface
 {
-    use CollectionAwareTrait, MultipleBinderTrait, CacheHandlerTrait, ValidatorTrait;
+    use CollectionAwareTrait, MultipleBinderTrait, ValidatorTrait;
 
     /**
      * The Container constructor.
