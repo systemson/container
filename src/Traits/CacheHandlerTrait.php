@@ -2,12 +2,8 @@
 
 namespace Amber\Container\Traits;
 
-use Amber\Cache\CacheAware\CacheAwareTrait;
-
 trait CacheHandlerTrait
 {
-    use CacheAwareTrait;
-
     public function drop(): void
     {
         $cache = $this->getCache();
