@@ -231,7 +231,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
 
             InvalidArgumentException::wrongArgumentType(
                 $key,
-                $type,
+                $type->getName(),
                 $argumentType,
                 "{$service->class}::{$method}()"
             );
