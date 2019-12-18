@@ -173,7 +173,7 @@ class Container implements ContainerInterface, CollectionAwareInterface
      *
      * @return array The arguments for the class method.
      */
-    protected function getArguments(ServiceClass $service, string $method = '__construct'): array
+    public function getArguments(ServiceClass $service, string $method = '__construct'): array
     {
         $params = $service->getParameters($method);
 
