@@ -85,6 +85,8 @@ class ServiceTest extends TestCase
             ],
             $service->getArguments('__construct')
         );
+
+        $this->assertEmpty($service->getArguments('unknownMethod'));
     }
 
     public function testOthers()

@@ -22,7 +22,7 @@
         }
     },
     "require": {
-        "php": ">=7.4",
+        "php": ">=7.2.0",
         "amber/collection": "^0.6@beta",
         "amber/validator": "^0.1@dev",
         "psr/container": "^1.0"
@@ -34,8 +34,8 @@
     "scripts": {
         "test": "phpunit",
         "docs": "php sami.phar update samiConfig.php -v",
-        "sniff": "phpcs --standard=PSR12 ./src ./tests",
-        "fix-cs": "phpcbf --standard=PSR12 ./src ./tests",
+        "sniff": "phpcs --standard=PSR2 ./src ./tests",
+        "fix-cs": "phpcbf --standard=PSR2 ./src ./tests",
         "type-hint": "psalm --show-info=false",
         "pull": [
             "git pull",

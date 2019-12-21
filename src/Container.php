@@ -2,19 +2,13 @@
 
 namespace Amber\Container;
 
-use Amber\Cache\CacheAware\CacheAwareInterface;
-use Amber\Collection\{
-    Collection,
-    CollectionAware\CollectionAwareInterface,
-    CollectionAware\CollectionAwareTrait
-};
-use Amber\Container\{
-    Exception\InvalidArgumentException,
-    Exception\NotFoundException,
-    Service\ServiceClass,
-    Traits\MultipleBinderTrait,
-    Traits\CacheHandlerTrait
-};
+use Amber\Collection\Collection;
+use Amber\Collection\CollectionAware\CollectionAwareInterface;
+use Amber\Collection\CollectionAware\CollectionAwareTrait;
+use Amber\Container\Exception\InvalidArgumentException;
+use Amber\Container\Exception\NotFoundException;
+use Amber\Container\Service\ServiceClass;
+use Amber\Container\Traits\MultipleBinderTrait;
 use Amber\Validator\ValidatorTrait;
 use Psr\Container\ContainerInterface;
 use Closure;
