@@ -2,19 +2,13 @@
 
 namespace Amber\Container;
 
-use Amber\Cache\CacheAware\CacheAwareInterface;
-use Amber\Collection\{
-    Collection,
-    CollectionAware\CollectionAwareInterface,
-    CollectionAware\CollectionAwareTrait
-};
-use Amber\Container\{
-    Exception\InvalidArgumentException,
-    Exception\NotFoundException,
-    Service\ServiceClass,
-    Traits\MultipleBinderTrait,
-    Traits\CacheHandlerTrait
-};
+use Amber\Collection\Collection;
+use Amber\Collection\CollectionAware\CollectionAwareInterface;
+use Amber\Collection\CollectionAware\CollectionAwareTrait;
+use Amber\Container\Exception\InvalidArgumentException;
+use Amber\Container\Exception\NotFoundException;
+use Amber\Container\Service\ServiceClass;
+use Amber\Container\Traits\MultipleBinderTrait;
 use Amber\Validator\ValidatorTrait;
 use Psr\Container\ContainerInterface;
 use Closure;
@@ -22,9 +16,9 @@ use Closure;
 /**
  * Class for PSR-11 Container compliance.
  */
-class Container implements ContainerInterface, CollectionAwareInterface, CacheAwareInterface
+class Container implements ContainerInterface, CollectionAwareInterface
 {
-    use CollectionAwareTrait, MultipleBinderTrait, CacheHandlerTrait, ValidatorTrait;
+    use CollectionAwareTrait, MultipleBinderTrait, ValidatorTrait;
 
     /**
      * The Container constructor.
@@ -173,7 +167,7 @@ class Container implements ContainerInterface, CollectionAwareInterface, CacheAw
      *
      * @return array The arguments for the class method.
      */
-    protected function getArguments(ServiceClass $service, string $method = '__construct'): array
+    public function getArguments(ServiceClass $service, string $method = '__construct'): array
     {
         $params = $service->getParameters($method);
 

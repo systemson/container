@@ -35,9 +35,8 @@
     "scripts": {
         "test": "phpunit",
         "docs": "php sami.phar update samiConfig.php -v",
-        "sniff": "phpcs --standard=PSR12 ./src ./tests",
-        "fix-cs": "phpcbf --standard=PSR12 ./src ./tests",
-        "speed": "php ./tests/Benchmark.php",
+        "sniff": "phpcs --standard=PSR2 ./src ./tests",
+        "fix-cs": "phpcbf --standard=PSR2 ./src ./tests",
         "type-hint": "psalm --show-info=false",
         "pull": [
             "git pull",
