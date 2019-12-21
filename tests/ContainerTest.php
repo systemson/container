@@ -127,6 +127,7 @@ class ContainerTest extends TestCase
      */
     public function testGetInvalidArgumentException($container)
     {
+        $container->clear();
         $this->expectException(InvalidArgumentException::class);
 
         $container->get(1);
@@ -137,6 +138,7 @@ class ContainerTest extends TestCase
      */
     public function testGetNotFoundException($container)
     {
+        $container->clear();
         $this->expectException(NotFoundException::class);
 
         $container->get('string');
@@ -147,6 +149,7 @@ class ContainerTest extends TestCase
      */
     public function testHasInvalidArgumentException($container)
     {
+        $container->clear();
         $this->expectException(InvalidArgumentException::class);
 
         $container->has(1);
@@ -157,6 +160,7 @@ class ContainerTest extends TestCase
      */
     public function testBindInvalidArgumentException($container)
     {
+        $container->clear();
         $this->expectException(InvalidArgumentException::class);
 
         $container->bind(1, 'value');
@@ -167,6 +171,7 @@ class ContainerTest extends TestCase
      */
     public function testUnbindInvalidArgumentException($container)
     {
+        $container->clear();
         $this->expectException(InvalidArgumentException::class);
 
         $container->unbind(1);
@@ -177,6 +182,7 @@ class ContainerTest extends TestCase
      */
     public function testLocateInvalidArgumentException($container)
     {
+        $container->clear();
         $this->expectException(InvalidArgumentException::class);
 
         $container->locate(1);
@@ -187,6 +193,7 @@ class ContainerTest extends TestCase
      */
     public function testPutInvalidArgumentException($container)
     {
+        $container->clear();
         $this->expectException(InvalidArgumentException::class);
 
         $container->put(1);
@@ -197,6 +204,7 @@ class ContainerTest extends TestCase
      */
     public function testPutInvalidArgumentException2($container)
     {
+        $container->clear();
         $this->expectException(InvalidArgumentException::class);
 
         $container->put('this_is_not_a_class');
@@ -205,8 +213,20 @@ class ContainerTest extends TestCase
     /**
      * @depends testContainer
      */
+    public function testPutInvalidArgumentException3($container)
+    {
+        $container->clear();
+        $this->expectException(InvalidArgumentException::class);
+
+        $container->put(Controller::class, 'this_is_not_a_class');
+    }
+
+    /**
+     * @depends testContainer
+     */
     public function testMakeInvalidArgumentException($container)
     {
+        $container->clear();
         $this->expectException(InvalidArgumentException::class);
 
         $container->make(1);
@@ -217,6 +237,7 @@ class ContainerTest extends TestCase
      */
     public function testRegisterInvalidArgumentException($container)
     {
+        $container->clear();
         $this->expectException(InvalidArgumentException::class);
 
         /* Test strings */
@@ -228,6 +249,7 @@ class ContainerTest extends TestCase
      */
     public function testGetArgumentsNotFoundException($container)
     {
+        $container->clear();
         $this->expectException(NotFoundException::class);
 
         /* Test strings */
@@ -239,11 +261,13 @@ class ContainerTest extends TestCase
      */
     public function testSetArgumentsInvalidArgumentException($container)
     {
+        $container->clear();
         $this->expectException(InvalidArgumentException::class);
 
         /* Test strings */
         $container->register(Controller::class)
-        ->setArgument('__construct', 'this_is_not_a_class');
+            ->bindArgument('this_is_not_a_class', null, '__construct')
+        ;
     }
 
     /**
@@ -251,6 +275,7 @@ class ContainerTest extends TestCase
      */
     public function testPutInvalidArgumentExceptionNotSubclassOf($container)
     {
+        $container->clear();
         $this->expectException(InvalidArgumentException::class);
 
         /* Test strings */
@@ -262,6 +287,7 @@ class ContainerTest extends TestCase
      */
     public function testWrongArgumentType($container)
     {
+        $container->clear();
         $this->expectException(InvalidArgumentException::class);
 
         $container->bind(View::class);
@@ -276,6 +302,7 @@ class ContainerTest extends TestCase
      */
     public function testClosureForUndefinedMEthod($container)
     {
+        $container->clear();
         $this->expectException(InvalidArgumentException::class);
 
         $container->bind(View::class);
@@ -283,5 +310,118 @@ class ContainerTest extends TestCase
 
         /* Test strings */
         $container->getClosureFor(Controller::class, 'undefined');
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testInjectableNotFound($container)
+    {
+        $container->clear();
+        $this->expectException(NotFoundException::class);
+
+        $container->bind(Model::class);
+        $container->bind(View::class);
+
+        $container->register(Controller::class)
+            ->injectProperty('id')
+        ;
+
+        $container->get(Controller::class);
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testUnkownInjectable($container)
+    {
+        $container->clear();
+        $this->expectException(InvalidArgumentException::class);
+
+        $container->register(Controller::class)
+            ->injectProperty('unkown')
+        ;
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testUnkownMethodInGetArgument($container)
+    {
+        $container->clear();
+        $this->expectException(InvalidArgumentException::class);
+
+        $container->register(Controller::class)
+            ->getArgument('model', 'unkown')
+        ;
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testUnkownMethodInGetArguments($container)
+    {
+        $container->clear();
+        $this->expectException(InvalidArgumentException::class);
+
+        $container->register(Controller::class)
+            ->getArguments('unkown')
+        ;
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testUnkownMethodInBindArgument($container)
+    {
+        $container->clear();
+        $this->expectException(InvalidArgumentException::class);
+
+        $container->register(Controller::class)
+            ->bindArgument('model', 'value', 'unkown')
+        ;
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testUnkownMethodInHasArgument($container)
+    {
+        $container->clear();
+        $this->expectException(InvalidArgumentException::class);
+
+        $container->register(Controller::class)
+            ->hasArgument('model', 'unkown')
+        ;
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testBindArgumentOfNotSameClass($container)
+    {
+        $container->clear();
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $container->register(Controller::class)
+            ->bindArgument(Model::class, View::class, '__construct')
+        ;
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testBindArgumentOfNotClass($container)
+    {
+        $container->clear();
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $container->register(Controller::class)
+            ->bindArgument(Model::class, 'not_a_class', '__construct')
+        ;
+
+        $container->get(Controller::class);
     }
 }

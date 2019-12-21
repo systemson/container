@@ -23,7 +23,7 @@ class RealTest extends TestCase
         $container->bind(View::class);
 
         $service = $container->singleton(Controller::class)
-        ->setArguments('__construct', ['optional' => 2])
+        ->bindArguments(['optional' => 2], '__construct')
         ->afterConstruct('setId', 53);
 
         $controller = $container->get(Controller::class);
@@ -81,9 +81,10 @@ class RealTest extends TestCase
         $container = new Container();
 
         $service = $container->register(Controller::class)
-        ->setArgument('__construct', View::class)
-        ->setArgument('__construct', Model::class)
-        ->setArgument('__construct', 'optional', 2);
+            ->bindArgument(View::class, null, '__construct')
+            ->bindArgument(Model::class, null, '__construct')
+            ->bindArgument('optional', 2, '__construct')
+        ;
 
         $controller = $container->get(Controller::class);
 
@@ -97,11 +98,11 @@ class RealTest extends TestCase
         $container = new Container();
 
         $service = $container->register(Controller::class)
-        ->setArgument('__construct', View::class, function () {
+        ->bindArgument(View::class, function () {
             return new View();
-        })
-        ->setArgument('__construct', Model::class)
-        ->setArgument('__construct', 'optional', 2)
+        }, '__construct')
+        ->bindArgument(Model::class, null, '__construct')
+        ->bindArgument('optional', 2, '__construct')
         ->afterConstruct('setId', function () {
             return 53;
         });
@@ -127,5 +128,24 @@ class RealTest extends TestCase
 
         $this->assertEquals(true, $boolean->__invoke());
         $this->assertEquals('12145', $int->__invoke());
+    }
+
+    public function testParameterInjection()
+    {
+        $container = new Container();
+
+        $container->bind(View::class);
+        $container->bind(Model::class);
+
+        /* Test strings */
+        $service = $container->register(Controller::class)
+            ->injectProperty('model')
+            ->injectProperty('view')
+        ;
+
+        $controller = $container->get(Controller::class);
+
+        $this->assertEquals($container->get(View::class), $controller->view);
+        $this->assertEquals($container->get(Model::class), $controller->model);
     }
 }

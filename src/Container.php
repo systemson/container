@@ -101,14 +101,14 @@ class Container implements ContainerInterface, CollectionAwareInterface
             InvalidArgumentException::identifierMustBeClass($identifier);
         }
 
-        $value = $value ?? $identifier;
+        $value ??= $identifier;
 
-        if ($this->isClass($identifier, $value)) {
-            if (is_a($value, $identifier, true)) {
+        if ($this->isClass($identifier)) {
+            if (($this->isClass($value) && is_a($value, $identifier, true))) {
                 return $this->getCollection()->add($identifier, new ServiceClass($value));
-            } else {
+            } elseif (!$value instanceof $identifier && !$value instanceof \Closure) {
                 throw new InvalidArgumentException(
-                    "Class [$value] must be a subclass of [$identifier], or the same class."
+                    "Value argument must be a subclass/instance of [$identifier], or the same class."
                 );
             }
         }
@@ -156,7 +156,7 @@ class Container implements ContainerInterface, CollectionAwareInterface
      */
     protected function instantiate(ServiceClass $service)
     {
-        return $service->getInstance($this->getArguments($service));
+        return $service->getInstance($this->getArguments($service), $this->getInjects($service));
     }
 
     /**
@@ -174,8 +174,6 @@ class Container implements ContainerInterface, CollectionAwareInterface
         if (empty($params)) {
             return [];
         }
-
-        $arguments = [];
 
         /*
          * First we find the name of the parameter or the class name.
@@ -198,7 +196,7 @@ class Container implements ContainerInterface, CollectionAwareInterface
 
             // Then tries to get the argument from the service itself or from the container
             try {
-                $arguments[$key] = $this->getArgumentFromService($method, $service, $key) ?? $this->get($key);
+                $arguments[$key] = $this->getArgumentFromService($service, $key, $method) ?? $this->get($key);
             } catch (NotFoundException $e) {
                 // If the parameter is not optional throws an exception.
                 if (!$param->isOptional()) {
@@ -227,30 +225,70 @@ class Container implements ContainerInterface, CollectionAwareInterface
 
             InvalidArgumentException::wrongArgumentType(
                 $key,
-                $type,
+                $type->getName(),
                 $argumentType,
                 "{$service->class}::{$method}()"
             );
         }
 
-        return $arguments;
+        return $arguments ?? [];
     }
 
     /**
-     * Gets the arguments for a Service's method from the it's arguments bag.
+     * Gets the arguments for a Service's method.
+     *
+     * @param array $service The params needed by the constructor.
+     * @param array $method  Optional. The method to get the arguments from.
+     *
+     * @return array The arguments for the class method.
+     */
+    protected function getInjects(ServiceClass $service): array
+    {
+        $properties = $service->getInjectables();
+
+        if (empty($properties)) {
+            return [];
+        }
+
+        /*
+         * First we find the name of the parameter or the class name.
+         * Then we get the arguments from the container.
+         */
+        foreach ($properties as $name => $property) {
+            // Gets the param type if any.
+            if ($property->hasType()) {
+                $type = $property->getType();
+            }
+
+            $alias = $this->isClass($type) ? $type : $property->getName();
+
+            // Then tries to get the argument from the container.
+            try {
+                $arguments[$name] = $this->get($alias);
+            } catch (NotFoundException $e) {
+                $msg = $e->getMessage() . " Requested for [{$service->class}::\${$name}].";
+                throw new NotFoundException($msg);
+            }
+        }
+
+        return $arguments ?? [];
+    }
+
+    /**
+     * Gets the arguments for a Service's method from it's arguments bag.
      *
      * @param array $service The params needed by the constructor.
      * @param array $key     The argument's key.
      *
      * @return mixed The argument's value.
      */
-    protected function getArgumentFromService(string $method, ServiceClass $service, string $key)
+    protected function getArgumentFromService(ServiceClass $service, string $key, string $method = null)
     {
-        if (!$service->hasArgument($method, $key)) {
+        if (!$service->hasArgument($key, $method)) {
             return;
         }
 
-        $subService = $service->getArgument($method, $key);
+        $subService = $service->getArgument($key, $method);
 
         if (!$subService instanceof ServiceClass) {
             return $subService;
@@ -366,7 +404,8 @@ class Container implements ContainerInterface, CollectionAwareInterface
     public function singleton(string $class, string $alias = null): ServiceClass
     {
         return $this->register($class, $alias)
-        ->singleton();
+            ->singleton()
+        ;
     }
 
     /**
@@ -387,7 +426,7 @@ class Container implements ContainerInterface, CollectionAwareInterface
         }
 
         $service = $this->locate($class)
-            ->setArguments($method, $binds)
+            ->bindArguments($binds, $method)
         ;
 
         $args = $this->getArguments($service, $method);

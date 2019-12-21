@@ -55,11 +55,11 @@ class ServiceTest extends TestCase
             $service->getParameters('setId')
         );
 
-        $this->assertInstanceOf(ServiceClass::class, $service->setArgument('__construct', Model::class, $model));
-        $this->assertInstanceOf(ServiceClass::class, $service->setArgument('__construct', View::class, $view));
+        $this->assertInstanceOf(ServiceClass::class, $service->bindArgument(Model::class, $model, '__construct'));
+        $this->assertInstanceOf(ServiceClass::class, $service->bindArgument(View::class, $view, '__construct'));
 
-        $this->assertEquals($model, $service->getArgument('__construct', Model::class));
-        $this->assertEquals($view, $service->getArgument('__construct', View::class));
+        $this->assertEquals($model, $service->getArgument(Model::class, '__construct'));
+        $this->assertEquals($view, $service->getArgument(View::class, '__construct'));
         $this->assertEquals(
             [
                 Model::class => $model,
@@ -68,16 +68,16 @@ class ServiceTest extends TestCase
             $service->getArguments('__construct')
         );
 
-        $this->assertInstanceOf(ServiceClass::class, $service->setArguments(
-            '__construct',
+        $this->assertInstanceOf(ServiceClass::class, $service->bindArguments(
             [
                 Model::class => $model,
                 View::class => $view,
-            ]
+            ],
+            '__construct',
         ));
 
-        $this->assertEquals($model, $service->getArgument('__construct', Model::class));
-        $this->assertEquals($view, $service->getArgument('__construct', View::class));
+        $this->assertEquals($model, $service->getArgument(Model::class, '__construct'));
+        $this->assertEquals($view, $service->getArgument(View::class, '__construct'));
         $this->assertEquals(
             [
                 Model::class => $model,
@@ -107,5 +107,49 @@ class ServiceTest extends TestCase
         $this->expectException(BadMethodCallException::class);
 
         (new ServiceClass(View::class))->afterConstruct('setId');
+    }
+
+    public function testProperties()
+    {
+        $service = (new ServiceClass(Controller::class));
+        $property = $service->getProperty('model');
+
+        if ($property->hasType()) {
+            $this->assertEquals(Model::class, $property->getType());
+        }
+
+        if (!$property->hasValue()) {
+            $property->setValue(Model::class);
+
+            $this->assertEquals(Model::class, $property->getValue());
+        }
+
+        $this->assertEquals($property, $service->getProperty('model'));
+
+        $service->injectProperty('model');
+
+        $type = current($service->getInjectables())->getType();
+
+        $this->assertEquals(Model::class, $type);
+    }
+
+    public function testServiceGlobalArguments()
+    {
+        $service = (new ServiceClass(Controller::class));
+
+        $model = new Model();
+        $view = new View();
+
+        $this->assertEmpty($service->getArguments('getModel'));
+
+        $service
+            ->bindArgument(Model::class, $model)
+            ->bindArgument(View::class)
+        ;
+
+        $this->assertTrue($service->getMethod('__construct')->hasParameters());
+        $this->assertTrue($service->hasArgument(Model::class));
+        $this->assertEquals($model, $service->getArgument(Model::class, '__construct'));
+        $this->assertInstanceOf(ServiceClass::class, $service->getArgument(View::class));
     }
 }
