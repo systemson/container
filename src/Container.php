@@ -8,6 +8,7 @@ use Amber\Collection\CollectionAware\CollectionAwareTrait;
 use Amber\Container\Exception\InvalidArgumentException;
 use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Service\ServiceClass;
+use Amber\Container\Service\ServiceClosure;
 use Amber\Container\Traits\MultipleBinderTrait;
 use Amber\Validator\ValidatorTrait;
 use Psr\Container\ContainerInterface;
@@ -113,6 +114,10 @@ class Container implements ContainerInterface, CollectionAwareInterface
             }
         }
 
+        if ($value instanceof \Closure) {
+            return $this->getCollection()->add($identifier, new ServiceClosure($value));
+        }
+
         return $this->getCollection()->add($identifier, $value);
     }
 
@@ -140,7 +145,7 @@ class Container implements ContainerInterface, CollectionAwareInterface
 
         if ($service instanceof ServiceClass) {
             return $this->instantiate($service);
-        } elseif ($service instanceof Closure) {
+        } elseif ($service instanceof ServiceClosure) {
             return $service();
         }
 

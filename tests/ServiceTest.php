@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Amber\Container\Service\ServiceClass;
+use Amber\Container\Service\ServiceClosure;
 use Tests\Example\Controller;
 use Tests\Example\Model;
 use Tests\Example\View;
@@ -107,5 +108,22 @@ class ServiceTest extends TestCase
         $this->expectException(BadMethodCallException::class);
 
         (new ServiceClass(View::class))->afterConstruct('setId');
+    }
+
+    public function testServiceClosure()
+    {
+        $callback = function (int $value): int {
+            return $value + 5;
+        };
+
+        $service = new ServiceClosure($callback);
+
+        $this->assertEquals(10, $service(5));
+
+        $serialized = serialize($service);
+
+        $service = unserialize($serialized);
+
+        $this->assertEquals(10, $service(5));
     }
 }

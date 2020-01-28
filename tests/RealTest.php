@@ -128,4 +128,37 @@ class RealTest extends TestCase
         $this->assertEquals(true, $boolean->__invoke());
         $this->assertEquals('12145', $int->__invoke());
     }
+
+    public function testSerialization()
+    {
+        /* Variables */
+        $string = 'string';
+        $number = 1;
+        $array = [1, 2, 3, 4, 5];
+        $class = Model::class;
+        $object = new $class();
+        $function = function () use ($string) {
+            return $string;
+        };
+
+        $container = new Container();
+
+        $container->bind('string', $string);
+        $container->bind('number', $number);
+        $container->bind('array', $array);
+        $container->bind('class', $class);
+        $container->bind('object', $object);
+        $container->bind('function', $function);
+
+        $serialized = serialize($container);
+
+        $container = unserialize($serialized);
+
+        $this->assertEquals($string, $container->get('string'));
+        $this->assertEquals($number, $container->get('number'));
+        $this->assertEquals($array, $container->get('array'));
+        $this->assertEquals($class, $container->get('class'));
+        $this->assertEquals($object, $container->get('object'));
+        $this->assertEquals($string, $container->get('function'));
+    }
 }
