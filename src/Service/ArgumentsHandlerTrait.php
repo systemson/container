@@ -5,6 +5,7 @@ namespace Amber\Container\Service;
 use Amber\Validator\Validator;
 use Amber\Container\Container;
 use Amber\Container\Exception\InvalidArgumentException;
+use Opis\Closure\SerializableClosure;
 
 trait ArgumentsHandlerTrait
 {
@@ -88,6 +89,8 @@ trait ArgumentsHandlerTrait
 
         if ($this->isClass($value ?? $key)) {
             $this->getMethod($method)->setArgument($key, new ServiceClass($value ?? $key));
+        } elseif ($value instanceof \Closure) {
+            $this->getMethod($method)->setArgument($key, new SerializableClosure($value ?? $key));
         } else {
             $this->getMethod($method)->setArgument($key, $value);
         }
@@ -118,7 +121,7 @@ trait ArgumentsHandlerTrait
     {
         $value =  $this->getMethod($method)->getArgument($key);
 
-        if ($value instanceof \Closure) {
+        if ($value instanceof SerializableClosure) {
             return $value();
         }
 
