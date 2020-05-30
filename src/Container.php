@@ -145,7 +145,9 @@ class Container implements ContainerInterface, CollectionAwareInterface
         if ($service instanceof ServiceClass) {
             return $this->instantiate($service);
         } elseif ($service instanceof ServiceClosure) {
-            return $service();
+            $arguments = $this->getArguments($service, '__invoke');
+
+            return call_user_func_array([$service, '__invoke'], $arguments);
         }
 
         return $service;
@@ -166,12 +168,14 @@ class Container implements ContainerInterface, CollectionAwareInterface
     /**
      * Gets the arguments for a Service's method.
      *
+     * @todo $service parameter should typehint to a Service interface.
+     *
      * @param array $service The params needed by the constructor.
      * @param array $method  Optional. The method to get the arguments from.
      *
      * @return array The arguments for the class method.
      */
-    public function getArguments(ServiceClass $service, string $method = '__construct'): array
+    public function getArguments($service, string $method = '__construct'): array
     {
         $params = $service->getParameters($method);
 
@@ -206,7 +210,7 @@ class Container implements ContainerInterface, CollectionAwareInterface
             } catch (NotFoundException $e) {
                 // If the parameter is not optional throws an exception.
                 if (!$param->isOptional()) {
-                    $msg = $e->getMessage() . " Requested on [{$service->class}::{$method}()].";
+                    $msg = $e->getMessage() . " Requested on [{$service->getName()}::{$method}()].";
                     throw new NotFoundException($msg);
                 }
                 // Else returns the parameter's default value.
@@ -243,14 +247,16 @@ class Container implements ContainerInterface, CollectionAwareInterface
     /**
      * Gets the arguments for a Service's method from the it's arguments bag.
      *
+     * @todo $service parameter should typehint to a Service interface.
+     *
      * @param array $service The params needed by the constructor.
      * @param array $key     The argument's key.
      *
      * @return mixed The argument's value.
      */
-    protected function getArgumentFromService(string $method, ServiceClass $service, string $key)
+    protected function getArgumentFromService(string $method, $service, string $key)
     {
-        if (!$service->hasArgument($method, $key)) {
+        if (!method_exists($service, 'hasArgument') || !$service->hasArgument($method, $key)) {
             return;
         }
 

@@ -28,6 +28,9 @@ class ContainerTest extends TestCase
         $function = function () use ($string) {
             return $string;
         };
+        $functionParameter = function (string $string) {
+            return $string;
+        };
 
         /* Tests strings */
         $this->assertTrue($container->bind($key, $string));
@@ -90,6 +93,17 @@ class ContainerTest extends TestCase
         $this->assertFalse($container->bind($key, $function));
         $this->assertTrue($container->has($key));
         $this->assertSame($function(), $container->get($key));
+        $this->assertSame($string, $container->get($key));
+        $this->assertTrue($container->unbind($key));
+        $this->assertFalse($container->unbind($key));
+        $this->assertFalse($container->has($key));
+
+        /* Tests anonymous function with parameters */
+        $this->assertTrue($container->bind($key, $functionParameter));
+        $this->assertTrue($container->bind($string, $string));
+        $this->assertFalse($container->bind($key, $function));
+        $this->assertTrue($container->has($key));
+        $this->assertSame($functionParameter($string), $container->get($key));
         $this->assertSame($string, $container->get($key));
         $this->assertTrue($container->unbind($key));
         $this->assertFalse($container->unbind($key));
@@ -283,5 +297,20 @@ class ContainerTest extends TestCase
 
         /* Test strings */
         $container->getClosureFor(Controller::class, 'undefined');
+    }
+
+    /**
+     * @depends testContainer
+     */
+    public function testNotFoundArgumentForClosure($container)
+    {
+        $this->expectException(NotFoundException::class);
+
+        $container->clear();
+
+        $container->bind('closure', function (Controller $controller) {
+            return $controller;
+        });
+        $container->get('closure');
     }
 }

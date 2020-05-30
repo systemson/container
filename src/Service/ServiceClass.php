@@ -176,4 +176,9 @@ class ServiceClass
 
         return $this;
     }
+
+    public function getName()
+    {
+        return $this->getReflection()->getName();
+    }
 }

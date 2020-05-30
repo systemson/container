@@ -5,6 +5,9 @@ namespace Amber\Container\Exception;
 use Psr\Container\ContainerExceptionInterface;
 use InvalidArgumentException as BaseException;
 
+/**
+ * @todo SHOULD define new specific exeptions for every exception case.
+ */
 class InvalidArgumentException extends BaseException implements ContainerExceptionInterface
 {
     public static function mustBeString()
