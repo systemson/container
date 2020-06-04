@@ -10,7 +10,8 @@ use Amber\Container\Exception\NotFoundException;
 use Amber\Container\Service\ServiceClass;
 use Amber\Container\Service\ServiceClosure;
 use Amber\Validator\ValidatorTrait;
-use Psr\Container\ContainerInterface;
+use Amber\Container\Contracts\ContainerInterface;
+use Amber\Container\Contracts\ServiceInterface;
 use Closure;
 
 /**
@@ -33,9 +34,9 @@ class Container implements ContainerInterface, CollectionAwareInterface
      *
      * @param string $identifier The entry's identifier.
      *
-     * @throws Amber\Container\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      *         Identifier must be a non empty string.
-     * @throws Amber\Container\Exception\NotFoundException
+     * @throws NotFoundException
      *         No entry was found for [$identifier] identifier.
      *
      * @return mixed
@@ -62,7 +63,7 @@ class Container implements ContainerInterface, CollectionAwareInterface
      * @param string $identifier      The entry's identifier.
      * @param mixed  $value Optional. The entry's value.
      *
-     * @throws Amber\Container\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      *         Identifier must be a non empty string.
      *         Identifier [$identifier] must be a valid class.
      *         Class [$value] must be a subclass of [$identifier], or the same.
@@ -84,7 +85,7 @@ class Container implements ContainerInterface, CollectionAwareInterface
      * @param string $identifier      The entry's identifier.
      * @param mixed  $value Optional. The entry's value.
      *
-     * @throws Amber\Container\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      *         Identifier must be a non empty string.
      *         Identifier [$identifier] must be a valid class.
      *         Class [$value] must be a subclass of [$identifier], or the same.
@@ -125,11 +126,11 @@ class Container implements ContainerInterface, CollectionAwareInterface
      *
      * @param string $identifier The entry's identifier.
      *
-     * @throws Amber\Container\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      *         Identifier must be a non empty string.
-     * @throws Amber\Container\Exception\NotFoundExceptionInterface
+     * @throws NotFoundExceptionInterface
      *         No entry was found for [$identifier] identifier.
-     * @throws Amber\Container\Exception\ContainerExceptionInterface
+     * @throws ContainerExceptionInterface
      *         Error while retrieving the entry.
      *
      * @return mixed The entry.
@@ -144,10 +145,10 @@ class Container implements ContainerInterface, CollectionAwareInterface
 
         if ($service instanceof ServiceClass) {
             return $this->instantiate($service);
-        } elseif ($service instanceof ServiceClosure) {
-            $arguments = $this->getArguments($service, '__invoke');
+        }
 
-            return call_user_func_array([$service, '__invoke'], $arguments);
+        if ($service instanceof ServiceClosure) {
+            return $this->callClosure($service);
         }
 
         return $service;
@@ -163,6 +164,13 @@ class Container implements ContainerInterface, CollectionAwareInterface
     protected function instantiate(ServiceClass $service)
     {
         return $service->getInstance($this->getArguments($service));
+    }
+
+    public function callClosure(ServiceClosure $closure)
+    {
+        $arguments = $this->getArguments($closure, '__invoke');
+
+        return call_user_func_array([$closure, '__invoke'], $arguments);
     }
 
     /**
@@ -237,7 +245,7 @@ class Container implements ContainerInterface, CollectionAwareInterface
                 $key,
                 $type,
                 $argumentType,
-                "{$service->class}::{$method}()"
+                "{$service->getName()}::{$method}()"
             );
         }
 
@@ -245,16 +253,17 @@ class Container implements ContainerInterface, CollectionAwareInterface
     }
 
     /**
-     * Gets the arguments for a Service's method from the it's arguments bag.
+     * Gets the argument(s) for a Service's method from the service's arguments bag.
      *
      * @todo $service parameter should typehint to a Service interface.
      *
-     * @param array $service The params needed by the constructor.
-     * @param array $key     The argument's key.
+     * @param string            $method  The method from the service to retrieve the arguments.
+     * @param ServiceInterface  $service The service for retriving it's arguments.
+     * @param array             $key     The argument's key name.
      *
      * @return mixed The argument's value.
      */
-    protected function getArgumentFromService(string $method, $service, string $key)
+    protected function getArgumentFromService(string $method, ServiceInterface $service, string $key)
     {
         if (!method_exists($service, 'hasArgument') || !$service->hasArgument($method, $key)) {
             return;
@@ -262,11 +271,15 @@ class Container implements ContainerInterface, CollectionAwareInterface
 
         $subService = $service->getArgument($method, $key);
 
-        if (!$subService instanceof ServiceClass) {
-            return $subService;
+        if ($subService instanceof ServiceClass) {
+            return $this->instantiate($subService);
         }
 
-        return $this->instantiate($subService);
+        if ($subService instanceof ServiceClosure) {
+            return $this->callClosure($subService);
+        }
+
+        return $subService;
     }
 
     /**
@@ -321,7 +334,7 @@ class Container implements ContainerInterface, CollectionAwareInterface
      *
      * @param string $class The item's class.
      *
-     * @throws Amber\Container\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return mixed The value of the item.
      */
@@ -343,7 +356,7 @@ class Container implements ContainerInterface, CollectionAwareInterface
      * @param string $class
      * @param string $alias
      *
-     * @throws Amber\Container\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return ServiceClass
      */
@@ -369,7 +382,7 @@ class Container implements ContainerInterface, CollectionAwareInterface
      * @param string $class The item's class.
      * @param string $alias The item's alias.
      *
-     * @throws Amber\Container\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return ServiceClass
      */

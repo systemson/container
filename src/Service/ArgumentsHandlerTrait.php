@@ -5,8 +5,11 @@ namespace Amber\Container\Service;
 use Amber\Validator\Validator;
 use Amber\Container\Container;
 use Amber\Container\Exception\InvalidArgumentException;
-use Opis\Closure\SerializableClosure;
+use Amber\Container\Exception\ContainerException;
 
+/**
+ * @todo Should replace ContainerException for a more specific exception.
+ */
 trait ArgumentsHandlerTrait
 {
     /**
@@ -34,7 +37,7 @@ trait ArgumentsHandlerTrait
      *
      * @return \ReflectionClass
      */
-    public function getReflection(): \ReflectionClass
+    public function getReflection(): \Reflector
     {
         if ($this->reflection instanceof \ReflectionClass) {
             return $this->reflection;
@@ -43,9 +46,14 @@ trait ArgumentsHandlerTrait
         return $this->reflection = new \ReflectionClass($this->class);
     }
 
+    public function hasMethod(string $method)
+    {
+        return isset($this->methods[$method]);
+    }
+
     public function getMethod(string $method): ?ServiceMethod
     {
-        if (isset($this->methods[$method])) {
+        if ($this->hasMethod($method)) {
             return $this->methods[$method];
         }
 
@@ -73,10 +81,9 @@ trait ArgumentsHandlerTrait
     /**
      * Stores a Service argument by its key.
      *
-     * @todo COULD set the argument for a specified method.
-     *
-     * @param string $key   The argument key.
-     * @param mixed  $value The argument value.
+     * @param string $method The service method.
+     * @param string $key    The argument key.
+     * @param mixed  $value  The argument value.
      *
      * @return self The current service.
      */
@@ -87,12 +94,16 @@ trait ArgumentsHandlerTrait
             InvalidArgumentException::identifierMustBeClass($key);
         }
 
+        if (is_null($serviceMethod = $this->getMethod($method))) {
+            throw new ContainerException("Method {$this->getName()}::{$method}() does not exists.");
+        }
+
         if ($this->isClass($value ?? $key)) {
-            $this->getMethod($method)->setArgument($key, new ServiceClass($value ?? $key));
+            $serviceMethod->setArgument($key, new ServiceClass($value ?? $key));
         } elseif ($value instanceof \Closure) {
-            $this->getMethod($method)->setArgument($key, new SerializableClosure($value ?? $key));
+            $serviceMethod->setArgument($key, new ServiceClosure($value));
         } else {
-            $this->getMethod($method)->setArgument($key, $value);
+            $serviceMethod->setArgument($key, $value);
         }
 
         return $this;
@@ -107,7 +118,11 @@ trait ArgumentsHandlerTrait
      */
     public function hasArgument(string $method, string $key): bool
     {
-        return $this->getMethod($method)->hasArgument($key);
+        if (is_null($serviceMethod = $this->getMethod($method))) {
+             throw new ContainerException("Method {$this->getName()}::{$method}() does not exists.");
+        }
+
+        return $serviceMethod->hasArgument($key);
     }
 
     /**
@@ -119,13 +134,11 @@ trait ArgumentsHandlerTrait
      */
     public function getArgument(string $method, string $key)
     {
-        $value =  $this->getMethod($method)->getArgument($key);
-
-        if ($value instanceof SerializableClosure) {
-            return $value();
+        if (is_null($serviceMethod = $this->getMethod($method))) {
+             throw new ContainerException("Method {$this->getName()}::{$method}() does not exists.");
         }
 
-        return $value;
+        return $serviceMethod->getArgument($key);
     }
 
     /**

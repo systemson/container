@@ -101,11 +101,12 @@ class ContainerTest extends TestCase
         /* Tests anonymous function with parameters */
         $this->assertTrue($container->bind($key, $functionParameter));
         $this->assertTrue($container->bind($string, $string));
-        $this->assertFalse($container->bind($key, $function));
+        $this->assertFalse($container->bind($key, $functionParameter));
         $this->assertTrue($container->has($key));
         $this->assertSame($functionParameter($string), $container->get($key));
         $this->assertSame($string, $container->get($key));
         $this->assertTrue($container->unbind($key));
+        $this->assertTrue($container->unbind($string));
         $this->assertFalse($container->unbind($key));
         $this->assertFalse($container->has($key));
 

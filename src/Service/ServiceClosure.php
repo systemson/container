@@ -5,16 +5,17 @@ namespace Amber\Container\Service;
 use Amber\Container\Container;
 use Opis\Closure\SerializableClosure;
 use Closure;
+use Amber\Container\Contracts\ServiceInterface;
 
-class ServiceClosure
+class ServiceClosure implements ServiceInterface
 {
     /**
-     * @var Closure
+     * @var SerializableClosure
      */
     protected $callback;
 
     /**
-     * @var \ReflectionFunction.
+     * @var \Reflector
      */
     protected $reflection;
 
@@ -43,9 +44,9 @@ class ServiceClosure
     /**
      * Gets an instance of the ReflectionFunction for the current closure.
      *
-     * @return \ReflectionFunction
+     * @return \Reflector
      */
-    public function getReflection(): \ReflectionFunction
+    public function getReflection(): \Reflector
     {
         if ($this->reflection instanceof \ReflectionFunction) {
             return $this->reflection;
@@ -55,17 +56,34 @@ class ServiceClosure
     }
 
     /**
-     * Gets the closure parameters.
+     * Gets the Service arguments.
+     *
+     * @param string $method The service's method.
      *
      * @return array
      */
-    public function getParameters(): array
+    public function getParameters(string $method = '__invoke'): array
     {
         return $this->getReflection()->getParameters();
     }
 
+    /**
+     * Gets the full namespace of the service.
+     *
+     * @return string The service's name.
+     */
     public function getName()
     {
         return $this->getReflection()->getName();
+    }
+
+    /**
+     * Gets the wrapped callback.
+     *
+     * @return Closure
+     */
+    public function getClosure(): Closure
+    {
+        return $this->callback->getClosure();
     }
 }

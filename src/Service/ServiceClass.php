@@ -5,10 +5,13 @@ namespace Amber\Container\Service;
 use Amber\Validator\ValidatorTrait;
 use Amber\Container\Container;
 use Amber\Container\Exception\InvalidArgumentException;
+use Amber\Container\Contracts\ServiceInterface;
 
-class ServiceClass
+class ServiceClass implements ServiceInterface
 {
-    use ValidatorTrait, ArgumentsHandlerTrait;
+    use ValidatorTrait,
+        ArgumentsHandlerTrait
+    ;
 
     /**
      * @var string The class name.
@@ -45,7 +48,7 @@ class ServiceClass
      *
      * @param object $instance The instance of the service.
      *
-     * @throws Amber\Container\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return self The current service.
      */
@@ -146,7 +149,7 @@ class ServiceClass
     /**
      * Whether the class is singleton.
      *
-     * @return bool.
+     * @return bool
      */
     public function isSingleton(): bool
     {
@@ -177,6 +180,11 @@ class ServiceClass
         return $this;
     }
 
+    /**
+     * Gets the full namespace of the service.
+     *
+     * @return string The service's name.
+     */
     public function getName()
     {
         return $this->getReflection()->getName();

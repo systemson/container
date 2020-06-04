@@ -4,6 +4,7 @@ namespace Tests;
 
 use Amber\Container\Service\ServiceClass;
 use Amber\Container\Service\ServiceClosure;
+use Amber\Container\Exception\ContainerException;
 use Tests\Example\Controller;
 use Tests\Example\Model;
 use Tests\Example\View;
@@ -125,5 +126,27 @@ class ServiceTest extends TestCase
         $service = unserialize($serialized);
 
         $this->assertEquals(10, $service(5));
+        $this->assertEquals($callback, $service->getClosure());
+    }
+
+    public function testSetArgumentException()
+    {
+        $this->expectException(ContainerException::class);
+
+        (new ServiceClass(View::class))->setArgument('unknownMethod', 'argument', 'value');
+    }
+
+    public function testHasArgumentException()
+    {
+        $this->expectException(ContainerException::class);
+
+        (new ServiceClass(View::class))->hasArgument('unknownMethod', 'argument');
+    }
+
+    public function testGetsArgumentException()
+    {
+        $this->expectException(ContainerException::class);
+
+        (new ServiceClass(View::class))->getArgument('unknownMethod', 'argument');
     }
 }

@@ -114,6 +114,32 @@ class RealTest extends TestCase
         $this->assertEquals(53, $controller->id);
     }
 
+    public function testBindingClosureWithParametersDirectlyToService()
+    {
+        $container = new Container();
+
+        $container->bind(View::class);
+
+        $service = $container->register(Controller::class)
+        ->setArgument('__construct', View::class, function (View $view) {
+            return new $view();
+        })
+        ->setArgument('__construct', Model::class)
+        ->setArgument('__construct', 'optional', 2)
+        // Currently this is not posible.
+        /*->afterConstruct('setId', function (View $dummy) {
+            return 53;
+        })*/
+        ;
+
+        $controller = $container->get(Controller::class);
+
+        $this->assertInstanceOf(Controller::class, $controller);
+        $this->assertEquals($controller, $container->get(Controller::class));
+        $this->assertNotSame($controller, $container->get(Controller::class));
+        $this->assertEquals(2, $controller->id);
+    }
+
     public function testArgumentTypes()
     {
         $container = new Container();
