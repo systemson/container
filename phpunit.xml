@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true" verbose="false"  bootstrap="./vendor/autoload.php">
-    <testsuites>
-        <testsuite name="Amber Test Suite">
-            <directory>./tests/</directory>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src/</directory>
-            <exclude>
-                <directory suffix=".php">./tests/</directory>
-            </exclude>
-        </whitelist>
-    </filter>
-    <logging>
-        <log type="coverage-html" target="./tmp/report" lowUpperBound="75" highLowerBound="90"/>
-        <log type="coverage-clover" target="./tmp/clover/coverage.xml"/>
-    </logging>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" colors="true" verbose="false" bootstrap="./vendor/autoload.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">./src/</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">./tests/</directory>
+    </exclude>
+    <report>
+      <clover outputFile="./tmp/clover/coverage.xml"/>
+      <html outputDirectory="./tmp/report" lowUpperBound="75" highLowerBound="90"/>
+    </report>
+  </coverage>
+  <testsuites>
+    <testsuite name="Amber Test Suite">
+      <directory>./tests/</directory>
+    </testsuite>
+  </testsuites>
+  <logging/>
 </phpunit>
