@@ -22,7 +22,7 @@
         }
     },
     "require": {
-        "php": ">=7.2.0",
+        "php": ">=7.4.0",
         "amber/collection": "^0.6@beta",
         "amber/validator": "^0.1@dev",
         "psr/container": "^1.0"
